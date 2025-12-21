@@ -10,6 +10,8 @@ if (API_URL.endsWith('/health')) {
     API_URL = API_URL.replace(/\/health$/, '');
 }
 
+console.log('Sanitized API URL:', API_URL);
+
 const api = axios.create({
     baseURL: API_URL,
     headers: {
