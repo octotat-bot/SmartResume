@@ -20,10 +20,14 @@ const AnalyticsPage = () => {
 
     const loadAnalytics = async () => {
         try {
-            const [resumeData, jobData] = await Promise.all([
-                resumeService.getResumeStats(),
-                jobService.getJobStats()
-            ]);
+            const resumeData = await resumeService.getResumeStats();
+
+            let jobData = { total: 0, byStatus: {} };
+            try {
+                jobData = await jobService.getJobStats();
+            } catch (jobError) {
+                console.log('Job stats not available');
+            }
 
             const totalApps = jobData.total || 0;
             const offers = jobData.byStatus?.Offer || 0;

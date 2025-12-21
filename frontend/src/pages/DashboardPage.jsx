@@ -16,14 +16,24 @@ const DashboardPage = () => {
 
     const loadDashboardData = async () => {
         try {
-            const [resumeData, jobData] = await Promise.all([
-                resumeService.getResumeStats(),
-                jobService.getJobStats()
-            ]);
+            // Load resume stats
+            const resumeData = await resumeService.getResumeStats();
             setStats(resumeData);
-            setJobStats(jobData);
+
+            // Try to load job stats, but don't fail if endpoint doesn't exist
+            try {
+                const jobData = await jobService.getJobStats();
+                setJobStats(jobData);
+            } catch (jobError) {
+                console.log('Job stats not available, using default values');
+                // Set default empty job stats
+                setJobStats({ total: 0, byStatus: {} });
+            }
         } catch (error) {
             console.error('Failed to load dashboard:', error);
+            // Set default values on error
+            setStats({ total: 0, active: 0, recent: [] });
+            setJobStats({ total: 0, byStatus: {} });
         } finally {
             setLoading(false);
         }

@@ -28,13 +28,19 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const [resumeData, jobData] = await Promise.all([
-                    resumeService.getResumeStats(),
-                    jobService.getJobStats()
-                ]);
+                const resumeData = await resumeService.getResumeStats();
+
+                let jobTotal = 0;
+                try {
+                    const jobData = await jobService.getJobStats();
+                    jobTotal = jobData.total || 0;
+                } catch (jobError) {
+                    console.log('Job stats not available');
+                }
+
                 setStats({
                     resumes: resumeData.total || 0,
-                    applications: jobData.total || 0,
+                    applications: jobTotal,
                     activeResumes: resumeData.active || 0,
                     recentResumes: resumeData.recent || []
                 });
