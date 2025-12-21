@@ -15,7 +15,7 @@ import applicationRoutes from './routes/applicationRoutes.js';
 const app = express();
 
 // Middleware
-const allowedOrigin = (process.env.FRONTEND_URL || 'https://smartresume-rouge.vercel.app').replace(/\/$/, '');
+const allowedOrigin = (process.env.FRONTEND_URL || 'https://smartresume-rouge.vercel.app').trim().replace(/\/+$/, '');
 console.log('Configured CORS Origin:', allowedOrigin);
 
 app.use(cors({

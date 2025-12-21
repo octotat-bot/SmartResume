@@ -2,13 +2,14 @@ import axios from 'axios';
 
 let API_URL = import.meta.env.VITE_API_URL || 'https://smart-resume-backend-five.vercel.app/api';
 
-// Remove trailing slash if present
-API_URL = API_URL.replace(/\/$/, '');
+// 1. Trim whitespace
+API_URL = API_URL.trim();
 
-// Fix common misconfiguration where user pastes the health endpoint
-if (API_URL.endsWith('/health')) {
-    API_URL = API_URL.replace(/\/health$/, '');
-}
+// 2. Remove /health suffix if present, handling trailing slashes
+API_URL = API_URL.replace(/\/health\/*$/, '');
+
+// 3. Remove all trailing slashes to ensure base path is clean
+API_URL = API_URL.replace(/\/+$/, '');
 
 console.log('Sanitized API URL:', API_URL);
 
