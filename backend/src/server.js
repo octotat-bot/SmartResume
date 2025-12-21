@@ -16,7 +16,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'https://smartresume-rouge.vercel.app',
+    origin: process.env.FRONTEND_URL || 'https://smartresume-rouge.vercel.app',
     credentials: true
 }));
 app.use(express.json());
