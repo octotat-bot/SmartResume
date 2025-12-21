@@ -29,6 +29,20 @@ app.use('/api/versions', versionRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/applications', applicationRoutes);
 
+// Root route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'SmartResume API',
+        version: '1.0.0',
+        endpoints: {
+            health: '/api/health',
+            auth: '/api/auth',
+            resumes: '/api/resumes',
+            applications: '/api/applications'
+        }
+    });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'SmartResume API is running' });
