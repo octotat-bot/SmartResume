@@ -14,12 +14,41 @@ import applicationRoutes from './routes/applicationRoutes.js';
 
 const app = express();
 
-// Middleware
-const allowedOrigin = (process.env.FRONTEND_URL || 'https://smartresume-rouge.vercel.app').trim().replace(/\/+$/, '');
-console.log('Configured CORS Origin:', allowedOrigin);
+// Middleware - CORS Configuration
+const allowedOrigins = [
+    'https://smartresume-rouge.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+];
+
+// Add custom frontend URL if provided
+if (process.env.FRONTEND_URL) {
+    const customOrigin = process.env.FRONTEND_URL.trim().replace(/\/+$/, '');
+    if (!allowedOrigins.includes(customOrigin)) {
+        allowedOrigins.push(customOrigin);
+    }
+}
+
+console.log('Configured CORS Origins:', allowedOrigins);
 
 app.use(cors({
-    origin: allowedOrigin,
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        // Check if origin is in allowed list
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        // Allow all Vercel preview deployments for smartresume
+        if (origin.match(/^https:\/\/smartresume-[a-z0-9]+-octotat-bots?-projects\.vercel\.app$/)) {
+            return callback(null, true);
+        }
+
+        // Reject other origins
+        callback(new Error('Not allowed by CORS'));
+    },
     credentials: true
 }));
 app.use(express.json());
