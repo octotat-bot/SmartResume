@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -18,6 +18,23 @@ import NotFoundPage from './pages/NotFoundPage';
 
 // AI Components
 import AIChatAssistant from './components/AIChatAssistant';
+
+// Component to conditionally render AI Chat
+const ConditionalAIChat = () => {
+  const location = useLocation();
+
+  // Hide AI chat on resume workspace pages (they have AI Features Panel)
+  const hideOnPaths = ['/resumes/new', '/workspace'];
+  const isResumeWorkspace = hideOnPaths.some(path => location.pathname.startsWith(path)) ||
+    location.pathname.match(/^\/resumes\/[^/]+$/) ||
+    location.pathname.match(/^\/workspace\/[^/]+$/);
+
+  if (isResumeWorkspace) {
+    return null;
+  }
+
+  return <AIChatAssistant />;
+};
 
 function App() {
   return (
@@ -130,8 +147,8 @@ function App() {
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
 
-        {/* Global AI Chat Assistant - appears on all pages */}
-        <AIChatAssistant />
+        {/* Conditional AI Chat Assistant - hidden on resume workspace */}
+        <ConditionalAIChat />
       </Router>
     </AuthProvider>
   );
