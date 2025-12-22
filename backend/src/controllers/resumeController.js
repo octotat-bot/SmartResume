@@ -213,3 +213,48 @@ export const getResumeStats = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// DUPLICATE - Duplicate an existing resume
+export const duplicateResume = async (req, res) => {
+    try {
+        const originalResume = await Resume.findOne({
+            _id: req.params.id,
+            userId: req.user._id
+        });
+
+        if (!originalResume) {
+            return res.status(404).json({ message: 'Resume not found' });
+        }
+
+        // Create a copy of the resume
+        const resumeData = originalResume.toObject();
+        delete resumeData._id;
+        delete resumeData.__v;
+        delete resumeData.createdAt;
+        delete resumeData.updatedAt;
+        delete resumeData.lastModified;
+
+        // Update title to indicate it's a copy
+        resumeData.title = `${resumeData.title} (Copy)`;
+
+        // Create the new resume
+        const newResume = await Resume.create({
+            ...resumeData,
+            userId: req.user._id
+        });
+
+        // Create initial version for the duplicated resume
+        await Version.create({
+            resumeId: newResume._id,
+            versionNumber: 1,
+            title: 'Initial Version (Duplicated)',
+            snapshot: newResume.toObject(),
+            createdBy: req.user._id
+        });
+
+        res.status(201).json(newResume);
+    } catch (error) {
+        console.error('Duplicate resume error:', error);
+        res.status(500).json({ message: error.message });
+    }
+};

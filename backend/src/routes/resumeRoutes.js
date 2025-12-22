@@ -5,7 +5,8 @@ import {
     getResumeById,
     updateResume,
     deleteResume,
-    getResumeStats
+    getResumeStats,
+    duplicateResume
 } from '../controllers/resumeController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -18,6 +19,8 @@ router.route('/')
     .post(createResume);
 
 router.get('/stats', getResumeStats);
+
+router.post('/:id/duplicate', duplicateResume);
 
 router.route('/:id')
     .get(getResumeById)
