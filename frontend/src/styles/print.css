@@ -1,0 +1,340 @@
+/* Print Optimization for Resume Templates */
+
+@media print {
+
+    /* Page Setup */
+    @page {
+        size: A4;
+        margin: 0.5in;
+    }
+
+    /* Global Print Styles */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Hide Non-Printable Elements */
+    .no-print,
+    button,
+    nav,
+    header:not(.resume-header),
+    footer:not(.resume-footer),
+    .sidebar,
+    .toolbar,
+    .modal,
+    .popup,
+    .tooltip,
+    input[type="button"],
+    input[type="submit"],
+    .print-hide {
+        display: none !important;
+    }
+
+    /* Body and Container */
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Resume Container */
+    .resume-container,
+    .resume-preview,
+    .template-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        page-break-after: auto;
+    }
+
+    /* Page Breaks */
+    .page-break {
+        page-break-after: always;
+    }
+
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+
+    section,
+    .resume-section {
+        page-break-inside: avoid;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Typography */
+    body,
+    p,
+    span,
+    div {
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    h1 {
+        font-size: 20pt !important;
+    }
+
+    h2 {
+        font-size: 16pt !important;
+    }
+
+    h3 {
+        font-size: 14pt !important;
+    }
+
+    /* Links */
+    a {
+        text-decoration: none !important;
+        color: #000 !important;
+    }
+
+    a[href]:after {
+        content: "" !important;
+    }
+
+    /* Colors - Optimize for B&W printing */
+    .text-white,
+    .text-gray-100,
+    .text-gray-200 {
+        color: #000 !important;
+    }
+
+    .bg-black,
+    .bg-gray-900,
+    .bg-gray-800 {
+        background: #fff !important;
+    }
+
+    /* Borders */
+    .border,
+    .border-t,
+    .border-b,
+    .border-l,
+    .border-r {
+        border-color: #000 !important;
+    }
+
+    /* Shadows */
+    .shadow,
+    .shadow-sm,
+    .shadow-md,
+    .shadow-lg,
+    .shadow-xl {
+        box-shadow: none !important;
+    }
+
+    /* Gradients - Convert to solid colors */
+    .bg-gradient-to-r,
+    .bg-gradient-to-l,
+    .bg-gradient-to-t,
+    .bg-gradient-to-b,
+    .bg-gradient-to-br,
+    .bg-gradient-to-bl {
+        background: #fff !important;
+    }
+
+    /* Spacing Optimization */
+    .p-6,
+    .p-8,
+    .p-10 {
+        padding: 0.5rem !important;
+    }
+
+    .m-6,
+    .m-8,
+    .m-10 {
+        margin: 0.5rem !important;
+    }
+
+    /* Grid and Flex */
+    .grid {
+        display: block !important;
+    }
+
+    .flex {
+        display: block !important;
+    }
+
+    /* Images */
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    /* Tables */
+    table {
+        page-break-inside: avoid;
+        border-collapse: collapse;
+    }
+
+    /* Lists */
+    ul,
+    ol {
+        page-break-inside: avoid;
+    }
+
+    /* Template-Specific Optimizations */
+
+    /* Modern Template */
+    .modern-template {
+        background: white !important;
+    }
+
+    /* Creative Template */
+    .creative-template .gradient-bg {
+        background: white !important;
+    }
+
+    /* Technical Template */
+    .technical-template .code-block {
+        border: 1px solid #000 !important;
+        background: #f5f5f5 !important;
+    }
+
+    /* Compact Template */
+    .compact-template {
+        font-size: 10pt !important;
+    }
+
+    /* Professional Template */
+    .professional-template .header {
+        border-bottom: 2px solid #000 !important;
+    }
+
+    /* Timeline Template */
+    .timeline-template .timeline-line {
+        border-left: 2px solid #000 !important;
+    }
+
+    /* Bold Template */
+    .bold-template h1,
+    .bold-template h2 {
+        font-weight: bold !important;
+    }
+
+    /* Elegant Template */
+    .elegant-template {
+        font-family: 'Georgia', serif !important;
+    }
+
+    /* Minimalist Template */
+    .minimalist-template {
+        padding: 0.25in !important;
+    }
+
+    /* Standard Template */
+    .standard-template {
+        max-width: 100% !important;
+    }
+
+    /* Contact Information */
+    .contact-info {
+        page-break-inside: avoid;
+    }
+
+    /* Skills Section */
+    .skills-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Experience Items */
+    .experience-item,
+    .education-item,
+    .project-item {
+        page-break-inside: avoid;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Bullet Points */
+    ul li {
+        margin-bottom: 0.25rem !important;
+    }
+
+    /* Date Ranges */
+    .date-range {
+        font-style: italic !important;
+        color: #666 !important;
+    }
+
+    /* Section Titles */
+    .section-title {
+        border-bottom: 1px solid #000 !important;
+        padding-bottom: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+        font-weight: bold !important;
+    }
+
+    /* Ensure proper spacing */
+    .resume-section+.resume-section {
+        margin-top: 1rem !important;
+    }
+
+    /* QR Codes and Icons */
+    .qr-code,
+    .social-icon {
+        display: none !important;
+    }
+
+    /* Optimize for single page if possible */
+    @media print and (max-height: 11in) {
+        body {
+            font-size: 10pt !important;
+        }
+
+        .resume-section {
+            margin-bottom: 0.5rem !important;
+        }
+    }
+
+    /* Two-column layout optimization */
+    .two-column {
+        column-count: 2;
+        column-gap: 1rem;
+    }
+
+    .two-column>* {
+        break-inside: avoid;
+    }
+}
+
+/* Print Button Styles (visible on screen, hidden in print) */
+@media screen {
+    .print-button {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        padding: 1rem 2rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+}
