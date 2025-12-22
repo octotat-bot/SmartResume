@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { resumeService } from '../services/api';
-import { Plus, Trash2, ArrowLeft, ChevronRight, Layout, User, Briefcase, GraduationCap, Code, Award, FileText, Download, Share2, Palette, Wand2, RefreshCcw, Save, X, Search, Check, Loader, AlertCircle, Undo, Redo, Linkedin, Github, Terminal, Cpu, BarChart, Globe, History, TrendingUp } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, ChevronRight, Layout, User, Briefcase, GraduationCap, Code, Award, FileText, Download, Share2, Palette, Wand2, RefreshCcw, Save, X, Search, Check, Loader, AlertCircle, Undo, Redo, Linkedin, Github, Terminal, Cpu, BarChart, Globe, History, TrendingUp, BarChart3 } from 'lucide-react';
 import html2pdf from 'html2pdf.js/dist/html2pdf.js';
 import StandardTemplate from '../templates/StandardTemplate';
 import ModernTemplate from '../templates/ModernTemplate';
@@ -17,6 +17,7 @@ import TimelineTemplate from '../templates/TimelineTemplate';
 import VersionHistory from '../components/VersionHistory';
 import ResumeAnalyzer from '../components/ResumeAnalyzer';
 import AIFeaturesPanel from '../components/AIFeaturesPanel';
+import ResumeStats from '../components/ResumeStats';
 
 const ResumeWorkspace = () => {
 
@@ -106,6 +107,7 @@ const ResumeWorkspace = () => {
     const [zoom, setZoom] = useState(1); // 1 = 100%, 0.5 = 50%, 1.5 = 150%
     const [showAnalyzer, setShowAnalyzer] = useState(false);
     const [showAIPanel, setShowAIPanel] = useState(false);
+    const [showStats, setShowStats] = useState(false);
 
     useEffect(() => {
         if (id && id !== 'new') {
@@ -384,6 +386,13 @@ const ResumeWorkspace = () => {
                     >
                         <Wand2 className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
                         <span className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                    </button>
+                    <button
+                        onClick={() => setShowStats(true)}
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-yellow-500/20 rounded-xl transition-all duration-200"
+                        title="Resume Statistics"
+                    >
+                        <BarChart3 className="w-4 h-4 text-orange-400 group-hover:text-orange-300 transition-colors" />
                     </button>
                 </div>
 
@@ -1757,6 +1766,14 @@ const ResumeWorkspace = () => {
                         />
                     </div>
                 </div>
+            )}
+
+            {/* Resume Statistics Modal */}
+            {showStats && resume && (
+                <ResumeStats
+                    resume={resume}
+                    onClose={() => setShowStats(false)}
+                />
             )}
         </div>
     );
