@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { resumeService } from '../services/api';
-import { FileText, Plus, Trash2, Edit, Clock, Download, Star, Search, Filter, SortAsc } from 'lucide-react';
+import { FileText, Plus, Trash2, Edit, Clock, Download, Star, Search, Filter, SortAsc, Copy } from 'lucide-react';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 const ResumesPage = () => {
+    const navigate = useNavigate();
     const [resumes, setResumes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +15,7 @@ const ResumesPage = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, resumeId: null, resumeTitle: '' });
+    const [duplicating, setDuplicating] = useState(null);
 
     useEffect(() => {
         loadResumes();
@@ -50,6 +52,22 @@ const ResumesPage = () => {
         } catch (error) {
             console.error('Failed to delete resume:', error);
             setDeleteDialog({ isOpen: false, resumeId: null, resumeTitle: '' });
+        }
+    };
+
+    const handleDuplicate = async (resumeId, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        try {
+            setDuplicating(resumeId);
+            const duplicatedResume = await resumeService.duplicateResume(resumeId);
+
+            // Navigate to the duplicated resume
+            navigate(`/resumes/${duplicatedResume._id}`);
+        } catch (error) {
+            console.error('Failed to duplicate resume:', error);
+            setDuplicating(null);
         }
     };
 
@@ -153,7 +171,15 @@ const ResumesPage = () => {
                                 <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] flex items-center justify-center text-gray-500 group-hover:text-white group-hover:bg-[#222] border border-[#222] group-hover:border-[#333] transition-all">
                                     <FileText className="w-6 h-6" />
                                 </div>
-                                <div className="relative z-20">
+                                <div className="relative z-20 flex gap-1">
+                                    <button
+                                        onClick={(e) => handleDuplicate(resume._id, e)}
+                                        disabled={duplicating === resume._id}
+                                        className="p-2 text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                                        title="Duplicate"
+                                    >
+                                        <Copy className="w-4 h-4" />
+                                    </button>
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();

@@ -23,6 +23,12 @@ export const resumeService = {
         return data;
     },
 
+    // DUPLICATE
+    duplicateResume: async (id) => {
+        const { data } = await api.post(`/resumes/${id}/duplicate`);
+        return data;
+    },
+
     // UPDATE
     updateResume: async (id, resumeData) => {
         const { data } = await api.put(`/resumes/${id}`, resumeData);
