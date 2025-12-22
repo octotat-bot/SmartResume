@@ -343,23 +343,24 @@ const ResumeWorkspace = () => {
                     </div>
                 </div>
 
+
                 {/* Center Section - Tools */}
                 <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10">
                     <button
                         onClick={handleUndo}
                         disabled={undoStack.length === 0}
-                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent hover:scale-110 active:scale-95"
                         title="Undo (Ctrl+Z)"
                     >
-                        <Undo className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
+                        <Undo className="w-4 h-4 text-gray-300 group-hover:text-white transition-all group-hover:-rotate-12" />
                     </button>
                     <button
                         onClick={handleRedo}
                         disabled={redoStack.length === 0}
-                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent hover:scale-110 active:scale-95"
                         title="Redo (Ctrl+Y)"
                     >
-                        <Redo className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
+                        <Redo className="w-4 h-4 text-gray-300 group-hover:text-white transition-all group-hover:rotate-12" />
                     </button>
 
                     <div className="w-px h-6 bg-white/10 mx-1"></div>
@@ -367,32 +368,32 @@ const ResumeWorkspace = () => {
                     <button
                         onClick={() => setShowVersionHistory(true)}
                         disabled={id === 'new'}
-                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="group p-2.5 hover:bg-blue-500/20 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent hover:scale-110 active:scale-95"
                         title="Version History"
                     >
-                        <History className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
+                        <History className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-all group-hover:rotate-12" />
                     </button>
                     <button
                         onClick={() => setShowAnalyzer(true)}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-500/20 rounded-xl transition-all duration-200"
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-500/20 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-green-500/20"
                         title="Analyze Resume"
                     >
-                        <TrendingUp className="w-4 h-4 text-green-400 group-hover:text-green-300 transition-colors" />
+                        <TrendingUp className="w-4 h-4 text-green-400 group-hover:text-green-300 transition-all group-hover:translate-y-[-2px]" />
                     </button>
                     <button
                         onClick={() => setShowAIPanel(true)}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 rounded-xl transition-all duration-200 relative"
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 rounded-xl transition-all duration-200 relative hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-purple-500/20"
                         title="AI Assistant"
                     >
-                        <Wand2 className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                        <Wand2 className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-all group-hover:rotate-12" />
                         <span className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
                     </button>
                     <button
                         onClick={() => setShowStats(true)}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-yellow-500/20 rounded-xl transition-all duration-200"
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-yellow-500/20 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-orange-500/20"
                         title="Resume Statistics"
                     >
-                        <BarChart3 className="w-4 h-4 text-orange-400 group-hover:text-orange-300 transition-colors" />
+                        <BarChart3 className="w-4 h-4 text-orange-400 group-hover:text-orange-300 transition-all group-hover:scale-110" />
                     </button>
                 </div>
 
@@ -501,23 +502,12 @@ const ResumeWorkspace = () => {
                                         />
                                     </div>
 
-                                    <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Professional Summary</label>
-                                        <textarea
-                                            value={resume.personalInfo?.summary || ''}
-                                            onChange={(e) => setResume({
-                                                ...resume,
-                                                personalInfo: { ...resume.personalInfo, summary: e.target.value }
-                                            })}
-                                            rows={4}
-                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
-                                            placeholder="Brief professional summary..."
-                                        />
-                                    </div>
-
                                     {/* Tags */}
                                     <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Tags</label>
+                                        <label className="block text-sm font-medium mb-2 text-gray-300">
+                                            Tags
+                                            <span className="text-xs text-gray-500 ml-2">(Organize your resumes)</span>
+                                        </label>
                                         <div className="space-y-2">
                                             <div className="flex gap-2">
                                                 <input
@@ -582,6 +572,20 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             )}
                                         </div>
+                                    </div>
+
+                                    <div className="col-span-2">
+                                        <label className="block text-sm font-medium mb-2 text-gray-300">Professional Summary</label>
+                                        <textarea
+                                            value={resume.personalInfo?.summary || ''}
+                                            onChange={(e) => setResume({
+                                                ...resume,
+                                                personalInfo: { ...resume.personalInfo, summary: e.target.value }
+                                            })}
+                                            rows={4}
+                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
+                                            placeholder="Brief professional summary..."
+                                        />
                                     </div>
                                 </div>
                             </div>

@@ -215,17 +215,17 @@ const ApplicationTracker = () => {
 
                 {/* Kanban Board */}
                 {view === 'kanban' && (
-                    <div className="grid grid-cols-8 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 overflow-x-auto">
                         {statuses.map(status => {
                             const statusApps = applications.filter(app => app.status === status.value);
                             return (
-                                <div key={status.value} className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-4">
+                                <div key={status.value} className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-4 min-w-[180px]">
                                     <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-2xl">{status.icon}</span>
-                                            <h3 className="font-semibold">{status.label}</h3>
+                                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                                            <span className="text-2xl flex-shrink-0">{status.icon}</span>
+                                            <h3 className="font-semibold text-sm truncate">{status.label}</h3>
                                         </div>
-                                        <span className="text-sm text-gray-400">{statusApps.length}</span>
+                                        <span className="text-sm text-gray-400 flex-shrink-0 ml-2">{statusApps.length}</span>
                                     </div>
                                     <div className="space-y-3">
                                         {statusApps.map(app => (
