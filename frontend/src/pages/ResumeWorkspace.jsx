@@ -305,85 +305,102 @@ const ResumeWorkspace = () => {
     };
 
     return (
-        <div className="h-screen bg-[#0a0a0a] flex flex-col">
-            {/* Top Toolbar */}
-            <div className="h-16 bg-[#111111] border-b border-[#1a1a1a] px-6 flex items-center justify-between flex-shrink-0">
-                {/* Left */}
-                <div className="flex items-center gap-4">
+        <div className="h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex flex-col">
+            {/* Top Toolbar - Modern Design */}
+            <div className="h-20 bg-gradient-to-r from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl border-b border-white/10 px-8 flex items-center justify-between flex-shrink-0 shadow-2xl">
+                {/* Left Section */}
+                <div className="flex items-center gap-6">
                     <button
                         onClick={() => navigate('/resumes')}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 rounded-xl transition-all duration-300 hover:scale-110"
+                        title="Back to Resumes"
                     >
-                        <ArrowLeft className="w-5 h-5 text-white" />
+                        <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors" />
                     </button>
-                    <input
-                        type="text"
-                        value={resume.title}
-                        onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                        className="text-lg font-semibold bg-transparent border-none focus:outline-none text-white w-64"
-                        placeholder="Resume Title"
-                    />
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                        {statusIcons[autoSaveStatus]}
-                        <span>{statusText[autoSaveStatus]}</span>
+
+                    <div className="flex flex-col">
+                        <input
+                            type="text"
+                            value={resume.title}
+                            onChange={(e) => setResume({ ...resume, title: e.target.value })}
+                            className="text-xl font-bold bg-transparent border-none focus:outline-none text-white w-80 placeholder-gray-500"
+                            placeholder="Untitled Resume"
+                        />
+                        <div className="flex items-center gap-2 mt-1">
+                            <div className={`flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full ${autoSaveStatus === 'saved' ? 'bg-emerald-500/20 text-emerald-400' :
+                                    autoSaveStatus === 'saving' ? 'bg-blue-500/20 text-blue-400' :
+                                        'bg-red-500/20 text-red-400'
+                                }`}>
+                                {statusIcons[autoSaveStatus]}
+                                <span>{statusText[autoSaveStatus]}</span>
+                            </div>
+                            {autoSaveStatus === 'saved' && (
+                                <span className="text-xs text-gray-500">Last saved {new Date().toLocaleTimeString()}</span>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Center */}
-                <div className="flex items-center gap-2">
+                {/* Center Section - Tools */}
+                <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10">
                     <button
                         onClick={handleUndo}
                         disabled={undoStack.length === 0}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors disabled:opacity-30"
+                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent"
                         title="Undo (Ctrl+Z)"
                     >
-                        <Undo className="w-4 h-4 text-white" />
+                        <Undo className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
                     </button>
                     <button
                         onClick={handleRedo}
                         disabled={redoStack.length === 0}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors disabled:opacity-30"
+                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent"
                         title="Redo (Ctrl+Y)"
                     >
-                        <Redo className="w-4 h-4 text-white" />
+                        <Redo className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
                     </button>
+
+                    <div className="w-px h-6 bg-white/10 mx-1"></div>
+
                     <button
                         onClick={() => setShowVersionHistory(true)}
                         disabled={id === 'new'}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors disabled:opacity-30"
+                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent"
                         title="Version History"
                     >
-                        <History className="w-4 h-4 text-white" />
+                        <History className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
                     </button>
                     <button
                         onClick={() => setShowAnalyzer(true)}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-500/20 rounded-xl transition-all duration-200"
                         title="Analyze Resume"
                     >
-                        <TrendingUp className="w-4 h-4 text-white" />
+                        <TrendingUp className="w-4 h-4 text-green-400 group-hover:text-green-300 transition-colors" />
                     </button>
                     <button
                         onClick={() => setShowAIPanel(true)}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        className="group p-2.5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 rounded-xl transition-all duration-200 relative"
                         title="AI Assistant"
                     >
-                        <Wand2 className="w-4 h-4 text-purple-400" />
+                        <Wand2 className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
                     </button>
                 </div>
 
-                {/* Right */}
+                {/* Right Section */}
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleDownload}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        className="group px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 flex items-center gap-2 hover:scale-105"
                         title="Export PDF"
                     >
-                        <Download className="w-4 h-4 text-white" />
+                        <Download className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
+                        <span className="text-sm font-medium text-gray-300 group-hover:text-white">Export</span>
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 flex items-center gap-2"
+                        className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                     >
                         <Save className="w-4 h-4" />
                         {saving ? 'Saving...' : 'Save'}
