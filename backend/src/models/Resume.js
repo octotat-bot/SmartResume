@@ -62,7 +62,9 @@ const resumeSchema = new mongoose.Schema({
         name: String,
         description: String,
         technologies: [String],
-        link: String,
+        link: String, // Legacy field
+        codeUrl: String, // GitHub/code repository link
+        hostedUrl: String, // Live demo/hosted project link
         startDate: String,
         endDate: String,
         highlights: [String]

@@ -74,7 +74,6 @@ const TechnicalTemplate = ({ resume }) => {
                     </div>
                 )}
 
-                {/* Projects */}
                 {resume.projects && resume.projects.length > 0 && (
                     <div className="mb-4">
                         <h2 className="text-sm font-bold text-green-600 mb-2">PROJECTS</h2>
@@ -82,7 +81,26 @@ const TechnicalTemplate = ({ resume }) => {
                             {resume.projects.map((project, index) => (
                                 <div key={index} className="bg-gray-50 p-3 rounded border border-gray-300">
                                     <h3 className="font-bold text-gray-900 mb-1 text-sm">{project.name}</h3>
-                                    <p className="text-xs text-gray-700">{project.description}</p>
+                                    <p className="text-xs text-gray-700 mb-2">{project.description}</p>
+                                    {(project.codeUrl || project.hostedUrl || project.link) && (
+                                        <div className="flex gap-3 text-xs">
+                                            {project.codeUrl && (
+                                                <a href={project.codeUrl} className="text-blue-600 hover:underline flex items-center gap-1">
+                                                    <span>🔗</span> Code
+                                                </a>
+                                            )}
+                                            {project.hostedUrl && (
+                                                <a href={project.hostedUrl} className="text-green-600 hover:underline flex items-center gap-1">
+                                                    <span>🌐</span> Live Demo
+                                                </a>
+                                            )}
+                                            {!project.codeUrl && !project.hostedUrl && project.link && (
+                                                <a href={project.link} className="text-blue-600 hover:underline flex items-center gap-1">
+                                                    <span>🔗</span> Link
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

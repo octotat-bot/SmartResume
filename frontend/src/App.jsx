@@ -16,6 +16,9 @@ import ProfilePage from './pages/ProfilePage';
 import ApplicationTracker from './pages/ApplicationTracker';
 import NotFoundPage from './pages/NotFoundPage';
 
+// AI Components
+import AIChatAssistant from './components/AIChatAssistant';
+
 function App() {
   return (
     <AuthProvider>
@@ -126,6 +129,9 @@ function App() {
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
+
+        {/* Global AI Chat Assistant - appears on all pages */}
+        <AIChatAssistant />
       </Router>
     </AuthProvider>
   );

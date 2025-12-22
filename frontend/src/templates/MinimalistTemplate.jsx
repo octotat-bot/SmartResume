@@ -90,6 +90,25 @@ const MinimalistTemplate = ({ resume }) => {
                             <div key={index} className="text-center">
                                 <h3 className="text-base font-medium text-gray-900">{project.name}</h3>
                                 <p className="text-sm text-gray-700 leading-relaxed mt-2">{project.description}</p>
+                                {(project.codeUrl || project.hostedUrl || project.link) && (
+                                    <div className="flex gap-4 justify-center text-xs mt-2">
+                                        {project.codeUrl && (
+                                            <a href={project.codeUrl} className="text-blue-600 hover:underline">
+                                                Code
+                                            </a>
+                                        )}
+                                        {project.hostedUrl && (
+                                            <a href={project.hostedUrl} className="text-green-600 hover:underline">
+                                                Live Demo
+                                            </a>
+                                        )}
+                                        {!project.codeUrl && !project.hostedUrl && project.link && (
+                                            <a href={project.link} className="text-blue-600 hover:underline">
+                                                Link
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

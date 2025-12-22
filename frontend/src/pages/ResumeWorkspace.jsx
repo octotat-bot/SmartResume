@@ -16,6 +16,7 @@ import BoldTemplate from '../templates/BoldTemplate';
 import TimelineTemplate from '../templates/TimelineTemplate';
 import VersionHistory from '../components/VersionHistory';
 import ResumeAnalyzer from '../components/ResumeAnalyzer';
+import AIFeaturesPanel from '../components/AIFeaturesPanel';
 
 const ResumeWorkspace = () => {
 
@@ -104,6 +105,7 @@ const ResumeWorkspace = () => {
     const [showVersionHistory, setShowVersionHistory] = useState(false);
     const [zoom, setZoom] = useState(1); // 1 = 100%, 0.5 = 50%, 1.5 = 150%
     const [showAnalyzer, setShowAnalyzer] = useState(false);
+    const [showAIPanel, setShowAIPanel] = useState(false);
 
     useEffect(() => {
         if (id && id !== 'new') {
@@ -359,6 +361,13 @@ const ResumeWorkspace = () => {
                         title="Analyze Resume"
                     >
                         <TrendingUp className="w-4 h-4 text-white" />
+                    </button>
+                    <button
+                        onClick={() => setShowAIPanel(true)}
+                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        title="AI Assistant"
+                    >
+                        <Wand2 className="w-4 h-4 text-purple-400" />
                     </button>
                 </div>
 
@@ -1695,6 +1704,39 @@ const ResumeWorkspace = () => {
                         <ResumeAnalyzer
                             resume={resume}
                             onClose={() => setShowAnalyzer(false)}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* AI Features Panel Modal */}
+            {showAIPanel && resume && id && id !== 'new' && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
+                    <div className="bg-[#0a0a0a] rounded-2xl border border-[#1a1a1a] max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold text-white">AI Assistant</h2>
+                            <button
+                                onClick={() => setShowAIPanel(false)}
+                                className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                            >
+                                <X className="w-5 h-5 text-white" />
+                            </button>
+                        </div>
+                        <AIFeaturesPanel
+                            resumeId={id}
+                            resumeData={resume}
+                            onUpdate={(field, value) => {
+                                // Handle AI-generated content updates
+                                if (field === 'summary') {
+                                    setResume({
+                                        ...resume,
+                                        personalInfo: {
+                                            ...resume.personalInfo,
+                                            summary: value
+                                        }
+                                    });
+                                }
+                            }}
                         />
                     </div>
                 </div>

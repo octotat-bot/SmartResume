@@ -103,7 +103,26 @@ const BoldTemplate = ({ resume }) => {
                             {resume.projects.map((project, index) => (
                                 <div key={index} className="border-l-4 border-gray-400 pl-4">
                                     <h3 className="text-base font-black text-gray-900">{project.name}</h3>
-                                    <p className="text-sm text-gray-700 leading-relaxed">{project.description}</p>
+                                    <p className="text-sm text-gray-700 leading-relaxed mb-2">{project.description}</p>
+                                    {(project.codeUrl || project.hostedUrl || project.link) && (
+                                        <div className="flex gap-3 text-xs font-bold">
+                                            {project.codeUrl && (
+                                                <a href={project.codeUrl} className="text-blue-600 hover:underline">
+                                                    CODE →
+                                                </a>
+                                            )}
+                                            {project.hostedUrl && (
+                                                <a href={project.hostedUrl} className="text-green-600 hover:underline">
+                                                    LIVE →
+                                                </a>
+                                            )}
+                                            {!project.codeUrl && !project.hostedUrl && project.link && (
+                                                <a href={project.link} className="text-blue-600 hover:underline">
+                                                    LINK →
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

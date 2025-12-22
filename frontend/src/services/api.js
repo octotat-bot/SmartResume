@@ -128,33 +128,68 @@ export const jobService = {
 };
 
 export const aiService = {
-    enhanceBulletPoint: async (bulletPoint) => {
-        const { data } = await api.post('/ai/enhance-bullet', { bulletPoint });
+    // Check AI service status
+    getStatus: async () => {
+        const { data } = await api.get('/ai/status');
         return data;
     },
 
-    generateSummary: async (resumeData) => {
-        const { data } = await api.post('/ai/generate-summary', { resumeData });
+    // Enhance a bullet point
+    enhanceBulletPoint: async (bulletPoint, context = {}) => {
+        const { data } = await api.post('/ai/enhance-bullet', { bulletPoint, context });
         return data;
     },
 
-    suggestSkills: async (jobDescription) => {
-        const { data } = await api.post('/ai/suggest-skills', { jobDescription });
+    // Generate professional summary
+    generateSummary: async (resumeId) => {
+        const { data } = await api.post('/ai/generate-summary', { resumeId });
         return data;
     },
 
-    analyzeATS: async (resumeText, jobDescription) => {
-        const { data } = await api.post('/ai/analyze-ats', { resumeText, jobDescription });
+    // Analyze resume for ATS compatibility
+    analyzeATS: async (resumeId, jobDescription = '') => {
+        const { data } = await api.post('/ai/analyze-ats', { resumeId, jobDescription });
         return data;
     },
 
-    optimizeForRole: async (resumeData, targetRole) => {
-        const { data } = await api.post('/ai/optimize-role', { resumeData, targetRole });
+    // Generate cover letter
+    generateCoverLetter: async (resumeId, applicationId = null, jobData = null, jobDescription = '') => {
+        const { data } = await api.post('/ai/generate-cover-letter', {
+            resumeId,
+            applicationId,
+            jobData,
+            jobDescription
+        });
         return data;
     },
 
-    parseLinkedIn: async (linkedinText) => {
-        const { data } = await api.post('/ai/parse-linkedin', { linkedinText });
+    // Parse job posting from text or URL
+    parseJobPosting: async (jobText = '', url = '') => {
+        const { data } = await api.post('/ai/parse-job', { jobText, url });
+        return data;
+    },
+
+    // Generate interview preparation
+    generateInterviewPrep: async (resumeId, applicationId) => {
+        const { data } = await api.post('/ai/interview-prep', { resumeId, applicationId });
+        return data;
+    },
+
+    // AI chat assistant
+    chat: async (message, resumeId = null, conversationHistory = '') => {
+        const { data } = await api.post('/ai/chat', { message, resumeId, conversationHistory });
+        return data;
+    },
+
+    // Suggest skills based on job description
+    suggestSkills: async (jobDescription, resumeId = null) => {
+        const { data } = await api.post('/ai/suggest-skills', { jobDescription, resumeId });
+        return data;
+    },
+
+    // Optimize resume for specific role
+    optimizeResume: async (resumeId, targetRole, jobDescription = '') => {
+        const { data } = await api.post('/ai/optimize-resume', { resumeId, targetRole, jobDescription });
         return data;
     }
 };

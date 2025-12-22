@@ -116,7 +116,26 @@ const CompactTemplate = ({ resume }) => {
                                 {resume.projects.map((project, index) => (
                                     <div key={index}>
                                         <h3 className="font-bold text-gray-900">{project.name}</h3>
-                                        <p className="text-gray-700 leading-tight">{project.description}</p>
+                                        <p className="text-gray-700 leading-tight mb-1">{project.description}</p>
+                                        {(project.codeUrl || project.hostedUrl || project.link) && (
+                                            <div className="flex gap-2 text-xs">
+                                                {project.codeUrl && (
+                                                    <a href={project.codeUrl} className="text-blue-600 hover:underline">
+                                                        Code
+                                                    </a>
+                                                )}
+                                                {project.hostedUrl && (
+                                                    <a href={project.hostedUrl} className="text-green-600 hover:underline">
+                                                        Demo
+                                                    </a>
+                                                )}
+                                                {!project.codeUrl && !project.hostedUrl && project.link && (
+                                                    <a href={project.link} className="text-blue-600 hover:underline">
+                                                        Link
+                                                    </a>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>

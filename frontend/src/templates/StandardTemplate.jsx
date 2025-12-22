@@ -88,6 +88,25 @@ const StandardTemplate = ({ resume }) => {
                         <div key={i} className="mb-3">
                             <div className="font-bold text-xs text-gray-900">{proj.name}</div>
                             {proj.description && <p className="text-xs mt-1 leading-relaxed text-gray-800">{proj.description}</p>}
+                            {(proj.codeUrl || proj.hostedUrl || proj.link) && (
+                                <div className="flex gap-3 text-xs mt-1">
+                                    {proj.codeUrl && (
+                                        <a href={proj.codeUrl} className="text-blue-600 hover:underline">
+                                            Code →
+                                        </a>
+                                    )}
+                                    {proj.hostedUrl && (
+                                        <a href={proj.hostedUrl} className="text-green-600 hover:underline">
+                                            Live Demo →
+                                        </a>
+                                    )}
+                                    {!proj.codeUrl && !proj.hostedUrl && proj.link && (
+                                        <a href={proj.link} className="text-blue-600 hover:underline">
+                                            Link →
+                                        </a>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>

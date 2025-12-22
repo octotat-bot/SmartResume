@@ -57,11 +57,27 @@ const ModernTemplate = ({ resume }) => {
                             <div className="space-y-4">
                                 {resume.projects.map((proj, i) => (
                                     <div key={i}>
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h4 className="font-bold">{proj.name}</h4>
-                                            {proj.codeUrl && <a href={proj.codeUrl} className="text-xs text-blue-600 hover:underline">View Code</a>}
-                                        </div>
-                                        {proj.description && <p className="text-sm leading-relaxed text-gray-600">{proj.description}</p>}
+                                        <h4 className="font-bold mb-1">{proj.name}</h4>
+                                        {proj.description && <p className="text-sm leading-relaxed text-gray-600 mb-2">{proj.description}</p>}
+                                        {(proj.codeUrl || proj.hostedUrl || proj.link) && (
+                                            <div className="flex gap-3 text-xs">
+                                                {proj.codeUrl && (
+                                                    <a href={proj.codeUrl} className="text-blue-600 hover:underline font-medium">
+                                                        Code ↗
+                                                    </a>
+                                                )}
+                                                {proj.hostedUrl && (
+                                                    <a href={proj.hostedUrl} className="text-green-600 hover:underline font-medium">
+                                                        Live Demo ↗
+                                                    </a>
+                                                )}
+                                                {!proj.codeUrl && !proj.hostedUrl && proj.link && (
+                                                    <a href={proj.link} className="text-blue-600 hover:underline font-medium">
+                                                        Link ↗
+                                                    </a>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>

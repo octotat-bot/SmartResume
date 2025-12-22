@@ -18,12 +18,18 @@ An AI-powered resume builder with intelligent features to help you create profes
 - 🔗 **Shareable Links** - Share your resume with a unique URL
 - 🎨 **Custom Themes** - Personalize colors and fonts
 
-### AI-Powered Features
-- 🤖 **Content Suggestions** - AI-powered content recommendations
-- ✍️ **Bullet Point Enhancement** - Improve your experience descriptions
-- 🎯 **ATS Optimization** - Check and optimize for Applicant Tracking Systems
-- 💼 **LinkedIn Import** - Import your LinkedIn profile data
-- 📝 **Cover Letter Generation** - AI-generated cover letters
+
+### AI-Powered Features ✨
+- 💬 **AI Chat Assistant** - Conversational AI for resume and career advice
+- ✍️ **Bullet Point Enhancement** - Transform basic points into impactful achievements
+- 📝 **Professional Summary Generator** - AI-generated compelling summaries
+- 🎯 **ATS Optimization** - Analyze and optimize for Applicant Tracking Systems
+- 📄 **Cover Letter Generation** - Personalized cover letters for each job
+- 🎤 **Interview Preparation** - AI-generated questions and preparation tips
+- 💡 **Skill Suggestions** - Get relevant skill recommendations
+- 🔍 **Job Posting Parser** - Auto-fill applications from job descriptions
+- 🎨 **Resume Optimizer** - Tailor your resume for specific roles
+
 
 ## 🛠️ Tech Stack
 

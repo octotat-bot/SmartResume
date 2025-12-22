@@ -57,7 +57,26 @@ const CreativeTemplate = ({ resume }) => {
                                     {resume.projects.map((project, index) => (
                                         <div key={index}>
                                             <h3 className="font-bold text-gray-900">{project.name}</h3>
-                                            <p className="text-sm text-gray-700">{project.description}</p>
+                                            <p className="text-sm text-gray-700 mb-2">{project.description}</p>
+                                            {(project.codeUrl || project.hostedUrl || project.link) && (
+                                                <div className="flex gap-3 text-xs">
+                                                    {project.codeUrl && (
+                                                        <a href={project.codeUrl} className="text-purple-600 hover:underline font-medium">
+                                                            Code →
+                                                        </a>
+                                                    )}
+                                                    {project.hostedUrl && (
+                                                        <a href={project.hostedUrl} className="text-pink-600 hover:underline font-medium">
+                                                            Live Demo →
+                                                        </a>
+                                                    )}
+                                                    {!project.codeUrl && !project.hostedUrl && project.link && (
+                                                        <a href={project.link} className="text-purple-600 hover:underline font-medium">
+                                                            Link →
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>

@@ -9,6 +9,7 @@ import resumeRoutes from './routes/resumeRoutes.js';
 import versionRoutes from './routes/versionRoutes.js';
 import templateRoutes from './routes/templateRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 
 
@@ -63,6 +64,7 @@ app.use('/api/resumes', resumeRoutes);
 app.use('/api/versions', versionRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -73,7 +75,8 @@ app.get('/', (req, res) => {
             health: '/api/health',
             auth: '/api/auth',
             resumes: '/api/resumes',
-            applications: '/api/applications'
+            applications: '/api/applications',
+            ai: '/api/ai'
         }
     });
 });

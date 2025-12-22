@@ -110,7 +110,26 @@ const TimelineTemplate = ({ resume }) => {
                         {resume.projects.map((project, index) => (
                             <div key={index} className="bg-white p-3 rounded-lg shadow-sm border-l-4 border-purple-500">
                                 <h3 className="text-sm font-bold text-gray-900 mb-1">{project.name}</h3>
-                                <p className="text-xs text-gray-700 leading-relaxed">{project.description}</p>
+                                <p className="text-xs text-gray-700 leading-relaxed mb-2">{project.description}</p>
+                                {(project.codeUrl || project.hostedUrl || project.link) && (
+                                    <div className="flex gap-3 text-xs">
+                                        {project.codeUrl && (
+                                            <a href={project.codeUrl} className="text-purple-600 hover:underline font-medium">
+                                                Code ↗
+                                            </a>
+                                        )}
+                                        {project.hostedUrl && (
+                                            <a href={project.hostedUrl} className="text-green-600 hover:underline font-medium">
+                                                Live Demo ↗
+                                            </a>
+                                        )}
+                                        {!project.codeUrl && !project.hostedUrl && project.link && (
+                                            <a href={project.link} className="text-purple-600 hover:underline font-medium">
+                                                Link ↗
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

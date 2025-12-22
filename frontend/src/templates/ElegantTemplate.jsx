@@ -94,7 +94,26 @@ const ElegantTemplate = ({ resume }) => {
                         {resume.projects.map((project, index) => (
                             <div key={index} className="text-center">
                                 <h3 className="text-base font-semibold text-gray-900">{project.name}</h3>
-                                <p className="text-sm text-gray-700 leading-relaxed mt-1">{project.description}</p>
+                                <p className="text-sm text-gray-700 leading-relaxed mt-1 mb-2">{project.description}</p>
+                                {(project.codeUrl || project.hostedUrl || project.link) && (
+                                    <div className="flex gap-4 justify-center text-xs italic">
+                                        {project.codeUrl && (
+                                            <a href={project.codeUrl} className="text-blue-600 hover:underline">
+                                                View Code
+                                            </a>
+                                        )}
+                                        {project.hostedUrl && (
+                                            <a href={project.hostedUrl} className="text-green-600 hover:underline">
+                                                Live Demo
+                                            </a>
+                                        )}
+                                        {!project.codeUrl && !project.hostedUrl && project.link && (
+                                            <a href={project.link} className="text-blue-600 hover:underline">
+                                                View Project
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
