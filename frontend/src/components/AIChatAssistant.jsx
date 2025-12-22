@@ -4,13 +4,7 @@ import { aiService } from '../services/api';
 
 const AIChatAssistant = ({ resumeId = null }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([
-        {
-            role: 'assistant',
-            content: '👋 Hi! I\'m your AI career assistant. I can help you with:\n\n• Writing better resume content\n• Improving bullet points\n• Tailoring your resume for jobs\n• Career advice\n\nHow can I help you today?',
-            timestamp: new Date()
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [aiAvailable, setAiAvailable] = useState(true);
@@ -21,6 +15,20 @@ const AIChatAssistant = ({ resumeId = null }) => {
     useEffect(() => {
         checkAIStatus();
     }, []);
+
+    // Set welcome message based on AI availability
+    useEffect(() => {
+        if (messages.length === 0) {
+            const welcomeMessage = {
+                role: 'assistant',
+                content: aiAvailable
+                    ? '👋 Hi! I\'m your AI career assistant. I can help you with:\n\n• Writing better resume content\n• Improving bullet points\n• Tailoring your resume for jobs\n• Career advice\n\nHow can I help you today?'
+                    : '⚠️ AI Assistant is currently unavailable.\n\nTo enable AI features:\n1. Configure GEMINI_API_KEY in backend/.env\n2. Restart the backend server\n3. Refresh this page\n\nThe chat will still appear, but won\'t respond until configured.',
+                timestamp: new Date()
+            };
+            setMessages([welcomeMessage]);
+        }
+    }, [aiAvailable]);
 
     const checkAIStatus = async () => {
         try {
@@ -104,10 +112,6 @@ const AIChatAssistant = ({ resumeId = null }) => {
         inputRef.current?.focus();
     };
 
-    if (!aiAvailable) {
-        return null; // Don't show chat if AI is not available
-    }
-
     return (
         <>
             {/* Floating Chat Button */}
@@ -161,8 +165,8 @@ const AIChatAssistant = ({ resumeId = null }) => {
                             >
                                 <div
                                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.role === 'user'
-                                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
-                                            : 'bg-white text-gray-800 border border-gray-200'
+                                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                                        : 'bg-white text-gray-800 border border-gray-200'
                                         }`}
                                 >
                                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
