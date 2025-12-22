@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { resumeService } from '../services/api';
-import { FileText, Plus, Trash2, Edit, Clock, Download, Star, Search, Filter, SortAsc, Copy } from 'lucide-react';
+import { FileText, Plus, Trash2, Edit, Clock, Download, Star, Search, Filter, SortAsc, Copy, Tag, X } from 'lucide-react';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 const ResumesPage = () => {
@@ -16,6 +16,9 @@ const ResumesPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, resumeId: null, resumeTitle: '' });
     const [duplicating, setDuplicating] = useState(null);
+    const [selectedTag, setSelectedTag] = useState(null);
+    const [allTags, setAllTags] = useState([]);
+
 
     useEffect(() => {
         loadResumes();
@@ -203,9 +206,27 @@ const ResumesPage = () => {
                                 <h3 className="text-xl font-bold text-white mb-2 line-clamp-2 leading-tight group-hover:text-blue-400 transition-colors">
                                     {resume.title || 'Untitled Resume'}
                                 </h3>
-                                <p className="text-sm text-gray-400 line-clamp-2">
+                                <p className="text-sm text-gray-400 line-clamp-2 mb-2">
                                     {resume.metadata?.targetRole || 'No role specified'}
                                 </p>
+                                {/* Tags */}
+                                {resume.tags && resume.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mt-2">
+                                        {resume.tags.slice(0, 3).map((tag, idx) => (
+                                            <span
+                                                key={idx}
+                                                className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                        {resume.tags.length > 3 && (
+                                            <span className="px-2 py-0.5 bg-gray-500/20 text-gray-400 text-xs rounded-full">
+                                                +{resume.tags.length - 3}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Footer */}

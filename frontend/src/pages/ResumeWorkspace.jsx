@@ -514,6 +514,75 @@ const ResumeWorkspace = () => {
                                             placeholder="Brief professional summary..."
                                         />
                                     </div>
+
+                                    {/* Tags */}
+                                    <div className="col-span-2">
+                                        <label className="block text-sm font-medium mb-2 text-gray-300">Tags</label>
+                                        <div className="space-y-2">
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={skillInput}
+                                                    onChange={(e) => setSkillInput(e.target.value)}
+                                                    onKeyPress={(e) => {
+                                                        if (e.key === 'Enter' && skillInput.trim()) {
+                                                            e.preventDefault();
+                                                            const newTag = skillInput.trim().toLowerCase();
+                                                            if (!resume.tags?.includes(newTag)) {
+                                                                setResume({
+                                                                    ...resume,
+                                                                    tags: [...(resume.tags || []), newTag]
+                                                                });
+                                                            }
+                                                            setSkillInput('');
+                                                        }
+                                                    }}
+                                                    className="flex-1 px-4 py-2 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    placeholder="Add tags (e.g., frontend, react, senior)..."
+                                                />
+                                                <button
+                                                    onClick={() => {
+                                                        if (skillInput.trim()) {
+                                                            const newTag = skillInput.trim().toLowerCase();
+                                                            if (!resume.tags?.includes(newTag)) {
+                                                                setResume({
+                                                                    ...resume,
+                                                                    tags: [...(resume.tags || []), newTag]
+                                                                });
+                                                            }
+                                                            setSkillInput('');
+                                                        }
+                                                    }}
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                                >
+                                                    Add
+                                                </button>
+                                            </div>
+                                            {resume.tags && resume.tags.length > 0 && (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {resume.tags.map((tag, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm flex items-center gap-2 border border-blue-500/30"
+                                                        >
+                                                            {tag}
+                                                            <button
+                                                                onClick={() => {
+                                                                    setResume({
+                                                                        ...resume,
+                                                                        tags: resume.tags.filter((_, i) => i !== index)
+                                                                    });
+                                                                }}
+                                                                className="hover:text-red-400 transition-colors"
+                                                            >
+                                                                <X className="w-3 h-3" />
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}

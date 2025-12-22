@@ -94,6 +94,11 @@ const resumeSchema = new mongoose.Schema({
         experienceLevel: String,
         layout: { type: String, default: 'standard' }
     },
+    tags: [{
+        type: String,
+        trim: true,
+        lowercase: true
+    }],
     isActive: {
         type: Boolean,
         default: true
