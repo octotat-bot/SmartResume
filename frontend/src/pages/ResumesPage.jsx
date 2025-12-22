@@ -95,13 +95,25 @@ const ResumesPage = () => {
                             <h1 className="text-4xl font-bold text-white mb-2">My Resumes</h1>
                             <p className="text-base text-gray-400">Manage and create professional resumes</p>
                         </div>
-                        <Link
-                            to="/resumes/new"
-                            className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
-                        >
-                            <Plus className="w-5 h-5" />
-                            Create New Resume
-                        </Link>
+                        <div className="flex gap-3">
+                            {resumes.length > 0 && (
+                                <button
+                                    onClick={() => alert('Bulk export feature requires JSZip package. Run: npm install jszip')}
+                                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+                                    title="Export all resumes as ZIP"
+                                >
+                                    <Download className="w-5 h-5" />
+                                    Export All
+                                </button>
+                            )}
+                            <Link
+                                to="/resumes/new"
+                                className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
+                            >
+                                <Plus className="w-5 h-5" />
+                                Create New Resume
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Search and Filters */}
