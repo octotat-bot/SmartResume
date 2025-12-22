@@ -328,8 +328,8 @@ const ResumeWorkspace = () => {
                         />
                         <div className="flex items-center gap-2 mt-1">
                             <div className={`flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full ${autoSaveStatus === 'saved' ? 'bg-emerald-500/20 text-emerald-400' :
-                                    autoSaveStatus === 'saving' ? 'bg-blue-500/20 text-blue-400' :
-                                        'bg-red-500/20 text-red-400'
+                                autoSaveStatus === 'saving' ? 'bg-blue-500/20 text-blue-400' :
+                                    'bg-red-500/20 text-red-400'
                                 }`}>
                                 {statusIcons[autoSaveStatus]}
                                 <span>{statusText[autoSaveStatus]}</span>
@@ -400,7 +400,7 @@ const ResumeWorkspace = () => {
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                        className="px-6 py-2.5 bg-white hover:bg-gray-50 text-gray-900 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105"
                     >
                         <Save className="w-4 h-4" />
                         {saving ? 'Saving...' : 'Save'}
