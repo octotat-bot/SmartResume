@@ -123,17 +123,14 @@ const AuthPage = () => {
                             <label className="block text-sm font-medium text-gray-300 mb-2">
                                 Full Name
                             </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
-                                    placeholder="John Doe"
-                                    required={!isLogin}
-                                />
-                            </div>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full px-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                placeholder="John Doe"
+                                required={!isLogin}
+                            />
                         </div>
 
                         {/* Email Field */}
@@ -141,17 +138,14 @@ const AuthPage = () => {
                             <label className="block text-sm font-medium text-gray-300 mb-2">
                                 Email
                             </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
-                                    placeholder="you@example.com"
-                                    required
-                                />
-                            </div>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
+                                placeholder="you@example.com"
+                                required
+                            />
                         </div>
 
                         {/* Password Field */}
@@ -160,13 +154,12 @@ const AuthPage = () => {
                                 Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
-                                    placeholder="••••••••"
+                                    className="w-full px-4 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
+                                    placeholder="Enter your password"
                                     required
                                 />
                                 <button
