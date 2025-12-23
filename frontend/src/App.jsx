@@ -5,8 +5,7 @@ import Layout from './components/Layout';
 
 // Pages
 import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import ResumesPage from './pages/ResumesPage';
 import ResumeWorkspace from './pages/ResumeWorkspace';
@@ -22,6 +21,7 @@ import AIChatAssistant from './components/AIChatAssistant';
 // Public Route Component - shows landing page to non-authenticated users
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -31,9 +31,14 @@ const PublicRoute = ({ children }) => {
     );
   }
 
-  // If user is authenticated, redirect to dashboard
-  if (isAuthenticated) {
+  // If user is authenticated and not already on dashboard, redirect to dashboard
+  if (isAuthenticated && location.pathname !== '/dashboard') {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  // If user is authenticated and on dashboard, don't render children
+  if (isAuthenticated) {
+    return null;
   }
 
   return children;
@@ -70,8 +75,8 @@ function App() {
               </PublicRoute>
             }
           />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage />} />
 
           {/* Protected Routes with Layout */}
           <Route
