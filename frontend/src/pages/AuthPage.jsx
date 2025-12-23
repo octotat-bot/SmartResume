@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, FileText, User, Sparkles, CheckCircle, Zap, Target, TrendingUp } from 'lucide-react';
 
+// AuthPage Component - Clean Design v2.0 (No Input Icons)
 const AuthPage = () => {
     const location = useLocation();
     const isLoginPage = location.pathname === '/login';
