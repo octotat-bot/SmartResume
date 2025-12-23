@@ -19,7 +19,7 @@ import NotFoundPage from './pages/NotFoundPage';
 // AI Components
 import AIChatAssistant from './components/AIChatAssistant';
 
-// Public Route Component - redirects to dashboard if already logged in
+// Public Route Component - shows landing page to non-authenticated users
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -43,143 +43,138 @@ const PublicRoute = ({ children }) => {
 const ConditionalAIChat = () => {
   const location = useLocation();
 
-  // Hide AI chat on resume workspace pages (they have AI Features Panel)
-  const hideOnPaths = ['/resumes/new', '/workspace'];
-  const isResumeWorkspace = hideOnPaths.some(path => location.pathname.startsWith(path)) ||
+  // Hide AI chat on resume workspace pages and public pages
+  const hideOnPaths = ['/resumes/new', '/workspace', '/', '/login', '/register'];
+  const shouldHide = hideOnPaths.some(path => location.pathname === path || location.pathname.startsWith(path)) ||
     location.pathname.match(/^\/resumes\/[^/]+$/) ||
     location.pathname.match(/^\/workspace\/[^/]+$/);
 
-  if (isResumeWorkspace) {
+  if (shouldHide) {
     return null;
   }
 
   return <AIChatAssistant />;
 };
 
-function AppRoutes() {
-  return (
-    <Routes>
-      {/* Public Routes */}
-      <Route
-        path="/"
-        element={
-          <PublicRoute>
-            <LandingPage />
-          </PublicRoute>
-        }
-      />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-
-      {/* Protected Routes with Layout */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <DashboardPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/resumes"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ResumesPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/resumes/new"
-        element={
-          <ProtectedRoute>
-            <ResumeWorkspace />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/resumes/:id"
-        element={
-          <ProtectedRoute>
-            <ResumeWorkspace />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/workspace"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ResumesPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/workspace/:id"
-        element={
-          <ProtectedRoute>
-            <ResumeWorkspace />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/templates"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <TemplatesPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/applications"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ApplicationTracker />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/analytics"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <AnalyticsPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ProfilePage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 404 */}
-      <Route path="/404" element={<NotFoundPage />} />
-      <Route path="*" element={<Navigate to="/404" replace />} />
-    </Routes>
-  );
-}
-
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <AppRoutes />
-        {/* Conditional AI Chat Assistant - hidden on resume workspace */}
+        <Routes>
+          {/* Public Routes */}
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <LandingPage />
+              </PublicRoute>
+            }
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* Protected Routes with Layout */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <DashboardPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ResumesPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes/new"
+            element={
+              <ProtectedRoute>
+                <ResumeWorkspace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes/:id"
+            element={
+              <ProtectedRoute>
+                <ResumeWorkspace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workspace"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ResumesPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workspace/:id"
+            element={
+              <ProtectedRoute>
+                <ResumeWorkspace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/templates"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <TemplatesPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/applications"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ApplicationTracker />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AnalyticsPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProfilePage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 404 */}
+          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
+        </Routes>
+
+        {/* Conditional AI Chat Assistant */}
         <ConditionalAIChat />
       </Router>
     </AuthProvider>
