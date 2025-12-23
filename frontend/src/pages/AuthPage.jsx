@@ -129,7 +129,7 @@ const AuthPage = () => {
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                    className="w-full pl-14 pr-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
                                     placeholder="John Doe"
                                     required={!isLogin}
                                 />
@@ -147,7 +147,7 @@ const AuthPage = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
+                                    className="w-full pl-14 pr-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
                                     placeholder="you@example.com"
                                     required
                                 />
@@ -165,7 +165,7 @@ const AuthPage = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-12 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
+                                    className="w-full pl-14 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-all focus:shadow-lg focus:shadow-white/5"
                                     placeholder="••••••••"
                                     required
                                 />
