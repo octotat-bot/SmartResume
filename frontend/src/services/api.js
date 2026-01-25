@@ -103,32 +103,32 @@ export const templateService = {
 
 export const jobService = {
     createJob: async (jobData) => {
-        const { data } = await api.post('/jobs', jobData);
+        const { data } = await api.post('/applications', jobData);
         return data;
     },
 
     getJobs: async (params = {}) => {
-        const { data } = await api.get('/jobs', { params });
+        const { data } = await api.get('/applications', { params });
         return data;
     },
 
     getJobById: async (id) => {
-        const { data } = await api.get(`/jobs/${id}`);
+        const { data } = await api.get(`/applications/${id}`);
         return data;
     },
 
     updateJob: async (id, jobData) => {
-        const { data } = await api.put(`/jobs/${id}`, jobData);
+        const { data } = await api.put(`/applications/${id}`, jobData);
         return data;
     },
 
     deleteJob: async (id) => {
-        const { data } = await api.delete(`/jobs/${id}`);
+        const { data } = await api.delete(`/applications/${id}`);
         return data;
     },
 
     getJobStats: async () => {
-        const { data } = await api.get('/jobs/stats');
+        const { data } = await api.get('/applications/stats');
         return data;
     }
 };

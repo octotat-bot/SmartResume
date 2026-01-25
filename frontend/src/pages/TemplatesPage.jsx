@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { templateService, resumeService } from '../services/api';
 import { Search, Filter, Star, Crown, TrendingUp, Clock, Users, X, Eye, Sparkles, Check } from 'lucide-react';
@@ -14,11 +14,7 @@ const TemplatesPage = () => {
     const [showPreview, setShowPreview] = useState(false);
     const [creating, setCreating] = useState(false);
 
-    useEffect(() => {
-        loadTemplates();
-    }, [search, category, sortBy]);
-
-    const loadTemplates = async () => {
+    const loadTemplates = useCallback(async () => {
         setLoading(true);
         try {
             const data = await templateService.getTemplates({
@@ -33,7 +29,11 @@ const TemplatesPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [search, category, sortBy]);
+
+    useEffect(() => {
+        loadTemplates();
+    }, [loadTemplates]);
 
     const handleUseTemplate = async (template) => {
         setCreating(true);

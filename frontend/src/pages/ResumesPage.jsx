@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { resumeService } from '../services/api';
-import { FileText, Plus, Trash2, Edit, Clock, Download, Star, Search, Filter, SortAsc, Copy, Tag, X } from 'lucide-react';
+import { FileText, Plus, Trash2, Clock, Download, Search, SortAsc, Copy } from 'lucide-react';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 const ResumesPage = () => {
@@ -16,15 +16,8 @@ const ResumesPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, resumeId: null, resumeTitle: '' });
     const [duplicating, setDuplicating] = useState(null);
-    const [selectedTag, setSelectedTag] = useState(null);
-    const [allTags, setAllTags] = useState([]);
 
-
-    useEffect(() => {
-        loadResumes();
-    }, [searchTerm, filterActive, sortBy, sortOrder, page]);
-
-    const loadResumes = async () => {
+    const loadResumes = useCallback(async () => {
         setLoading(true);
         try {
             const params = {
@@ -45,7 +38,11 @@ const ResumesPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [searchTerm, filterActive, sortBy, sortOrder, page]);
+
+    useEffect(() => {
+        loadResumes();
+    }, [loadResumes]);
 
     const handleDelete = async () => {
         try {

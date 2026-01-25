@@ -5,7 +5,6 @@ import { aiService } from '../services/api';
 const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
     const [activeFeature, setActiveFeature] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
 
     // Bullet Point Enhancer
@@ -165,7 +164,6 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
                                 onClick={() => {
                                     setActiveFeature(feature.id);
                                     setError(null);
-                                    setResult(null);
                                 }}
                                 className={`p-4 border-2 rounded-xl text-left transition-all ${getColorClasses(feature.color)}`}
                             >
@@ -185,7 +183,6 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
                         onClick={() => {
                             setActiveFeature(null);
                             setError(null);
-                            setResult(null);
                             setBulletInput('');
                             setEnhancedBullet(null);
                             setGeneratedSummary(null);

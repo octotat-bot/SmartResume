@@ -24,8 +24,7 @@ const DashboardPage = () => {
             try {
                 const jobData = await jobService.getJobStats();
                 setJobStats(jobData);
-            } catch (jobError) {
-                console.log('Job stats not available, using default values');
+            } catch {
                 // Set default empty job stats
                 setJobStats({ total: 0, byStatus: {} });
             }
@@ -197,7 +196,7 @@ const DashboardPage = () => {
                             </Link>
 
                             <Link
-                                to="/jobs"
+                                to="/applications"
                                 className="flex items-center gap-3 p-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg hover:border-white/20 transition-all group"
                             >
                                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">

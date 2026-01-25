@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { versionService } from '../services/api';
 import { Clock, RotateCcw, Trash2, X, AlertCircle, Check } from 'lucide-react';
 
@@ -8,11 +8,7 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
     const [restoring, setRestoring] = useState(null);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        loadVersions();
-    }, [resumeId]);
-
-    const loadVersions = async () => {
+    const loadVersions = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -24,7 +20,11 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [resumeId]);
+
+    useEffect(() => {
+        loadVersions();
+    }, [loadVersions]);
 
     const handleRestore = async (versionId) => {
         if (!confirm('Are you sure you want to restore this version? Your current changes will be saved as a new version.')) {

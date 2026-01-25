@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Phone, MapPin, Linkedin, Github, Globe, LogOut, Save, Check, FileText, Briefcase, Clock, TrendingUp, Activity } from 'lucide-react';
+import { LogOut, Save, Check, FileText, Briefcase, Clock, Activity } from 'lucide-react';
 import { resumeService, jobService } from '../services/api';
 
 const ProfilePage = () => {
@@ -34,8 +34,8 @@ const ProfilePage = () => {
                 try {
                     const jobData = await jobService.getJobStats();
                     jobTotal = jobData.total || 0;
-                } catch (jobError) {
-                    console.log('Job stats not available');
+                } catch {
+                    // Job stats not available
                 }
 
                 setStats({
@@ -141,7 +141,7 @@ const ProfilePage = () => {
 
                                 <div className="flex justify-between items-center pt-4 border-t border-[#1a1a1a]">
                                     <span className="text-sm text-gray-400">Member Since</span>
-                                    <span className="text-sm font-semibold text-white">{new Date(user?.createdAt || Date.now()).toLocaleDateString()}</span>
+                                    <span className="text-sm font-semibold text-white">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</span>
                                 </div>
                             </div>
                         </div>

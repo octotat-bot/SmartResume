@@ -16,18 +16,21 @@ const AIChatAssistant = ({ resumeId = null }) => {
         checkAIStatus();
     }, []);
 
-    // Set welcome message based on AI availability
+    // Set welcome message based on AI availability (only on initial mount or aiAvailable change)
     useEffect(() => {
-        if (messages.length === 0) {
-            const welcomeMessage = {
-                role: 'assistant',
-                content: aiAvailable
-                    ? '👋 Hi! I\'m your AI career assistant. I can help you with:\n\n• Writing better resume content\n• Improving bullet points\n• Tailoring your resume for jobs\n• Career advice\n\nHow can I help you today?'
-                    : '⚠️ AI Assistant is currently unavailable.\n\nTo enable AI features:\n1. Configure GEMINI_API_KEY in backend/.env\n2. Restart the backend server\n3. Refresh this page\n\nThe chat will still appear, but won\'t respond until configured.',
-                timestamp: new Date()
-            };
-            setMessages([welcomeMessage]);
-        }
+        setMessages(prev => {
+            if (prev.length === 0) {
+                const welcomeMessage = {
+                    role: 'assistant',
+                    content: aiAvailable
+                        ? '👋 Hi! I\'m your AI career assistant. I can help you with:\n\n• Writing better resume content\n• Improving bullet points\n• Tailoring your resume for jobs\n• Career advice\n\nHow can I help you today?'
+                        : '⚠️ AI Assistant is currently unavailable.\n\nTo enable AI features:\n1. Configure GEMINI_API_KEY in backend/.env\n2. Restart the backend server\n3. Refresh this page\n\nThe chat will still appear, but won\'t respond until configured.',
+                    timestamp: new Date()
+                };
+                return [welcomeMessage];
+            }
+            return prev;
+        });
     }, [aiAvailable]);
 
     const checkAIStatus = async () => {

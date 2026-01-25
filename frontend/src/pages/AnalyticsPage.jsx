@@ -25,8 +25,8 @@ const AnalyticsPage = () => {
             let jobData = { total: 0, byStatus: {} };
             try {
                 jobData = await jobService.getJobStats();
-            } catch (jobError) {
-                console.log('Job stats not available');
+            } catch {
+                // Job stats not available
             }
 
             const totalApps = jobData.total || 0;

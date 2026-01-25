@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
 import { applicationService } from '../services/api';
-import { Plus, Search, Filter, BarChart3, Calendar, List, Briefcase, TrendingUp, Clock, Target, X, Edit2, Trash2, ExternalLink, Building2, MapPin, DollarSign, Tag, AlertCircle } from 'lucide-react';
+import { Plus, Search, BarChart3, List, Briefcase, TrendingUp, Clock, Target, X, Edit2, Trash2, ExternalLink } from 'lucide-react';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 const ApplicationTracker = () => {
-    const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -28,12 +26,7 @@ const ApplicationTracker = () => {
         { value: 'withdrawn', label: 'Withdrawn', color: 'bg-orange-500', icon: '🔙' }
     ];
 
-    useEffect(() => {
-        loadApplications();
-        loadStats();
-    }, [filterStatus, filterPriority, searchTerm]);
-
-    const loadApplications = async () => {
+    const loadApplications = useCallback(async () => {
         try {
             const params = {};
             if (filterStatus) params.status = filterStatus;
@@ -47,7 +40,7 @@ const ApplicationTracker = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [filterStatus, filterPriority, searchTerm]);
 
     const loadStats = async () => {
         try {
@@ -57,6 +50,11 @@ const ApplicationTracker = () => {
             console.error('Error loading stats:', error);
         }
     };
+
+    useEffect(() => {
+        loadApplications();
+        loadStats();
+    }, [loadApplications]);
 
     const handleDelete = async () => {
         try {
@@ -383,9 +381,9 @@ const ApplicationTracker = () => {
                 title="Delete Application"
                 message={`Are you sure you want to delete the application for ${deleteDialog.company}? This action cannot be undone.`}
                 onConfirm={handleDelete}
-                onCancel={() => setDeleteDialog({ isOpen: false, id: null, company: '' })}
+                onClose={() => setDeleteDialog({ isOpen: false, id: null, company: '' })}
                 confirmText="Delete"
-                isDangerous={true}
+                type="danger"
             />
         </div>
     );

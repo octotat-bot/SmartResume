@@ -1,9 +1,7 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { resumeService } from '../services/api';
 import { Plus, Trash2, ArrowLeft, ChevronRight, Layout, User, Briefcase, GraduationCap, Code, Award, FileText, Download, Share2, Palette, Wand2, RefreshCcw, Save, X, Search, Check, Loader, AlertCircle, Undo, Redo, Linkedin, Github, Terminal, Cpu, BarChart, Globe, History, TrendingUp, BarChart3 } from 'lucide-react';
-import html2pdf from 'html2pdf.js/dist/html2pdf.js';
 import StandardTemplate from '../templates/StandardTemplate';
 import ModernTemplate from '../templates/ModernTemplate';
 import MinimalistTemplate from '../templates/MinimalistTemplate';

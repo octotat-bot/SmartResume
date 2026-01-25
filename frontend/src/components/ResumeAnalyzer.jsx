@@ -1,17 +1,241 @@
-import { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, AlertCircle, TrendingUp, Award, FileText, Zap, BarChart } from 'lucide-react';
+import { useMemo } from 'react';
+import { CheckCircle, XCircle, AlertCircle, TrendingUp, Award, Zap, BarChart } from 'lucide-react';
 
 const ResumeAnalyzer = ({ resume, onClose }) => {
-    const [analysis, setAnalysis] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        analyzeResume();
-    }, [resume]);
+    const getGrade = (score) => {
+        if (score >= 90) return { letter: 'A+', color: 'text-green-500', label: 'Excellent' };
+        if (score >= 80) return { letter: 'A', color: 'text-green-400', label: 'Great' };
+        if (score >= 70) return { letter: 'B', color: 'text-blue-500', label: 'Good' };
+        if (score >= 60) return { letter: 'C', color: 'text-yellow-500', label: 'Fair' };
+        return { letter: 'D', color: 'text-red-500', label: 'Needs Work' };
+    };
 
-    const analyzeResume = () => {
-        setLoading(true);
+    const getScoreColor = (score) => {
+        if (score >= 80) return 'bg-green-500';
+        if (score >= 60) return 'bg-yellow-500';
+        return 'bg-red-500';
+    };
 
+    // Compute analysis using useMemo to avoid setState in effect
+    const analysis = useMemo(() => {
+        // Calculate completeness score
+        const calculateCompleteness = () => {
+            let score = 0;
+            const maxScore = 100;
+
+            if (resume.personalInfo?.name) score += 5;
+            if (resume.personalInfo?.email) score += 5;
+            if (resume.personalInfo?.phone) score += 5;
+            if (resume.personalInfo?.summary) score += 5;
+
+            if (resume.experience?.length > 0) {
+                score += 15;
+                if (resume.experience.length >= 2) score += 10;
+                if (resume.experience.some(exp => exp.description?.length > 50)) score += 5;
+            }
+
+            if (resume.education?.length > 0) {
+                score += 15;
+                if (resume.education.some(edu => edu.degree)) score += 5;
+            }
+
+            if (resume.skills?.length > 0) {
+                score += 10;
+                if (resume.skills.length >= 5) score += 5;
+            }
+
+            if (resume.projects?.length > 0) score += 10;
+            if (resume.certifications?.length > 0) score += 5;
+
+            return Math.min(score, maxScore);
+        };
+
+        // Calculate ATS score
+        const calculateATSScore = () => {
+            let score = 100;
+            const allText = JSON.stringify(resume).toLowerCase();
+
+            if (resume.personalInfo?.name?.match(/[^a-zA-Z\s]/)) score -= 10;
+
+            const commonKeywords = ['experience', 'skills', 'education', 'project', 'develop', 'manage', 'lead'];
+            const keywordCount = commonKeywords.filter(kw => allText.includes(kw)).length;
+            if (keywordCount < 3) score -= 20;
+
+            return Math.max(0, Math.min(score, 100));
+        };
+
+        // Calculate content quality score
+        const calculateContentQuality = () => {
+            let score = 0;
+            const summary = resume.personalInfo?.summary || '';
+
+            if (summary.length > 50) score += 10;
+            if (summary.length > 100) score += 10;
+            if (summary.match(/\b(experienced|skilled|proficient|expert)\b/i)) score += 5;
+
+            if (resume.experience?.length > 0) {
+                const avgDescLength = resume.experience.reduce((sum, exp) =>
+                    sum + (exp.description?.length || 0), 0) / resume.experience.length;
+
+                if (avgDescLength > 50) score += 15;
+                if (avgDescLength > 100) score += 15;
+
+                const actionVerbs = ['led', 'managed', 'developed', 'created', 'implemented', 'improved', 'increased', 'reduced'];
+                const hasActionVerbs = resume.experience.some(exp =>
+                    actionVerbs.some(verb => exp.description?.toLowerCase().includes(verb))
+                );
+                if (hasActionVerbs) score += 10;
+            }
+
+            if (resume.skills?.length >= 5) score += 10;
+            if (resume.skills?.length >= 10) score += 10;
+
+            if (resume.projects?.length > 0) {
+                const hasDescriptions = resume.projects.every(proj => proj.description?.length > 30);
+                if (hasDescriptions) score += 15;
+            }
+
+            return Math.min(score, 100);
+        };
+
+        // Calculate formatting score
+        const calculateFormattingScore = () => {
+            let score = 100;
+            const dates = [];
+
+            resume.experience?.forEach(exp => {
+                if (exp.startDate) dates.push(exp.startDate);
+                if (exp.endDate) dates.push(exp.endDate);
+            });
+
+            if (dates.length > 0) {
+                const formats = new Set(dates.map(d => d.match(/\d{4}/) ? 'year' : 'other'));
+                if (formats.size > 1) score -= 15;
+            }
+
+            if (!resume.metadata?.layout) score -= 10;
+
+            return Math.max(0, score);
+        };
+
+        // Calculate keyword score
+        const calculateKeywordScore = () => {
+            let score = 0;
+            const allText = JSON.stringify(resume).toLowerCase();
+
+            const techKeywords = ['software', 'development', 'programming', 'code', 'system', 'application'];
+            const businessKeywords = ['management', 'strategy', 'analysis', 'leadership', 'team'];
+            const softSkills = ['communication', 'collaboration', 'problem-solving', 'analytical'];
+
+            const techCount = techKeywords.filter(kw => allText.includes(kw)).length;
+            const businessCount = businessKeywords.filter(kw => allText.includes(kw)).length;
+            const softCount = softSkills.filter(kw => allText.includes(kw)).length;
+
+            score += Math.min(techCount * 10, 40);
+            score += Math.min(businessCount * 10, 30);
+            score += Math.min(softCount * 10, 30);
+
+            return Math.min(score, 100);
+        };
+
+        // Generate suggestions
+        const generateSuggestions = (scores) => {
+            const suggestions = [];
+
+            if (scores.completeness < 80) {
+                if (!resume.personalInfo?.summary) {
+                    suggestions.push({
+                        type: 'warning',
+                        category: 'Completeness',
+                        text: 'Add a professional summary to introduce yourself',
+                        impact: 'high'
+                    });
+                }
+                if (!resume.skills || resume.skills.length < 5) {
+                    suggestions.push({
+                        type: 'warning',
+                        category: 'Completeness',
+                        text: 'Add at least 5-10 relevant skills',
+                        impact: 'high'
+                    });
+                }
+                if (!resume.experience || resume.experience.length === 0) {
+                    suggestions.push({
+                        type: 'error',
+                        category: 'Completeness',
+                        text: 'Add your work experience',
+                        impact: 'critical'
+                    });
+                }
+            }
+
+            if (scores.contentQuality < 70) {
+                suggestions.push({
+                    type: 'warning',
+                    category: 'Content',
+                    text: 'Use action verbs (led, managed, developed, created) in experience descriptions',
+                    impact: 'high'
+                });
+                suggestions.push({
+                    type: 'info',
+                    category: 'Content',
+                    text: 'Add quantifiable achievements (e.g., "Increased sales by 25%")',
+                    impact: 'medium'
+                });
+            }
+
+            if (scores.atsCompatibility < 80) {
+                suggestions.push({
+                    type: 'warning',
+                    category: 'ATS',
+                    text: 'Avoid special characters and graphics for better ATS compatibility',
+                    impact: 'high'
+                });
+                suggestions.push({
+                    type: 'info',
+                    category: 'ATS',
+                    text: 'Use standard section headings (Experience, Education, Skills)',
+                    impact: 'medium'
+                });
+            }
+
+            if (scores.keywords < 60) {
+                suggestions.push({
+                    type: 'info',
+                    category: 'Keywords',
+                    text: 'Include more industry-specific keywords relevant to your target role',
+                    impact: 'medium'
+                });
+            }
+
+            return suggestions;
+        };
+
+        // Generate strengths
+        const generateStrengths = (scores) => {
+            const strengths = [];
+
+            if (scores.completeness >= 80) {
+                strengths.push('Comprehensive resume with all key sections');
+            }
+            if (scores.atsCompatibility >= 80) {
+                strengths.push('ATS-friendly formatting');
+            }
+            if (scores.contentQuality >= 80) {
+                strengths.push('High-quality content with strong descriptions');
+            }
+            if (resume.skills?.length >= 10) {
+                strengths.push('Diverse skill set');
+            }
+            if (resume.projects?.length > 0) {
+                strengths.push('Includes relevant projects');
+            }
+
+            return strengths;
+        };
+
+        // Compute all scores
         const scores = {
             completeness: calculateCompleteness(),
             atsCompatibility: calculateATSScore(),
@@ -28,279 +252,14 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
             (scores.keywords * 0.10)
         );
 
-        const suggestions = generateSuggestions(scores);
-        const strengths = generateStrengths(scores);
-
-        setAnalysis({
+        return {
             overallScore,
             scores,
-            suggestions,
-            strengths,
+            suggestions: generateSuggestions(scores),
+            strengths: generateStrengths(scores),
             grade: getGrade(overallScore)
-        });
-
-        setLoading(false);
-    };
-
-    const calculateCompleteness = () => {
-        let score = 0;
-        const maxScore = 100;
-
-        // Personal Info (20 points)
-        if (resume.personalInfo?.name) score += 5;
-        if (resume.personalInfo?.email) score += 5;
-        if (resume.personalInfo?.phone) score += 5;
-        if (resume.personalInfo?.summary) score += 5;
-
-        // Experience (30 points)
-        if (resume.experience?.length > 0) {
-            score += 15;
-            if (resume.experience.length >= 2) score += 10;
-            if (resume.experience.some(exp => exp.description?.length > 50)) score += 5;
-        }
-
-        // Education (20 points)
-        if (resume.education?.length > 0) {
-            score += 15;
-            if (resume.education.some(edu => edu.degree)) score += 5;
-        }
-
-        // Skills (15 points)
-        if (resume.skills?.length > 0) {
-            score += 10;
-            if (resume.skills.length >= 5) score += 5;
-        }
-
-        // Projects (10 points)
-        if (resume.projects?.length > 0) score += 10;
-
-        // Certifications (5 points)
-        if (resume.certifications?.length > 0) score += 5;
-
-        return Math.min(score, maxScore);
-    };
-
-    const calculateATSScore = () => {
-        let score = 100;
-
-        // Check for common ATS issues
-        const summary = resume.personalInfo?.summary || '';
-        const allText = JSON.stringify(resume).toLowerCase();
-
-        // Deduct for special characters in key fields
-        if (resume.personalInfo?.name?.match(/[^a-zA-Z\s]/)) score -= 10;
-
-        // Deduct if no keywords found
-        const commonKeywords = ['experience', 'skills', 'education', 'project', 'develop', 'manage', 'lead'];
-        const keywordCount = commonKeywords.filter(kw => allText.includes(kw)).length;
-        if (keywordCount < 3) score -= 20;
-
-        // Bonus for standard sections
-        if (resume.experience?.length > 0) score += 0;
-        if (resume.education?.length > 0) score += 0;
-        if (resume.skills?.length > 0) score += 0;
-
-        return Math.max(0, Math.min(score, 100));
-    };
-
-    const calculateContentQuality = () => {
-        let score = 0;
-
-        // Summary quality (25 points)
-        const summary = resume.personalInfo?.summary || '';
-        if (summary.length > 50) score += 10;
-        if (summary.length > 100) score += 10;
-        if (summary.match(/\b(experienced|skilled|proficient|expert)\b/i)) score += 5;
-
-        // Experience descriptions (40 points)
-        if (resume.experience?.length > 0) {
-            const avgDescLength = resume.experience.reduce((sum, exp) =>
-                sum + (exp.description?.length || 0), 0) / resume.experience.length;
-
-            if (avgDescLength > 50) score += 15;
-            if (avgDescLength > 100) score += 15;
-
-            // Check for action verbs
-            const actionVerbs = ['led', 'managed', 'developed', 'created', 'implemented', 'improved', 'increased', 'reduced'];
-            const hasActionVerbs = resume.experience.some(exp =>
-                actionVerbs.some(verb => exp.description?.toLowerCase().includes(verb))
-            );
-            if (hasActionVerbs) score += 10;
-        }
-
-        // Skills diversity (20 points)
-        if (resume.skills?.length >= 5) score += 10;
-        if (resume.skills?.length >= 10) score += 10;
-
-        // Projects with descriptions (15 points)
-        if (resume.projects?.length > 0) {
-            const hasDescriptions = resume.projects.every(proj => proj.description?.length > 30);
-            if (hasDescriptions) score += 15;
-        }
-
-        return Math.min(score, 100);
-    };
-
-    const calculateFormattingScore = () => {
-        let score = 100;
-
-        // Check for consistent date formats
-        const dates = [];
-        resume.experience?.forEach(exp => {
-            if (exp.startDate) dates.push(exp.startDate);
-            if (exp.endDate) dates.push(exp.endDate);
-        });
-
-        // Deduct for inconsistent formatting
-        if (dates.length > 0) {
-            const formats = new Set(dates.map(d => d.match(/\d{4}/) ? 'year' : 'other'));
-            if (formats.size > 1) score -= 15;
-        }
-
-        // Check for template selection
-        if (!resume.metadata?.layout) score -= 10;
-
-        return Math.max(0, score);
-    };
-
-    const calculateKeywordScore = () => {
-        let score = 0;
-        const allText = JSON.stringify(resume).toLowerCase();
-
-        // Industry keywords
-        const techKeywords = ['software', 'development', 'programming', 'code', 'system', 'application'];
-        const businessKeywords = ['management', 'strategy', 'analysis', 'leadership', 'team'];
-        const softSkills = ['communication', 'collaboration', 'problem-solving', 'analytical'];
-
-        const techCount = techKeywords.filter(kw => allText.includes(kw)).length;
-        const businessCount = businessKeywords.filter(kw => allText.includes(kw)).length;
-        const softCount = softSkills.filter(kw => allText.includes(kw)).length;
-
-        score += Math.min(techCount * 10, 40);
-        score += Math.min(businessCount * 10, 30);
-        score += Math.min(softCount * 10, 30);
-
-        return Math.min(score, 100);
-    };
-
-    const generateSuggestions = (scores) => {
-        const suggestions = [];
-
-        if (scores.completeness < 80) {
-            if (!resume.personalInfo?.summary) {
-                suggestions.push({
-                    type: 'warning',
-                    category: 'Completeness',
-                    text: 'Add a professional summary to introduce yourself',
-                    impact: 'high'
-                });
-            }
-            if (!resume.skills || resume.skills.length < 5) {
-                suggestions.push({
-                    type: 'warning',
-                    category: 'Completeness',
-                    text: 'Add at least 5-10 relevant skills',
-                    impact: 'high'
-                });
-            }
-            if (!resume.experience || resume.experience.length === 0) {
-                suggestions.push({
-                    type: 'error',
-                    category: 'Completeness',
-                    text: 'Add your work experience',
-                    impact: 'critical'
-                });
-            }
-        }
-
-        if (scores.contentQuality < 70) {
-            suggestions.push({
-                type: 'warning',
-                category: 'Content',
-                text: 'Use action verbs (led, managed, developed, created) in experience descriptions',
-                impact: 'high'
-            });
-            suggestions.push({
-                type: 'info',
-                category: 'Content',
-                text: 'Add quantifiable achievements (e.g., "Increased sales by 25%")',
-                impact: 'medium'
-            });
-        }
-
-        if (scores.atsCompatibility < 80) {
-            suggestions.push({
-                type: 'warning',
-                category: 'ATS',
-                text: 'Avoid special characters and graphics for better ATS compatibility',
-                impact: 'high'
-            });
-            suggestions.push({
-                type: 'info',
-                category: 'ATS',
-                text: 'Use standard section headings (Experience, Education, Skills)',
-                impact: 'medium'
-            });
-        }
-
-        if (scores.keywords < 60) {
-            suggestions.push({
-                type: 'info',
-                category: 'Keywords',
-                text: 'Include more industry-specific keywords relevant to your target role',
-                impact: 'medium'
-            });
-        }
-
-        return suggestions;
-    };
-
-    const generateStrengths = (scores) => {
-        const strengths = [];
-
-        if (scores.completeness >= 80) {
-            strengths.push('Comprehensive resume with all key sections');
-        }
-        if (scores.atsCompatibility >= 80) {
-            strengths.push('ATS-friendly formatting');
-        }
-        if (scores.contentQuality >= 80) {
-            strengths.push('High-quality content with strong descriptions');
-        }
-        if (resume.skills?.length >= 10) {
-            strengths.push('Diverse skill set');
-        }
-        if (resume.projects?.length > 0) {
-            strengths.push('Includes relevant projects');
-        }
-
-        return strengths;
-    };
-
-    const getGrade = (score) => {
-        if (score >= 90) return { letter: 'A+', color: 'text-green-500', label: 'Excellent' };
-        if (score >= 80) return { letter: 'A', color: 'text-green-400', label: 'Great' };
-        if (score >= 70) return { letter: 'B', color: 'text-blue-500', label: 'Good' };
-        if (score >= 60) return { letter: 'C', color: 'text-yellow-500', label: 'Fair' };
-        return { letter: 'D', color: 'text-red-500', label: 'Needs Work' };
-    };
-
-    const getScoreColor = (score) => {
-        if (score >= 80) return 'bg-green-500';
-        if (score >= 60) return 'bg-yellow-500';
-        return 'bg-red-500';
-    };
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p className="text-gray-400">Analyzing your resume...</p>
-                </div>
-            </div>
-        );
-    }
+        };
+    }, [resume]);
 
     return (
         <div className="max-w-4xl mx-auto">
