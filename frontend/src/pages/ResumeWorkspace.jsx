@@ -1,36 +1,179 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Layout, Settings2, GripVertical, Plus, Sparkles, Check, X, Download, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowLeft, Layout, GripVertical, Plus, Sparkles, Check, X, Download, ZoomIn, ZoomOut, Loader2 } from 'lucide-react';
+import { resumeService } from '../services/api';
+import EditableField from '../components/EditableField';
+
+const defaultResume = {
+    title: 'Untitled Resume',
+    personalInfo: {
+        fullName: 'Your Name',
+        email: 'email@example.com',
+        phone: '(555) 555-5555',
+        location: 'City, State',
+        linkedin: 'linkedin.com/in/username'
+    },
+    experience: [
+        {
+            _id: 'temp-1',
+            position: 'Job Title',
+            company: 'Company Name',
+            startDate: 'YYYY',
+            endDate: 'Present',
+            achievements: ['Add your achievements here']
+        }
+    ],
+    education: [
+        {
+            _id: 'temp-1',
+            degree: 'Degree',
+            institution: 'University Name',
+            startDate: 'YYYY',
+            endDate: 'YYYY',
+            gpa: 'GPA'
+        }
+    ],
+    skills: {
+        technical: ['Skill 1', 'Skill 2', 'Skill 3']
+    }
+};
 
 const ResumeWorkspace = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [resume, setResume] = useState(null);
     
+    // Core State
+    const [resumeData, setResumeData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    
+    // Debounce timer ref
+    const saveTimeoutRef = useRef(null);
+    const initialLoadDone = useRef(false);
+
     // UI State
     const [rightPanelOpen, setRightPanelOpen] = useState(true);
-    const [selectedTemplate, setSelectedTemplate] = useState('modern');
     const [docSettings, setDocSettings] = useState({ font: 'inter', color: '#141210', margin: 'normal', spacing: 'normal' });
 
+    // 1. Fetch data on mount
     useEffect(() => {
-        // Mock loading resume
-        setTimeout(() => {
-            setResume({
-                title: 'Senior Frontend Engineer',
-                personalInfo: { firstName: 'John', lastName: 'Doe', email: 'john@example.com' },
-                experience: [],
-                education: [],
-                skills: { technical: [] }
-            });
-        }, 500);
+        const fetchResume = async () => {
+            if (id && id !== 'new') {
+                try {
+                    const data = await resumeService.getResumeById(id);
+                    setResumeData(data.data);
+                } catch (error) {
+                    console.error('Error fetching resume:', error);
+                    // fallback to default if error
+                    setResumeData(JSON.parse(JSON.stringify(defaultResume)));
+                }
+            } else {
+                setResumeData(JSON.parse(JSON.stringify(defaultResume)));
+            }
+            setLoading(false);
+            initialLoadDone.current = true;
+        };
+        fetchResume();
     }, [id]);
 
-    if (!resume) {
-        return <div className="h-screen flex items-center justify-center bg-surface-1 font-sans text-ink/60">Loading workspace...</div>;
+    // 2. Auto-save hook
+    useEffect(() => {
+        if (!initialLoadDone.current || !resumeData) return;
+
+        // Clear previous timeout
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
+        // Set new timeout for auto-save (2 seconds after last keystroke)
+        saveTimeoutRef.current = setTimeout(async () => {
+            setSaving(true);
+            try {
+                // Remove temp IDs before sending to backend if it's a new item
+                const payload = { ...resumeData };
+                payload.experience = payload.experience.map(e => e._id?.startsWith('temp') ? { ...e, _id: undefined } : e);
+                payload.education = payload.education.map(e => e._id?.startsWith('temp') ? { ...e, _id: undefined } : e);
+
+                if (id && id !== 'new') {
+                    // Update existing
+                    await resumeService.updateResume(id, payload);
+                } else {
+                    // Create new and update URL
+                    const created = await resumeService.createResume(payload);
+                    navigate(`/resumes/${created.data._id}`, { replace: true });
+                }
+            } catch (error) {
+                console.error("Auto-save failed:", error);
+            } finally {
+                setSaving(false);
+            }
+        }, 2000);
+
+        return () => clearTimeout(saveTimeoutRef.current);
+    }, [resumeData, id, navigate]);
+
+    // Handlers for state updates
+    const updatePersonalInfo = (field, value) => {
+        setResumeData(prev => ({
+            ...prev,
+            personalInfo: { ...prev.personalInfo, [field]: value }
+        }));
+    };
+
+    const updateExperience = (index, field, value) => {
+        setResumeData(prev => {
+            const exp = [...prev.experience];
+            exp[index] = { ...exp[index], [field]: value };
+            return { ...prev, experience: exp };
+        });
+    };
+
+    const updateExperienceAchievement = (expIndex, achIndex, value) => {
+        setResumeData(prev => {
+            const exp = [...prev.experience];
+            const achievements = [...exp[expIndex].achievements];
+            achievements[achIndex] = value;
+            exp[expIndex] = { ...exp[expIndex], achievements };
+            return { ...prev, experience: exp };
+        });
+    };
+
+    const addExperienceAchievement = (expIndex) => {
+        setResumeData(prev => {
+            const exp = [...prev.experience];
+            exp[expIndex].achievements.push('New achievement');
+            return { ...prev, experience: exp };
+        });
+    };
+
+    const addExperience = () => {
+        setResumeData(prev => ({
+            ...prev,
+            experience: [...prev.experience, { _id: `temp-${Date.now()}`, position: 'Role', company: 'Company', startDate: 'YYYY', endDate: 'YYYY', achievements: [''] }]
+        }));
+    };
+
+    const updateEducation = (index, field, value) => {
+        setResumeData(prev => {
+            const edu = [...prev.education];
+            edu[index] = { ...edu[index], [field]: value };
+            return { ...prev, education: edu };
+        });
+    };
+
+    const addEducation = () => {
+        setResumeData(prev => ({
+            ...prev,
+            education: [...prev.education, { _id: `temp-${Date.now()}`, degree: 'Degree', institution: 'Institution', startDate: 'YYYY', endDate: 'YYYY' }]
+        }));
+    };
+
+    if (loading || !resumeData) {
+        return <div className="h-screen flex items-center justify-center bg-surface-1 font-sans"><Loader2 className="w-8 h-8 text-ink/40 animate-spin" /></div>;
     }
 
     return (
-        <div className="h-screen flex flex-col font-sans bg-surface-1 overflow-hidden animate-[fadeInScale_300ms_ease-out]">
+        <div className="h-screen flex flex-col font-sans bg-surface-1 overflow-hidden animate-[fadeInScale_300ms_ease-out]" style={{ '--doc-color': docSettings.color }}>
             {/* TOP BAR */}
             <header className="h-[52px] bg-white border-b border-ink/5 px-4 flex items-center justify-between shrink-0 z-10">
                 <div className="flex flex-1 items-center gap-4">
@@ -42,17 +185,24 @@ const ResumeWorkspace = () => {
                 <div className="flex-1 flex justify-center">
                     <input 
                         type="text" 
-                        value={resume.title}
-                        onChange={(e) => setResume({...resume, title: e.target.value})}
+                        value={resumeData.title}
+                        onChange={(e) => setResumeData({...resumeData, title: e.target.value})}
                         className="font-serif text-[16px] text-ink text-center bg-transparent border-b border-transparent hover:border-ink/20 focus:border-accent focus:outline-none px-2 py-1 transition-colors w-64"
+                        placeholder="Resume Title"
                     />
                 </div>
                 
                 <div className="flex flex-1 items-center justify-end gap-4">
-                    <span className="text-[12px] text-ink/40">Last saved 2 min ago</span>
+                    <div className="flex items-center gap-2 text-[12px] text-ink/40">
+                        {saving ? (
+                            <><Loader2 className="w-3 h-3 animate-spin" /> Saving...</>
+                        ) : (
+                            <><Check className="w-3 h-3" /> Saved</>
+                        )}
+                    </div>
                     <button className="btn-ghost text-[13px] h-[32px] px-3 font-medium">Preview</button>
                     <button className="btn-primary text-[13px] h-[32px] px-4 rounded-lg flex items-center gap-2 font-medium">
-                        <Download className="w-4 h-4" /> Download PDF
+                        <Download className="w-4 h-4" /> PDF
                     </button>
                     <div className="w-px h-4 bg-ink/10 mx-2" />
                     <button className="p-2 text-ink/60 hover:bg-surface-2 rounded-lg transition-colors">
@@ -65,58 +215,40 @@ const ResumeWorkspace = () => {
                 {/* LEFT PANEL */}
                 <aside className="w-[240px] bg-white border-r border-ink/5 flex flex-col shrink-0 z-10">
                     <div className="p-4 flex-1 overflow-y-auto hide-scrollbar">
-                        <h3 className="text-caption text-ink/40 mb-4">Sections</h3>
+                        <h3 className="text-[11px] font-mono font-bold tracking-widest uppercase text-ink/40 mb-4">Sections</h3>
                         <div className="space-y-1 mb-4">
-                            {['Contact', 'Summary', 'Experience', 'Education', 'Skills', 'Projects', 'Certifications'].map(sec => (
+                            {['Contact', 'Experience', 'Education', 'Skills'].map(sec => (
                                 <div key={sec} className="group flex items-center gap-2 p-2 hover:bg-surface-2 rounded-lg cursor-pointer">
                                     <GripVertical className="w-3.5 h-3.5 text-ink/20 group-hover:text-ink/40 transition-colors" />
                                     <span className="text-[14px] text-ink flex-1">{sec}</span>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-status-success/80" />
                                 </div>
                             ))}
                         </div>
-                        <button className="text-[13px] text-ink/60 hover:text-ink font-medium flex items-center gap-1.5 p-2 transition-colors">
-                            <Plus className="w-4 h-4" /> Add section
-                        </button>
+                        <div className="flex flex-col gap-2">
+                            <button onClick={addExperience} className="text-[13px] text-ink/60 hover:text-ink font-medium flex items-center gap-1.5 p-2 transition-colors">
+                                <Plus className="w-4 h-4" /> Add Experience
+                            </button>
+                            <button onClick={addEducation} className="text-[13px] text-ink/60 hover:text-ink font-medium flex items-center gap-1.5 p-2 transition-colors">
+                                <Plus className="w-4 h-4" /> Add Education
+                            </button>
+                        </div>
 
                         <div className="mt-8 border-t border-ink/5 pt-6">
-                            <h3 className="text-caption text-ink/40 mb-4">Document settings</h3>
+                            <h3 className="text-[11px] font-mono font-bold tracking-widest uppercase text-ink/40 mb-4">Document Style</h3>
                             <div className="space-y-5">
-                                <div>
-                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Font</label>
-                                    <select className="w-full h-[36px] text-[13px] border border-ink/10 rounded-lg px-2 bg-white appearance-none cursor-pointer">
-                                        <option>Classic (Playfair)</option>
-                                        <option>Modern (Inter)</option>
-                                        <option>Technical (Mono)</option>
-                                    </select>
-                                </div>
                                 <div>
                                     <label className="text-[12px] font-medium text-ink/80 block mb-2">Color accent</label>
                                     <div className="flex gap-2">
                                         {['#141210', '#2B5BA8', '#2D6A4F', '#92622A', '#6B2B85'].map(color => (
                                             <button 
                                                 key={color} 
-                                                className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${docSettings.color === color ? 'ring-2 ring-offset-1 ring-accent' : ''}`} 
+                                                className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${docSettings.color === color ? 'ring-2 ring-offset-1 ring-ink/50' : ''}`} 
                                                 style={{backgroundColor: color}}
                                                 onClick={() => setDocSettings({...docSettings, color})}
                                             >
                                                 {docSettings.color === color && <Check className="w-3 h-3 text-white" />}
                                             </button>
                                         ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Page margins</label>
-                                    <input type="range" className="w-full accent-accent cursor-pointer" min="0" max="2" defaultValue="1" />
-                                    <div className="flex justify-between text-[11px] text-ink/40 mt-1">
-                                        <span>Narrow</span><span>Normal</span><span>Wide</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Line spacing</label>
-                                    <input type="range" className="w-full accent-accent cursor-pointer" min="0" max="2" defaultValue="1" />
-                                    <div className="flex justify-between text-[11px] text-ink/40 mt-1">
-                                        <span>Compact</span><span>Normal</span><span>Loose</span>
                                     </div>
                                 </div>
                             </div>
@@ -128,89 +260,120 @@ const ResumeWorkspace = () => {
                 <main className="flex-1 bg-[#ECEAE4] overflow-y-auto flex justify-center py-12 px-8 relative hide-scrollbar">
                     <div className="w-[794px] min-h-[1123px] shrink-0 bg-white shadow-[0_8px_40px_rgba(20,18,16,0.12)] rounded-[2px] p-16 transition-all relative group">
                         
-                        {/* Fake document content based on spec */}
-                        <div className="mb-8 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
-                            <h1 className="font-serif text-[42px] text-ink leading-tight text-center">John Doe</h1>
-                            <p className="text-[14px] text-ink/80 mt-2 text-center font-sans tracking-wide">
-                                San Francisco, CA • john@example.com • (555) 123-4567 • linkedin.com/in/johndoe
-                            </p>
+                        {/* HEADER - Personal Info */}
+                        <div className="mb-8 border border-transparent hover:border-ink/10 p-4 -m-4 rounded transition-colors group/section">
+                            <EditableField 
+                                value={resumeData.personalInfo?.fullName || ''} 
+                                onChange={(val) => updatePersonalInfo('fullName', val)} 
+                                className="font-serif text-[42px] text-ink leading-tight text-center w-full"
+                                placeholder="Your Name"
+                            />
+                            <div className="flex flex-wrap items-center justify-center gap-2 text-[14px] text-ink/80 mt-2 font-sans tracking-wide">
+                                <EditableField value={resumeData.personalInfo?.location || ''} onChange={(val) => updatePersonalInfo('location', val)} placeholder="Location" className="text-center w-auto inline-block min-w-[100px]" /> • 
+                                <EditableField value={resumeData.personalInfo?.email || ''} onChange={(val) => updatePersonalInfo('email', val)} placeholder="Email" className="text-center w-auto inline-block min-w-[150px]" /> • 
+                                <EditableField value={resumeData.personalInfo?.phone || ''} onChange={(val) => updatePersonalInfo('phone', val)} placeholder="Phone" className="text-center w-auto inline-block min-w-[120px]" /> • 
+                                <EditableField value={resumeData.personalInfo?.linkedin || ''} onChange={(val) => updatePersonalInfo('linkedin', val)} placeholder="LinkedIn" className="text-center w-auto inline-block min-w-[150px]" />
+                            </div>
                         </div>
                         
-                        <div className="mb-6 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
-                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4">Experience</h2>
+                        {/* EXPERIENCE */}
+                        <div className="mb-6 border border-transparent hover:border-ink/10 p-4 -m-4 rounded transition-colors group/section">
+                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4" style={{color: 'var(--doc-color)'}}>Experience</h2>
                             
-                            <div className="mb-6">
-                                <div className="flex justify-between items-baseline mb-1">
-                                    <h3 className="font-semibold text-ink text-[15px]">Senior Frontend Engineer <span className="font-normal text-ink/60">at Stripe</span></h3>
-                                    <span className="text-[13px] text-ink/60">2021 - Present</span>
+                            {resumeData.experience.map((exp, expIndex) => (
+                                <div key={exp._id || expIndex} className="mb-6 group/exp relative">
+                                    <button 
+                                        className="absolute -left-10 top-0 p-1 text-status-error opacity-0 group-hover/exp:opacity-100 transition-opacity rounded hover:bg-status-error/10"
+                                        onClick={() => setResumeData(prev => ({...prev, experience: prev.experience.filter((_, i) => i !== expIndex)}))}
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-semibold text-ink text-[15px] flex items-center gap-1 flex-1">
+                                            <EditableField value={exp.position} onChange={(v) => updateExperience(expIndex, 'position', v)} className="font-semibold text-[15px]" />
+                                            <span className="font-normal text-ink/60 mx-1">at</span>
+                                            <EditableField value={exp.company} onChange={(v) => updateExperience(expIndex, 'company', v)} className="text-ink/60" />
+                                        </h3>
+                                        <div className="flex items-center gap-1 text-[13px] text-ink/60 shrink-0 w-32 justify-end">
+                                            <EditableField value={exp.startDate} onChange={(v) => updateExperience(expIndex, 'startDate', v)} className="text-right w-12" /> - 
+                                            <EditableField value={exp.endDate} onChange={(v) => updateExperience(expIndex, 'endDate', v)} className="text-left w-14" />
+                                        </div>
+                                    </div>
+                                    <ul className="mt-2 space-y-1.5 text-[14px] text-ink/80">
+                                        {exp.achievements?.map((ach, achIndex) => (
+                                            <li key={achIndex} className="flex items-start gap-2 group/ach relative">
+                                                <span className="text-[8px] mt-1.5 opacity-60" style={{color: 'var(--doc-color)'}}>▪</span> 
+                                                <EditableField 
+                                                    value={ach} 
+                                                    onChange={(v) => updateExperienceAchievement(expIndex, achIndex, v)} 
+                                                    multiline 
+                                                    className="flex-1"
+                                                />
+                                                <button 
+                                                    className="absolute -left-5 top-1 p-0.5 text-status-error opacity-0 group-hover/ach:opacity-100 transition-opacity"
+                                                    onClick={() => setResumeData(prev => {
+                                                        const nExp = [...prev.experience];
+                                                        nExp[expIndex].achievements = nExp[expIndex].achievements.filter((_, i) => i !== achIndex);
+                                                        return {...prev, experience: nExp};
+                                                    })}
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </li>
+                                        ))}
+                                        <li className="opacity-0 group-hover/exp:opacity-100 transition-opacity mt-1">
+                                            <button onClick={() => addExperienceAchievement(expIndex)} className="text-[11px] text-ink/40 hover:text-ink flex items-center gap-1">
+                                                <Plus className="w-3 h-3" /> Add bullet
+                                            </button>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <ul className="mt-2 space-y-1.5 text-[14px] text-ink/80">
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
-                                        <span>Led frontend architecture for the new billing portal, decreasing time-to-market for new payment features by 30%.</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
-                                        <span>Decreased bundle size by 40%, improving Time to Interactive (TTI) by 1.2s across the dashboard.</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
-                                        <span>Mentored 4 junior engineers and established new React testing patterns using React Testing Library.</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div>
-                                <div className="flex justify-between items-baseline mb-1">
-                                    <h3 className="font-semibold text-ink text-[15px]">Software Engineer <span className="font-normal text-ink/60">at Airbnb</span></h3>
-                                    <span className="text-[13px] text-ink/60">2018 - 2021</span>
-                                </div>
-                                <ul className="mt-2 space-y-1.5 text-[14px] text-ink/80">
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
-                                        <span>Developed and maintained core UI components in the shared design system used by 50+ engineers.</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
-                                        <span>Migrated legacy Redux codebase to React Context and Hooks, reducing boilerplate code by 25%.</span>
-                                    </li>
-                                </ul>
-                            </div>
+                            ))}
                         </div>
 
-                        <div className="mb-6 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
-                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4">Education</h2>
-                            <div>
-                                <div className="flex justify-between items-baseline mb-1">
-                                    <h3 className="font-semibold text-ink text-[15px]">B.S. Computer Science <span className="font-normal text-ink/60">at UC Berkeley</span></h3>
-                                    <span className="text-[13px] text-ink/60">2014 - 2018</span>
+                        {/* EDUCATION */}
+                        <div className="mb-6 border border-transparent hover:border-ink/10 p-4 -m-4 rounded transition-colors group/section">
+                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4" style={{color: 'var(--doc-color)'}}>Education</h2>
+                            {resumeData.education.map((edu, eduIndex) => (
+                                <div key={edu._id || eduIndex} className="mb-4 group/edu relative">
+                                    <button 
+                                        className="absolute -left-10 top-0 p-1 text-status-error opacity-0 group-hover/edu:opacity-100 transition-opacity rounded hover:bg-status-error/10"
+                                        onClick={() => setResumeData(prev => ({...prev, education: prev.education.filter((_, i) => i !== eduIndex)}))}
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-semibold text-ink text-[15px] flex-1 flex items-center">
+                                            <EditableField value={edu.degree} onChange={(v) => updateEducation(eduIndex, 'degree', v)} className="font-semibold text-[15px]" />
+                                            <span className="font-normal text-ink/60 mx-1">at</span>
+                                            <EditableField value={edu.institution} onChange={(v) => updateEducation(eduIndex, 'institution', v)} className="text-ink/60" />
+                                        </h3>
+                                        <div className="flex items-center gap-1 text-[13px] text-ink/60 shrink-0 w-32 justify-end">
+                                            <EditableField value={edu.startDate} onChange={(v) => updateEducation(eduIndex, 'startDate', v)} className="text-right w-12" /> - 
+                                            <EditableField value={edu.endDate} onChange={(v) => updateEducation(eduIndex, 'endDate', v)} className="text-left w-14" />
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-1 text-[14px] text-ink/80">
+                                        <EditableField value={edu.gpa} onChange={(v) => updateEducation(eduIndex, 'gpa', v)} placeholder="GPA / Details" className="w-full" />
+                                    </div>
                                 </div>
-                                <p className="text-[14px] text-ink/80">GPA: 3.8/4.0 • Dean's List all semesters</p>
-                            </div>
+                            ))}
                         </div>
 
-                        <div className="mb-6 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
-                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4">Skills</h2>
-                            <p className="text-[14px] text-ink/80 leading-relaxed">
-                                <span className="font-semibold text-ink">Languages:</span> JavaScript, TypeScript, HTML/CSS, Python, SQL<br/>
-                                <span className="font-semibold text-ink">Frameworks:</span> React, Next.js, Node.js, Express, Tailwind CSS<br/>
-                                <span className="font-semibold text-ink">Tools:</span> Git, Webpack, Vite, Jest, Cypress, Figma, AWS
+                        {/* SKILLS */}
+                        <div className="mb-6 border border-transparent hover:border-ink/10 p-4 -m-4 rounded transition-colors group/section">
+                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4" style={{color: 'var(--doc-color)'}}>Skills</h2>
+                            <p className="text-[14px] text-ink/80 leading-relaxed flex items-start gap-2">
+                                <span className="font-semibold text-ink shrink-0">Technical:</span> 
+                                <EditableField 
+                                    value={resumeData.skills?.technical?.join(', ') || ''} 
+                                    onChange={(v) => setResumeData(prev => ({...prev, skills: {...prev.skills, technical: v.split(', ')}}))} 
+                                    multiline 
+                                    className="flex-1" 
+                                    placeholder="Comma separated skills"
+                                />
                             </p>
                         </div>
-                        
-                        {/* Page break indicator */}
-                        <div className="absolute top-[1123px] left-0 w-full border-t border-dashed border-status-error/40 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                            <div className="absolute right-4 -top-3 bg-white border border-status-error/20 text-status-error text-[11px] px-2 py-0.5 rounded shadow-sm">
-                                Content below this line won't print on page 1
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Canvas Controls */}
-                    <div className="fixed bottom-6 right-[324px] flex items-center gap-2 bg-white rounded-lg border border-ink/10 p-1 shadow-sm transition-all z-20">
-                        <button className="p-1.5 hover:bg-surface-2 rounded text-ink/60 transition-colors"><ZoomOut className="w-4 h-4" /></button>
-                        <span className="text-[12px] font-medium px-2 text-ink">100%</span>
-                        <button className="p-1.5 hover:bg-surface-2 rounded text-ink/60 transition-colors"><ZoomIn className="w-4 h-4" /></button>
                     </div>
                 </main>
 
@@ -229,7 +392,7 @@ const ResumeWorkspace = () => {
                                 <span className="text-[13px] text-ink/40 font-medium uppercase tracking-wider">/ 100</span>
                             </div>
                             <div className="h-1.5 w-full bg-surface-2 rounded-full overflow-hidden mb-3">
-                                <div className="h-full bg-status-success rounded-full" style={{width: '82%'}} />
+                                <div className="h-full bg-status-success rounded-full" style={{width: '82%', backgroundColor: docSettings.color !== '#141210' ? docSettings.color : undefined}} />
                             </div>
                             <div className="text-[12px] text-ink/60">Based on your current content</div>
                         </div>
@@ -240,8 +403,7 @@ const ResumeWorkspace = () => {
                             </h3>
 
                             <div className="space-y-4">
-                                {/* Suggestion Card */}
-                                <div className="bg-white border border-ink/5 border-l-[3px] border-l-accent rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="bg-white border border-ink/5 border-l-[3px] border-l-accent rounded-xl p-4 shadow-sm">
                                     <div className="inline-block px-2 py-1 bg-surface-2 rounded text-[10px] font-semibold uppercase tracking-wider text-ink/60 mb-3">
                                         Bullet enhancement
                                     </div>
@@ -250,20 +412,7 @@ const ResumeWorkspace = () => {
                                     </p>
                                     <div className="flex items-center gap-2">
                                         <button className="bg-accent text-white h-[28px] px-3 text-[12px] rounded-lg font-medium hover:brightness-95 transition-all">Apply</button>
-                                        <button className="bg-surface-2 text-ink/60 hover:text-ink hover:bg-ink/5 h-[28px] px-3 text-[12px] rounded-lg font-medium transition-all">Dismiss</button>
-                                    </div>
-                                </div>
-                                
-                                <div className="bg-white border border-ink/5 border-l-[3px] border-l-status-warning rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-                                    <div className="inline-block px-2 py-1 bg-surface-2 rounded text-[10px] font-semibold uppercase tracking-wider text-ink/60 mb-3">
-                                        Keyword missing
-                                    </div>
-                                    <p className="text-[13px] text-ink mb-4 leading-relaxed">
-                                        Consider adding <span className="font-medium bg-status-warning/10 px-1 py-0.5 rounded text-status-warning">"React Context"</span> to your skills section based on your target role.
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                        <button className="bg-accent text-white h-[28px] px-3 text-[12px] rounded-lg font-medium hover:brightness-95 transition-all">Apply</button>
-                                        <button className="bg-surface-2 text-ink/60 hover:text-ink hover:bg-ink/5 h-[28px] px-3 text-[12px] rounded-lg font-medium transition-all">Dismiss</button>
+                                        <button className="bg-surface-2 text-ink/60 hover:text-ink h-[28px] px-3 text-[12px] rounded-lg font-medium transition-all">Dismiss</button>
                                     </div>
                                 </div>
                             </div>
@@ -271,15 +420,13 @@ const ResumeWorkspace = () => {
                     </aside>
                 )}
 
-                {/* Floating AI Button (when collapsed) */}
+                {/* Floating AI Button */}
                 {!rightPanelOpen && (
                     <button 
                         onClick={() => setRightPanelOpen(true)}
                         className="absolute right-6 top-20 w-12 h-12 bg-white rounded-full shadow-lg border border-ink/5 flex items-center justify-center text-accent hover:scale-105 transition-transform z-20 group"
-                        title="AI Assistant"
                     >
                         <Sparkles className="w-5 h-5 group-hover:animate-pulse" />
-                        <div className="absolute top-0 right-0 w-3 h-3 bg-status-error border-2 border-white rounded-full" />
                     </button>
                 )}
             </div>
