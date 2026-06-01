@@ -208,8 +208,10 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
                                 ))}
                             </div>
                         )}
-                    </>
-                )}
+                    </div>
+                </div>
+                </>
+            )}
             </div>
         </div>
     );
