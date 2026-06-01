@@ -13,6 +13,7 @@ import ResumesPage from './pages/ResumesPage';
 import ResumeWorkspace from './pages/ResumeWorkspace';
 import TemplatesPage from './pages/TemplatesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import AnalyzerPage from './pages/AnalyzerPage';
 import ProfilePage from './pages/ProfilePage';
 import ApplicationTracker from './pages/ApplicationTracker';
 import NotFoundPage from './pages/NotFoundPage';
@@ -153,6 +154,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <AnalyticsPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analyzer"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AnalyzerPage />
                 </Layout>
               </ProtectedRoute>
             }
