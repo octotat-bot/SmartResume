@@ -79,6 +79,7 @@ const RadialNav = () => {
                             transition: `all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${isOpen ? index * 0.04 : (navItems.length - index) * 0.03}s`,
                             opacity: isOpen ? 1 : 0,
                             pointerEvents: isOpen ? 'auto' : 'none',
+                            zIndex: hoveredIndex === index ? 50 : 10,
                         }}
                     >
                         <Link
