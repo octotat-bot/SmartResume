@@ -73,10 +73,45 @@ const ResumesPage = () => {
 
     if (loading && page === 1) {
         return (
-            <div className="min-h-screen bg-surface-1 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-ink/60">Loading resumes...</p>
+            <div className="min-h-screen bg-canvas p-6">
+                <div className="max-w-7xl mx-auto">
+                    {/* Header Skeleton */}
+                    <div className="mb-8 flex justify-between items-start">
+                        <div>
+                            <div className="w-48 h-10 bg-ink/5 rounded-md mb-3 animate-pulse" />
+                            <div className="w-64 h-5 bg-ink/5 rounded-md animate-pulse" />
+                        </div>
+                        <div className="w-40 h-12 bg-ink/5 rounded-lg animate-pulse" />
+                    </div>
+                    {/* Filter Skeleton */}
+                    <div className="flex flex-col md:flex-row gap-4 mb-8">
+                        <div className="flex-1 h-12 bg-ink/5 rounded-lg animate-pulse" />
+                        <div className="w-full md:w-40 h-12 bg-ink/5 rounded-lg animate-pulse" />
+                        <div className="w-full md:w-40 h-12 bg-ink/5 rounded-lg animate-pulse" />
+                        <div className="w-12 h-12 bg-ink/5 rounded-lg animate-pulse" />
+                    </div>
+                    {/* Grid Skeleton */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                            <div key={i} className="bg-white border border-ink/5 rounded-xl p-6 min-h-[220px] flex flex-col justify-between shadow-sm">
+                                <div className="mb-6">
+                                    <div className="w-12 h-12 rounded-xl bg-ink/5 animate-pulse" />
+                                </div>
+                                <div className="flex-1 mb-4">
+                                    <div className="w-3/4 h-6 bg-ink/5 rounded-md mb-3 animate-pulse" />
+                                    <div className="w-1/2 h-4 bg-ink/5 rounded-md mb-3 animate-pulse" />
+                                    <div className="flex gap-2">
+                                        <div className="w-16 h-5 bg-ink/5 rounded-full animate-pulse" />
+                                        <div className="w-12 h-5 bg-ink/5 rounded-full animate-pulse" />
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4 border-t border-ink/5 mt-auto">
+                                    <div className="w-24 h-4 bg-ink/5 rounded-md animate-pulse" />
+                                    <div className="w-16 h-8 bg-ink/5 rounded-lg animate-pulse" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
