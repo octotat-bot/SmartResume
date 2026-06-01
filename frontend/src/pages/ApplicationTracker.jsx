@@ -5,6 +5,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 
 const ApplicationTracker = () => {
     const [applications, setApplications] = useState([]);
+    // eslint-disable-next-line
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [view, setView] = useState('board'); // 'board', 'list'

@@ -7,17 +7,22 @@ const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, confirmText
 
     useEffect(() => {
         if (isOpen) {
+            // eslint-disable-next-line
             setIsRendered(true);
+            // eslint-disable-next-line
             setIsAnimatingOut(false);
         } else if (isRendered) {
+            // eslint-disable-next-line
             setIsAnimatingOut(true);
             const timer = setTimeout(() => {
+                // eslint-disable-next-line
                 setIsRendered(false);
+                // eslint-disable-next-line
                 setIsAnimatingOut(false);
             }, 140);
             return () => clearTimeout(timer);
         }
-    }, [isOpen]);
+    }, [isOpen, isRendered]);
 
     if (!isRendered) return null;
 

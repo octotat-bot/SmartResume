@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2, Download, Layout, X, Plus, Sparkles, ArrowLeft, Check, GripVertical, FileText } from 'lucide-react';
 import { resumeService } from '../services/api';
@@ -127,16 +127,6 @@ const ResumeWorkspace = () => {
         setResumeData(prev => {
             const exp = [...prev.experience];
             exp[index] = { ...exp[index], [field]: value };
-            return { ...prev, experience: exp };
-        });
-    };
-
-    const updateExperienceAchievement = (expIndex, achIndex, value) => {
-        setResumeData(prev => {
-            const exp = [...prev.experience];
-            const achievements = [...exp[expIndex].achievements];
-            achievements[achIndex] = value;
-            exp[expIndex] = { ...exp[expIndex], achievements };
             return { ...prev, experience: exp };
         });
     };

@@ -4,7 +4,7 @@ import EditableField from '../components/EditableField';
 
 const TemplateTechnical = ({ 
     resumeData, setResumeData, updatePersonalInfo, updateExperience, 
-    addExperienceAchievement, updateEducation, docSettings, previewMode
+    addExperienceAchievement, docSettings, previewMode
 }) => {
     return (
         <div className={`w-[794px] min-h-[1123px] shrink-0 bg-[#0A0E17] text-[#8A9EB3] shadow-[0_8px_40px_rgba(20,18,16,0.12)] ${docSettings.margin === 'narrow' ? 'p-10' : docSettings.margin === 'wide' ? 'p-20' : 'p-16'} transition-all relative group font-mono print:shadow-none print:m-0 print:bg-white print:text-black ${previewMode ? 'pointer-events-none' : ''}`}>

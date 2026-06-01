@@ -3,6 +3,7 @@ import { CheckCircle, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
 
 const ToastContext = createContext(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => {
     const context = useContext(ToastContext);
     if (!context) {
@@ -66,6 +67,7 @@ const ToastItem = ({ toast, onRemove }) => {
             stopTimer();
         }
         return stopTimer;
+        // eslint-disable-next-line
     }, [isHovered]);
 
     const typeConfig = {

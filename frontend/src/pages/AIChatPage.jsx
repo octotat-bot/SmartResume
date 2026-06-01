@@ -69,7 +69,7 @@ const AIChatPage = () => {
                 content: response.data.message,
                 timestamp: new Date(response.data.timestamp)
             }]);
-        } catch (error) {
+        } catch {
             setMessages(prev => [...prev, {
                 role: 'assistant',
                 content: 'I encountered an error connecting to the AI service. Please try again later.',

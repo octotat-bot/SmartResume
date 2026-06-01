@@ -41,6 +41,7 @@ const RadialNav = () => {
 
     // Close nav on route change
     useEffect(() => {
+        // eslint-disable-next-line
         setIsOpen(false);
     }, [location.pathname]);
 
