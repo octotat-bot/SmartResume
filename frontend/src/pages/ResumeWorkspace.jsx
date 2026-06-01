@@ -113,6 +113,7 @@ const ResumeWorkspace = () => {
         } else {
             initializeNewResume();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     // Auto-save
@@ -120,6 +121,7 @@ const ResumeWorkspace = () => {
         if (!resume || id === 'new') return;
         const timer = setTimeout(() => handleAutoSave(), 3000);
         return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resume]);
 
     // Keyboard shortcuts
@@ -140,6 +142,7 @@ const ResumeWorkspace = () => {
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resume, undoStack, redoStack]);
 
     const loadResume = async () => {
@@ -274,8 +277,8 @@ const ResumeWorkspace = () => {
 
     if (!resume) {
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-                <div className="text-gray-400">Loading workspace...</div>
+            <div className="min-h-screen bg-surface-1 flex items-center justify-center">
+                <div className="text-ink/60">Loading workspace...</div>
             </div>
         );
     }
@@ -293,8 +296,8 @@ const ResumeWorkspace = () => {
     ];
 
     const statusIcons = {
-        saved: <Check className="w-3 h-3 text-white" />,
-        saving: <Loader className="w-3 h-3 animate-spin text-white" />,
+        saved: <Check className="w-3 h-3 text-ink" />,
+        saving: <Loader className="w-3 h-3 animate-spin text-ink" />,
         error: <AlertCircle className="w-3 h-3 text-red-400" />
     };
 
@@ -305,17 +308,17 @@ const ResumeWorkspace = () => {
     };
 
     return (
-        <div className="h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex flex-col">
+        <div className="h-screen bg-canvas flex flex-col font-sans">
             {/* Top Toolbar - Modern Design */}
-            <div className="h-20 bg-gradient-to-r from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl border-b border-white/10 px-8 flex items-center justify-between flex-shrink-0 shadow-2xl">
+            <div className="h-16 bg-surface-1 border-b border-ink/5 px-6 flex items-center justify-between flex-shrink-0">
                 {/* Left Section */}
                 <div className="flex items-center gap-6">
                     <button
                         onClick={() => navigate('/resumes')}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 rounded-xl transition-all duration-300 hover:scale-110"
+                        className="group p-2.5 hover:bg-surface-2 rounded-xl transition-all duration-200"
                         title="Back to Resumes"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors" />
+                        <ArrowLeft className="w-5 h-5 text-ink/60 group-hover:text-ink transition-colors" />
                     </button>
 
                     <div className="flex flex-col">
@@ -323,19 +326,19 @@ const ResumeWorkspace = () => {
                             type="text"
                             value={resume.title}
                             onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                            className="text-xl font-bold bg-transparent border-none focus:outline-none text-white w-80 placeholder-gray-500"
+                            className="text-lg font-serif bg-transparent border-none focus:outline-none text-ink w-80 placeholder-ink/40"
                             placeholder="Untitled Resume"
                         />
                         <div className="flex items-center gap-2 mt-1">
                             <div className={`flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full ${autoSaveStatus === 'saved' ? 'bg-emerald-500/20 text-emerald-400' :
-                                autoSaveStatus === 'saving' ? 'bg-blue-500/20 text-blue-400' :
+                                autoSaveStatus === 'saving' ? 'bg-accent/10 text-accent border border-accent/20' :
                                     'bg-red-500/20 text-red-400'
                                 }`}>
                                 {statusIcons[autoSaveStatus]}
                                 <span>{statusText[autoSaveStatus]}</span>
                             </div>
                             {autoSaveStatus === 'saved' && (
-                                <span className="text-xs text-gray-500">Last saved {new Date().toLocaleTimeString()}</span>
+                                <span className="text-xs text-ink/40">Last saved {new Date().toLocaleTimeString()}</span>
                             )}
                         </div>
                     </div>
@@ -343,55 +346,55 @@ const ResumeWorkspace = () => {
 
 
                 {/* Center Section - Tools */}
-                <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10">
+                <div className="flex items-center gap-2">
                     <button
                         onClick={handleUndo}
                         disabled={undoStack.length === 0}
-                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent hover:scale-110 active:scale-95"
+                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200 disabled:opacity-30"
                         title="Undo (Ctrl+Z)"
                     >
-                        <Undo className="w-4 h-4 text-gray-300 group-hover:text-white transition-all group-hover:-rotate-12" />
+                        <Undo className="w-4 h-4 text-ink/60 group-hover:text-ink" />
                     </button>
                     <button
                         onClick={handleRedo}
                         disabled={redoStack.length === 0}
-                        className="group p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent hover:scale-110 active:scale-95"
+                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200 disabled:opacity-30"
                         title="Redo (Ctrl+Y)"
                     >
-                        <Redo className="w-4 h-4 text-gray-300 group-hover:text-white transition-all group-hover:rotate-12" />
+                        <Redo className="w-4 h-4 text-ink/60 group-hover:text-ink" />
                     </button>
 
-                    <div className="w-px h-6 bg-white/10 mx-1"></div>
+                    <div className="w-px h-4 bg-ink/10 mx-2"></div>
 
                     <button
                         onClick={() => setShowVersionHistory(true)}
                         disabled={id === 'new'}
-                        className="group p-2.5 hover:bg-blue-500/20 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:hover:bg-transparent hover:scale-110 active:scale-95"
+                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200 disabled:opacity-30"
                         title="Version History"
                     >
-                        <History className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-all group-hover:rotate-12" />
+                        <History className="w-4 h-4 text-ink/60 group-hover:text-ink" />
                     </button>
                     <button
                         onClick={() => setShowAnalyzer(true)}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-500/20 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-green-500/20"
+                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200"
                         title="Analyze Resume"
                     >
-                        <TrendingUp className="w-4 h-4 text-green-400 group-hover:text-green-300 transition-all group-hover:translate-y-[-2px]" />
+                        <TrendingUp className="w-4 h-4 text-ink/60 group-hover:text-ink" />
                     </button>
                     <button
                         onClick={() => setShowAIPanel(true)}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 rounded-xl transition-all duration-200 relative hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-purple-500/20"
+                        className="group p-2 hover:bg-accent/10 rounded-lg transition-all duration-200 relative"
                         title="AI Assistant"
                     >
-                        <Wand2 className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-all group-hover:rotate-12" />
-                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                        <Wand2 className="w-4 h-4 text-accent group-hover:text-accent/80" />
+                        <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
                     </button>
                     <button
                         onClick={() => setShowStats(true)}
-                        className="group p-2.5 hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-yellow-500/20 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-orange-500/20"
+                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200"
                         title="Resume Statistics"
                     >
-                        <BarChart3 className="w-4 h-4 text-orange-400 group-hover:text-orange-300 transition-all group-hover:scale-110" />
+                        <BarChart3 className="w-4 h-4 text-ink/60 group-hover:text-ink" />
                     </button>
                 </div>
 
@@ -399,16 +402,16 @@ const ResumeWorkspace = () => {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleDownload}
-                        className="group px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 flex items-center gap-2 hover:scale-105"
+                        className="btn-ghost flex items-center gap-2"
                         title="Export PDF"
                     >
-                        <Download className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors" />
-                        <span className="text-sm font-medium text-gray-300 group-hover:text-white">Export</span>
+                        <Download className="w-4 h-4" />
+                        <span>Export</span>
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="px-6 py-2.5 bg-white hover:bg-gray-50 text-gray-900 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105"
+                        className="btn-primary flex items-center gap-2 disabled:opacity-50"
                     >
                         <Save className="w-4 h-4" />
                         {saving ? 'Saving...' : 'Save'}
@@ -419,17 +422,17 @@ const ResumeWorkspace = () => {
             {/* Main Content */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Left Sidebar - Sections */}
-                <div className="w-52 bg-[#0a0a0a] border-r border-[#1a1a1a] overflow-y-auto flex-shrink-0">
-                    <div className="p-4">
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Sections</h3>
+                <div className="w-[240px] bg-surface-2 overflow-y-auto flex-shrink-0">
+                    <div className="p-6">
+                        <h3 className="text-caption text-ink/40 mb-4">Sections</h3>
                         <div className="space-y-1">
                             {sections.map((section) => (
                                 <button
                                     key={section.id}
                                     onClick={() => setActiveSection(section.id)}
-                                    className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all ${activeSection === section.id
-                                        ? 'bg-white/10 text-white border-l-2 border-white'
-                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all ${activeSection === section.id
+                                        ? 'bg-accent/10 text-accent font-medium border-l-2 border-accent'
+                                        : 'text-ink/60 hover:text-ink hover:bg-surface-3'
                                         }`}
                                 >
                                     {section.label}
@@ -440,15 +443,15 @@ const ResumeWorkspace = () => {
                 </div>
 
                 {/* Center - Editor */}
-                <div className="flex-1 overflow-y-auto bg-[#0a0a0a] p-8">
+                <div className="flex-1 overflow-y-auto bg-surface-1 p-8">
                     <div className="max-w-3xl mx-auto">
                         {/* Personal Info */}
                         {activeSection === 'personal' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-white mb-6">Personal Information</h2>
+                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Personal Information</h2>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Full Name</label>
+                                        <label className="block text-sm font-medium mb-2 text-ink/80">Full Name</label>
                                         <input
                                             type="text"
                                             value={resume.personalInfo?.fullName || ''}
@@ -456,12 +459,12 @@ const ResumeWorkspace = () => {
                                                 ...resume,
                                                 personalInfo: { ...resume.personalInfo, fullName: e.target.value }
                                             })}
-                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none transition-all placeholder-ink/40"
                                             placeholder="John Doe"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Email</label>
+                                        <label className="block text-sm font-medium mb-2 text-ink/80">Email</label>
                                         <input
                                             type="email"
                                             value={resume.personalInfo?.email || ''}
@@ -469,12 +472,12 @@ const ResumeWorkspace = () => {
                                                 ...resume,
                                                 personalInfo: { ...resume.personalInfo, email: e.target.value }
                                             })}
-                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                             placeholder="you@example.com"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Phone</label>
+                                        <label className="block text-sm font-medium mb-2 text-ink/80">Phone</label>
                                         <input
                                             type="tel"
                                             value={resume.personalInfo?.phone || ''}
@@ -482,12 +485,12 @@ const ResumeWorkspace = () => {
                                                 ...resume,
                                                 personalInfo: { ...resume.personalInfo, phone: e.target.value }
                                             })}
-                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                             placeholder="+1 (555) 123-4567"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Location</label>
+                                        <label className="block text-sm font-medium mb-2 text-ink/80">Location</label>
                                         <input
                                             type="text"
                                             value={resume.personalInfo?.location || ''}
@@ -495,16 +498,16 @@ const ResumeWorkspace = () => {
                                                 ...resume,
                                                 personalInfo: { ...resume.personalInfo, location: e.target.value }
                                             })}
-                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                             placeholder="San Francisco, CA"
                                         />
                                     </div>
 
                                     {/* Tags */}
                                     <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
+                                        <label className="block text-sm font-medium mb-2 text-ink/80">
                                             Tags
-                                            <span className="text-xs text-gray-500 ml-2">(Organize your resumes)</span>
+                                            <span className="text-xs text-ink/40 ml-2">(Organize your resumes)</span>
                                         </label>
                                         <div className="space-y-2">
                                             <div className="flex gap-2">
@@ -525,7 +528,7 @@ const ResumeWorkspace = () => {
                                                             setSkillInput('');
                                                         }
                                                     }}
-                                                    className="flex-1 px-4 py-2 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="flex-1 px-4 py-2 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     placeholder="Add tags (e.g., frontend, react, senior)..."
                                                 />
                                                 <button
@@ -541,7 +544,7 @@ const ResumeWorkspace = () => {
                                                             setSkillInput('');
                                                         }
                                                     }}
-                                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                                    className="px-4 py-2 bg-blue-600 text-ink rounded-lg hover:bg-blue-700 transition-colors"
                                                 >
                                                     Add
                                                 </button>
@@ -551,7 +554,7 @@ const ResumeWorkspace = () => {
                                                     {resume.tags.map((tag, index) => (
                                                         <span
                                                             key={index}
-                                                            className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm flex items-center gap-2 border border-blue-500/30"
+                                                            className="px-3 py-1 bg-accent/10 text-accent border border-accent/20 rounded-full text-sm flex items-center gap-2 border "
                                                         >
                                                             {tag}
                                                             <button
@@ -561,7 +564,7 @@ const ResumeWorkspace = () => {
                                                                         tags: resume.tags.filter((_, i) => i !== index)
                                                                     });
                                                                 }}
-                                                                className="hover:text-red-400 transition-colors"
+                                                                className="hover:text-red-600 transition-colors"
                                                             >
                                                                 <X className="w-3 h-3" />
                                                             </button>
@@ -573,7 +576,7 @@ const ResumeWorkspace = () => {
                                     </div>
 
                                     <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Professional Summary</label>
+                                        <label className="block text-sm font-medium mb-2 text-ink/80">Professional Summary</label>
                                         <textarea
                                             value={resume.personalInfo?.summary || ''}
                                             onChange={(e) => setResume({
@@ -581,7 +584,7 @@ const ResumeWorkspace = () => {
                                                 personalInfo: { ...resume.personalInfo, summary: e.target.value }
                                             })}
                                             rows={4}
-                                            className="w-full px-4 py-3 bg-[#111111] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
+                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
                                             placeholder="Brief professional summary..."
                                         />
                                     </div>
@@ -592,7 +595,7 @@ const ResumeWorkspace = () => {
                         {/* Social Links */}
                         {activeSection === 'social' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-white mb-6">Social Links</h2>
+                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Social Links</h2>
                                 <div className="space-y-4">
                                     {/* Social Links Loop */}
                                     {[
@@ -624,10 +627,10 @@ const ResumeWorkspace = () => {
                                                         });
                                                     }
                                                 }}
-                                                className="w-5 h-5 rounded border-[#1a1a1a] bg-[#0a0a0a] text-blue-500 focus:ring-0 focus:ring-offset-0 checked:bg-blue-500 checked:border-blue-500 cursor-pointer"
+                                                className="w-5 h-5 rounded border-ink/10 bg-surface-1 text-blue-500 focus:ring-0 focus:ring-offset-0 checked:bg-blue-500 checked:border-blue-500 cursor-pointer"
                                             />
-                                            <div className="flex-1 flex items-center bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg overflow-hidden focus-within:border-white/30 transition-colors">
-                                                <div className="bg-[#111111] px-3 py-3 border-r border-[#1a1a1a] flex items-center gap-2 text-gray-400 min-w-[140px]">
+                                            <div className="flex-1 flex items-center bg-surface-1 border border-ink/10 rounded-lg overflow-hidden focus-within:border-white/30 transition-colors">
+                                                <div className="bg-surface-2 px-3 py-3 border-r border-ink/10 flex items-center gap-2 text-ink/60 min-w-[140px]">
                                                     <platform.icon className="w-4 h-4" />
                                                     <span className="text-sm font-medium">{platform.label}</span>
                                                 </div>
@@ -639,7 +642,7 @@ const ResumeWorkspace = () => {
                                                         personalInfo: { ...resume.personalInfo, [platform.id]: e.target.value }
                                                     })}
                                                     placeholder={platform.placeholder}
-                                                    className="flex-1 px-4 py-3 bg-transparent text-white focus:outline-none placeholder-gray-600"
+                                                    className="flex-1 px-4 py-3 bg-transparent text-ink focus:outline-none placeholder-gray-600"
                                                 />
                                             </div>
                                         </div>
@@ -652,7 +655,7 @@ const ResumeWorkspace = () => {
                         {activeSection === 'experience' && (
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-white">Experience</h2>
+                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Experience</h2>
                                     <button
                                         onClick={() => addItem('experience')}
                                         className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
@@ -663,7 +666,7 @@ const ResumeWorkspace = () => {
                                 </div>
 
                                 {resume.experience?.map((exp, index) => (
-                                    <div key={index} className="p-6 bg-[#111111] border border-[#1a1a1a] rounded-lg relative group overflow-hidden">
+                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
                                         <button
                                             onClick={() => removeItem('experience', index)}
                                             className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
@@ -672,13 +675,13 @@ const ResumeWorkspace = () => {
                                         </button>
                                         <div className="space-y-4 pr-12">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Experience Type <span className="text-red-400">*</span>
                                                 </label>
                                                 <select
                                                     value={exp.experienceType || ''}
                                                     onChange={(e) => updateItem('experience', index, 'experienceType', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
                                                 >
                                                     <option value="">Select type of experience</option>
                                                     <option value="Full-time">Full-time</option>
@@ -689,7 +692,7 @@ const ResumeWorkspace = () => {
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Designation <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -697,20 +700,20 @@ const ResumeWorkspace = () => {
                                                     value={exp.position || ''}
                                                     onChange={(e) => updateItem('experience', index, 'position', e.target.value)}
                                                     placeholder="Enter your role"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
-                                            <label className="flex items-start gap-2 text-sm text-gray-300 cursor-pointer">
+                                            <label className="flex items-start gap-2 text-sm text-ink/80 cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     checked={exp.isTechnical || false}
                                                     onChange={(e) => updateItem('experience', index, 'isTechnical', e.target.checked)}
-                                                    className="w-4 h-4 mt-0.5 rounded border-[#1a1a1a] bg-[#0a0a0a] text-white focus:ring-white/30"
+                                                    className="w-4 h-4 mt-0.5 rounded border-ink/10 bg-surface-1 text-ink focus:ring-white/30"
                                                 />
                                                 This position involve tasks of programming languages, APIs, or frameworks
                                             </label>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Company Name <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -718,17 +721,17 @@ const ResumeWorkspace = () => {
                                                     value={exp.company || ''}
                                                     onChange={(e) => updateItem('experience', index, 'company', e.target.value)}
                                                     placeholder="Enter Company Name"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Domain of Experience
                                                 </label>
                                                 <select
                                                     value={exp.domain || ''}
                                                     onChange={(e) => updateItem('experience', index, 'domain', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
                                                 >
                                                     <option value="">Select domain of experience</option>
                                                     <option value="Software Development">Software Development</option>
@@ -744,7 +747,7 @@ const ResumeWorkspace = () => {
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Start Date <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -752,11 +755,11 @@ const ResumeWorkspace = () => {
                                                         value={exp.startDate || ''}
                                                         onChange={(e) => updateItem('experience', index, 'startDate', e.target.value)}
                                                         placeholder="DD/MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         End Date <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -765,21 +768,21 @@ const ResumeWorkspace = () => {
                                                         onChange={(e) => updateItem('experience', index, 'endDate', e.target.value)}
                                                         placeholder="DD/MM/YYYY"
                                                         disabled={exp.current}
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500 disabled:opacity-50"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40 disabled:opacity-50"
                                                     />
                                                 </div>
                                             </div>
-                                            <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                                            <label className="flex items-center gap-2 text-sm text-ink/80 cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     checked={exp.current || false}
                                                     onChange={(e) => updateItem('experience', index, 'current', e.target.checked)}
-                                                    className="w-4 h-4 rounded border-[#1a1a1a] bg-[#0a0a0a] text-white focus:ring-white/30"
+                                                    className="w-4 h-4 rounded border-ink/10 bg-surface-1 text-ink focus:ring-white/30"
                                                 />
                                                 I am currently working here
                                             </label>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Location of work <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -787,11 +790,11 @@ const ResumeWorkspace = () => {
                                                     value={exp.location || ''}
                                                     onChange={(e) => updateItem('experience', index, 'location', e.target.value)}
                                                     placeholder="Enter the city you work in"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Description <span className="text-red-400">*</span>
                                                 </label>
                                                 <textarea
@@ -799,7 +802,7 @@ const ResumeWorkspace = () => {
                                                     onChange={(e) => updateItem('experience', index, 'description', e.target.value)}
                                                     placeholder="Describe your experience using bullet points: roles, impact with data, skills/tools used, optional achievements."
                                                     rows={5}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
                                                 />
                                             </div>
                                         </div>
@@ -807,7 +810,7 @@ const ResumeWorkspace = () => {
                                 ))}
 
                                 {resume.experience?.length === 0 && (
-                                    <div className="text-center py-12 text-gray-500 bg-[#111111] border border-[#1a1a1a] rounded-lg">
+                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
                                         <p>No experience added yet. Click "Add Experience" to get started.</p>
                                     </div>
                                 )}
@@ -818,7 +821,7 @@ const ResumeWorkspace = () => {
                         {activeSection === 'education' && (
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-white">Education</h2>
+                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Education</h2>
                                     <button
                                         onClick={() => addItem('education')}
                                         className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
@@ -829,7 +832,7 @@ const ResumeWorkspace = () => {
                                 </div>
 
                                 {resume.education?.map((edu, index) => (
-                                    <div key={index} className="p-6 bg-[#111111] border border-[#1a1a1a] rounded-lg relative group overflow-hidden">
+                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
                                         <button
                                             onClick={() => removeItem('education', index)}
                                             className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
@@ -838,13 +841,13 @@ const ResumeWorkspace = () => {
                                         </button>
                                         <div className="space-y-4 pr-12">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Education Type <span className="text-red-400">*</span>
                                                 </label>
                                                 <select
                                                     value={edu.educationType || ''}
                                                     onChange={(e) => updateItem('education', index, 'educationType', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
                                                 >
                                                     <option value="">Select level of education</option>
                                                     <option value="High School">High School</option>
@@ -857,7 +860,7 @@ const ResumeWorkspace = () => {
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Institute <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -865,11 +868,11 @@ const ResumeWorkspace = () => {
                                                     value={edu.institution || ''}
                                                     onChange={(e) => updateItem('education', index, 'institution', e.target.value)}
                                                     placeholder="Enter your Institute Name"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Degree <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -877,11 +880,11 @@ const ResumeWorkspace = () => {
                                                     value={edu.degree || ''}
                                                     onChange={(e) => updateItem('education', index, 'degree', e.target.value)}
                                                     placeholder="ex. Bachelor of Education"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Field of Study <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -889,12 +892,12 @@ const ResumeWorkspace = () => {
                                                     value={edu.field || ''}
                                                     onChange={(e) => updateItem('education', index, 'field', e.target.value)}
                                                     placeholder="ex. Computer Science"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Start Date <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -902,11 +905,11 @@ const ResumeWorkspace = () => {
                                                         value={edu.startDate || ''}
                                                         onChange={(e) => updateItem('education', index, 'startDate', e.target.value)}
                                                         placeholder="DD/MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         End Date <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -914,18 +917,18 @@ const ResumeWorkspace = () => {
                                                         value={edu.endDate || ''}
                                                         onChange={(e) => updateItem('education', index, 'endDate', e.target.value)}
                                                         placeholder="DD/MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Grade Type <span className="text-red-400">*</span>
                                                 </label>
                                                 <select
                                                     value={edu.gradeType || ''}
                                                     onChange={(e) => updateItem('education', index, 'gradeType', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
                                                 >
                                                     <option value="">Select grade type</option>
                                                     <option value="Percentage">Percentage</option>
@@ -935,7 +938,7 @@ const ResumeWorkspace = () => {
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Grade <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -943,11 +946,11 @@ const ResumeWorkspace = () => {
                                                         value={edu.grade || ''}
                                                         onChange={(e) => updateItem('education', index, 'grade', e.target.value)}
                                                         placeholder="Percentage or CGPA"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Max Grade <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -955,7 +958,7 @@ const ResumeWorkspace = () => {
                                                         value={edu.maxGrade || ''}
                                                         onChange={(e) => updateItem('education', index, 'maxGrade', e.target.value)}
                                                         placeholder="Percentage or CGPA"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                             </div>
@@ -964,7 +967,7 @@ const ResumeWorkspace = () => {
                                 ))}
 
                                 {resume.education?.length === 0 && (
-                                    <div className="text-center py-12 text-gray-500 bg-[#111111] border border-[#1a1a1a] rounded-lg">
+                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
                                         <p>No education added yet. Click "Add Education" to get started.</p>
                                     </div>
                                 )}
@@ -974,11 +977,11 @@ const ResumeWorkspace = () => {
                         {/* Skills */}
                         {activeSection === 'skills' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-white mb-6">Skills</h2>
+                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Skills</h2>
                                 <div>
                                     <div className="relative mb-6">
                                         <div className="relative">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink/40 pointer-events-none" />
                                             <input
                                                 type="text"
                                                 value={skillInput}
@@ -997,18 +1000,18 @@ const ResumeWorkspace = () => {
                                                     }
                                                 }}
                                                 placeholder="Search Skills..."
-                                                className="w-full pr-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                className="w-full pr-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 style={{ paddingLeft: '48px' }}
                                             />
                                         </div>
 
-                                        <div className="mt-4 max-h-60 overflow-y-auto border border-[#1a1a1a] rounded-lg bg-[#0a0a0a] p-2 space-y-1 custom-scrollbar">
+                                        <div className="mt-4 max-h-60 overflow-y-auto border border-ink/10 rounded-lg bg-surface-1 p-2 space-y-1 custom-scrollbar">
                                             {POPULAR_SKILLS
                                                 .filter(skill => skill.toLowerCase().includes(skillInput.toLowerCase()))
                                                 .map((skill, index) => {
                                                     const isSelected = resume.skills?.technical?.includes(skill);
                                                     return (
-                                                        <label key={index} className="flex items-center gap-3 p-2 hover:bg-[#1a1a1a] rounded-lg cursor-pointer transition-colors group">
+                                                        <label key={index} className="flex items-center gap-3 p-2 hover:bg-surface-3 rounded-lg cursor-pointer transition-colors group">
                                                             <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-white border-white' : 'border-gray-600 group-hover:border-gray-400'}`}>
                                                                 {isSelected && <Check className="w-3.5 h-3.5 text-black" />}
                                                             </div>
@@ -1027,7 +1030,7 @@ const ResumeWorkspace = () => {
                                                                 }}
                                                                 className="hidden"
                                                             />
-                                                            <span className={isSelected ? 'text-white font-medium' : 'text-gray-400 group-hover:text-gray-200'}>{skill}</span>
+                                                            <span className={isSelected ? 'text-ink font-medium' : 'text-ink/60 group-hover:text-gray-200'}>{skill}</span>
                                                         </label>
                                                     );
                                                 })}
@@ -1042,7 +1045,7 @@ const ResumeWorkspace = () => {
                                                         }
                                                         setSkillInput('');
                                                     }}
-                                                    className="w-full text-left p-2 text-blue-400 hover:bg-[#1a1a1a] rounded-lg transition-colors flex items-center gap-2"
+                                                    className="w-full text-left p-2 text-blue-400 hover:bg-surface-3 rounded-lg transition-colors flex items-center gap-2"
                                                 >
                                                     <Plus className="w-4 h-4" />
                                                     Add "{skillInput}" as custom skill
@@ -1060,7 +1063,7 @@ const ResumeWorkspace = () => {
                                                         const newSkills = resume.skills.technical.filter((_, i) => i !== index);
                                                         setResume({ ...resume, skills: { ...resume.skills, technical: newSkills } });
                                                     }}
-                                                    className="text-gray-500 hover:text-red-600 transition-colors"
+                                                    className="text-ink/40 hover:text-red-600 transition-colors"
                                                 >
                                                     <X className="w-4 h-4" />
                                                 </button>
@@ -1068,7 +1071,7 @@ const ResumeWorkspace = () => {
                                         ))}
                                     </div>
                                     {(!resume.skills?.technical || resume.skills.technical.length === 0) && (
-                                        <p className="text-gray-500 text-sm mt-2">Selected skills will appear here.</p>
+                                        <p className="text-ink/40 text-sm mt-2">Selected skills will appear here.</p>
                                     )}
                                 </div>
                             </div>
@@ -1078,7 +1081,7 @@ const ResumeWorkspace = () => {
                         {activeSection === 'projects' && (
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-white">Projects</h2>
+                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Projects</h2>
                                     <button
                                         onClick={() => addItem('projects')}
                                         className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
@@ -1089,7 +1092,7 @@ const ResumeWorkspace = () => {
                                 </div>
 
                                 {resume.projects?.map((proj, index) => (
-                                    <div key={index} className="p-6 bg-[#111111] border border-[#1a1a1a] rounded-lg relative group overflow-hidden">
+                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
                                         <button
                                             onClick={() => removeItem('projects', index)}
                                             className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
@@ -1098,7 +1101,7 @@ const ResumeWorkspace = () => {
                                         </button>
                                         <div className="space-y-4">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Title <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -1106,11 +1109,11 @@ const ResumeWorkspace = () => {
                                                     value={proj.name || ''}
                                                     onChange={(e) => updateItem('projects', index, 'name', e.target.value)}
                                                     placeholder="Name of your project"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500 pr-12"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40 pr-12"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Role <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -1118,11 +1121,11 @@ const ResumeWorkspace = () => {
                                                     value={proj.role || ''}
                                                     onChange={(e) => updateItem('projects', index, 'role', e.target.value)}
                                                     placeholder="Enter your role"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Code URL
                                                 </label>
                                                 <input
@@ -1130,11 +1133,11 @@ const ResumeWorkspace = () => {
                                                     value={proj.codeUrl || ''}
                                                     onChange={(e) => updateItem('projects', index, 'codeUrl', e.target.value)}
                                                     placeholder="Enter the code URL for the project (e.g., GitHub)"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Hosted URL
                                                 </label>
                                                 <input
@@ -1142,12 +1145,12 @@ const ResumeWorkspace = () => {
                                                     value={proj.hostedUrl || ''}
                                                     onChange={(e) => updateItem('projects', index, 'hostedUrl', e.target.value)}
                                                     placeholder="Enter the hosted URL for the project"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Start Date <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -1155,11 +1158,11 @@ const ResumeWorkspace = () => {
                                                         value={proj.startDate || ''}
                                                         onChange={(e) => updateItem('projects', index, 'startDate', e.target.value)}
                                                         placeholder="MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         End Date <span className="text-red-400">*</span>
                                                     </label>
                                                     <input
@@ -1168,21 +1171,21 @@ const ResumeWorkspace = () => {
                                                         onChange={(e) => updateItem('projects', index, 'endDate', e.target.value)}
                                                         placeholder="MM/YYYY"
                                                         disabled={proj.current}
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500 disabled:opacity-50"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40 disabled:opacity-50"
                                                     />
                                                 </div>
                                             </div>
-                                            <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                                            <label className="flex items-center gap-2 text-sm text-ink/80 cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     checked={proj.current || false}
                                                     onChange={(e) => updateItem('projects', index, 'current', e.target.checked)}
-                                                    className="w-4 h-4 rounded border-[#1a1a1a] bg-[#0a0a0a] text-white focus:ring-white/30"
+                                                    className="w-4 h-4 rounded border-ink/10 bg-surface-1 text-ink focus:ring-white/30"
                                                 />
                                                 I am currently working on this project
                                             </label>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Description <span className="text-red-400">*</span>
                                                 </label>
                                                 <textarea
@@ -1190,7 +1193,7 @@ const ResumeWorkspace = () => {
                                                     onChange={(e) => updateItem('projects', index, 'description', e.target.value)}
                                                     placeholder="Describe your projects using bullet points: objectives/scope, findings/insights, skills/tools used, project impact."
                                                     rows={5}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
                                                 />
                                             </div>
                                         </div>
@@ -1198,7 +1201,7 @@ const ResumeWorkspace = () => {
                                 ))}
 
                                 {resume.projects?.length === 0 && (
-                                    <div className="text-center py-12 text-gray-500 bg-[#111111] border border-[#1a1a1a] rounded-lg">
+                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
                                         <p>No projects added yet. Click "Add Project" to get started.</p>
                                     </div>
                                 )}
@@ -1209,7 +1212,7 @@ const ResumeWorkspace = () => {
                         {activeSection === 'certifications' && (
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-white">Certifications</h2>
+                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Certifications</h2>
                                     <button
                                         onClick={() => addItem('certifications')}
                                         className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
@@ -1220,7 +1223,7 @@ const ResumeWorkspace = () => {
                                 </div>
 
                                 {resume.certifications?.map((cert, index) => (
-                                    <div key={index} className="p-6 bg-[#111111] border border-[#1a1a1a] rounded-lg relative group overflow-hidden">
+                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
                                         <button
                                             onClick={() => removeItem('certifications', index)}
                                             className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
@@ -1229,7 +1232,7 @@ const ResumeWorkspace = () => {
                                         </button>
                                         <div className="space-y-4 pr-12">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Certificate Title <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -1237,11 +1240,11 @@ const ResumeWorkspace = () => {
                                                     value={cert.name || ''}
                                                     onChange={(e) => updateItem('certifications', index, 'name', e.target.value)}
                                                     placeholder="Enter certificate title"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Provider Organisation Name <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -1249,11 +1252,11 @@ const ResumeWorkspace = () => {
                                                     value={cert.issuer || ''}
                                                     onChange={(e) => updateItem('certifications', index, 'issuer', e.target.value)}
                                                     placeholder="Enter Organisation Name"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Start Date <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
@@ -1261,11 +1264,11 @@ const ResumeWorkspace = () => {
                                                     value={cert.date || ''}
                                                     onChange={(e) => updateItem('certifications', index, 'date', e.target.value)}
                                                     placeholder="DD/MM/YYYY"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Certification Link
                                                 </label>
                                                 <input
@@ -1273,11 +1276,11 @@ const ResumeWorkspace = () => {
                                                     value={cert.link || ''}
                                                     onChange={(e) => updateItem('certifications', index, 'link', e.target.value)}
                                                     placeholder="Enter Certification Name"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Description
                                                 </label>
                                                 <textarea
@@ -1285,7 +1288,7 @@ const ResumeWorkspace = () => {
                                                     onChange={(e) => updateItem('certifications', index, 'description', e.target.value)}
                                                     placeholder="Mention details about the certificate along with the skills required"
                                                     rows={4}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
                                                 />
                                             </div>
                                         </div>
@@ -1293,7 +1296,7 @@ const ResumeWorkspace = () => {
                                 ))}
 
                                 {resume.certifications?.length === 0 && (
-                                    <div className="text-center py-12 text-gray-500 bg-[#111111] border border-[#1a1a1a] rounded-lg">
+                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
                                         <p>No certifications added yet. Click "Add Certification" to get started.</p>
                                     </div>
                                 )}
@@ -1304,7 +1307,7 @@ const ResumeWorkspace = () => {
                         {activeSection === 'coCurricular' && (
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-white">Co-curricular & POR</h2>
+                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Co-curricular & POR</h2>
                                     <button
                                         onClick={() => addItem('coCurricular')}
                                         className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
@@ -1315,7 +1318,7 @@ const ResumeWorkspace = () => {
                                 </div>
 
                                 {resume.coCurricular?.map((item, index) => (
-                                    <div key={index} className="p-6 bg-[#111111] border border-[#1a1a1a] rounded-lg relative group overflow-hidden">
+                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
                                         <button
                                             onClick={() => removeItem('coCurricular', index)}
                                             className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
@@ -1324,7 +1327,7 @@ const ResumeWorkspace = () => {
                                         </button>
                                         <div className="space-y-4 pr-12">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Activity / Event Name
                                                 </label>
                                                 <input
@@ -1332,12 +1335,12 @@ const ResumeWorkspace = () => {
                                                     value={item.activity || ''}
                                                     onChange={(e) => updateItem('coCurricular', index, 'activity', e.target.value)}
                                                     placeholder="e.g. Annual Tech Fest"
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Role / Position
                                                     </label>
                                                     <input
@@ -1345,11 +1348,11 @@ const ResumeWorkspace = () => {
                                                         value={item.role || ''}
                                                         onChange={(e) => updateItem('coCurricular', index, 'role', e.target.value)}
                                                         placeholder="e.g. Lead Organizer"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
                                                         Date
                                                     </label>
                                                     <input
@@ -1357,12 +1360,12 @@ const ResumeWorkspace = () => {
                                                         value={item.date || ''}
                                                         onChange={(e) => updateItem('coCurricular', index, 'date', e.target.value)}
                                                         placeholder="e.g. Mar 2023"
-                                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none placeholder-gray-500"
+                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
                                                     />
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                                     Description
                                                 </label>
                                                 <textarea
@@ -1370,7 +1373,7 @@ const ResumeWorkspace = () => {
                                                     onChange={(e) => updateItem('coCurricular', index, 'description', e.target.value)}
                                                     placeholder="Describe your role and impact..."
                                                     rows={4}
-                                                    className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none resize-none placeholder-gray-500"
+                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
                                                 />
                                             </div>
                                         </div>
@@ -1378,7 +1381,7 @@ const ResumeWorkspace = () => {
                                 ))}
 
                                 {resume.coCurricular?.length === 0 && (
-                                    <div className="text-center py-12 text-gray-500 bg-[#111111] border border-[#1a1a1a] rounded-lg">
+                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
                                         <p>No items added yet. Click "Add Item" to get started.</p>
                                     </div>
                                 )}
@@ -1388,18 +1391,18 @@ const ResumeWorkspace = () => {
                         {/* Templates Selection */}
                         {activeSection === 'templates' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-white mb-6">Choose Template</h2>
+                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Choose Template</h2>
 
                                 {/* Built-in Templates */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">Built-in Templates</h3>
+                                    <h3 className="text-sm font-semibold text-ink/60 mb-3 uppercase tracking-wider">Built-in Templates</h3>
                                     <div className="grid grid-cols-2 gap-4">
                                         {/* Standard */}
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'standard' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${(resume.metadata?.layout || 'standard') === 'standard' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1418,10 +1421,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${(resume.metadata?.layout || 'standard') === 'standard' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${(resume.metadata?.layout || 'standard') === 'standard' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Classic Serif
                                                 </span>
-                                                <p className="text-xs text-gray-500">Traditional, elegant, and perfect for academic or executive roles.</p>
+                                                <p className="text-xs text-ink/40">Traditional, elegant, and perfect for academic or executive roles.</p>
                                             </div>
                                         </button>
 
@@ -1429,8 +1432,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'modern' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'modern' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden flex select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1450,10 +1453,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'modern' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'modern' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Modern Bold
                                                 </span>
-                                                <p className="text-xs text-gray-500">Contemporary two-column design with bold typography.</p>
+                                                <p className="text-xs text-ink/40">Contemporary two-column design with bold typography.</p>
                                             </div>
                                         </button>
 
@@ -1461,8 +1464,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'minimalist' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'minimalist' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-4 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1475,10 +1478,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'minimalist' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'minimalist' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Minimalist Clean
                                                 </span>
-                                                <p className="text-xs text-gray-500">Centered layout with lots of white space and thin lines.</p>
+                                                <p className="text-xs text-ink/40">Centered layout with lots of white space and thin lines.</p>
                                             </div>
                                         </button>
 
@@ -1486,8 +1489,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'creative' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'creative' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1506,10 +1509,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'creative' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'creative' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Creative Portfolio
                                                 </span>
-                                                <p className="text-xs text-gray-500">Vibrant gradient header with two-column design.</p>
+                                                <p className="text-xs text-ink/40">Vibrant gradient header with two-column design.</p>
                                             </div>
                                         </button>
 
@@ -1517,8 +1520,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'professional' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'professional' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1536,10 +1539,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'professional' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'professional' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Executive Professional
                                                 </span>
-                                                <p className="text-xs text-gray-500">Formal serif font with bold headers for senior roles.</p>
+                                                <p className="text-xs text-ink/40">Formal serif font with bold headers for senior roles.</p>
                                             </div>
                                         </button>
 
@@ -1547,8 +1550,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'technical' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'technical' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-gray-50 w-full rounded-md shadow-sm overflow-hidden select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1568,10 +1571,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'technical' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'technical' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Tech Developer
                                                 </span>
-                                                <p className="text-xs text-gray-500">Terminal-style with monospace font for developers.</p>
+                                                <p className="text-xs text-ink/40">Terminal-style with monospace font for developers.</p>
                                             </div>
                                         </button>
 
@@ -1579,8 +1582,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'compact' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'compact' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-2 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1599,10 +1602,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'compact' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'compact' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Compact Dense
                                                 </span>
-                                                <p className="text-xs text-gray-500">Space-efficient with small fonts and tight spacing.</p>
+                                                <p className="text-xs text-ink/40">Space-efficient with small fonts and tight spacing.</p>
                                             </div>
                                         </button>
 
@@ -1610,8 +1613,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'elegant' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'elegant' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1625,10 +1628,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'elegant' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'elegant' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Elegant Refined
                                                 </span>
-                                                <p className="text-xs text-gray-500">Sophisticated serif with centered, classical layout.</p>
+                                                <p className="text-xs text-ink/40">Sophisticated serif with centered, classical layout.</p>
                                             </div>
                                         </button>
 
@@ -1636,8 +1639,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'bold' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'bold' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1654,10 +1657,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'bold' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'bold' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Bold Impact
                                                 </span>
-                                                <p className="text-xs text-gray-500">Strong typography with high contrast and thick borders.</p>
+                                                <p className="text-xs text-ink/40">Strong typography with high contrast and thick borders.</p>
                                             </div>
                                         </button>
 
@@ -1665,8 +1668,8 @@ const ResumeWorkspace = () => {
                                         <button
                                             onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'timeline' } })}
                                             className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'timeline' && !resume.templateId
-                                                ? 'bg-white/10 border-blue-500'
-                                                : 'bg-[#111] border-[#1a1a1a] hover:border-white/20'
+                                                ? 'bg-surface-3 border-blue-500'
+                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
                                                 }`}
                                         >
                                             <div className="aspect-[8.5/11] bg-gradient-to-br from-slate-50 to-gray-100 w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
@@ -1681,10 +1684,10 @@ const ResumeWorkspace = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'timeline' ? 'text-blue-400' : 'text-white'}`}>
+                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'timeline' ? 'text-blue-400' : 'text-ink'}`}>
                                                     Timeline Visual
                                                 </span>
-                                                <p className="text-xs text-gray-500">Vertical timeline with colored dots and cards.</p>
+                                                <p className="text-xs text-ink/40">Vertical timeline with colored dots and cards.</p>
                                             </div>
                                         </button>
                                     </div>
@@ -1696,28 +1699,28 @@ const ResumeWorkspace = () => {
                 </div>
 
                 {/* Right - Live Preview */}
-                <div className="w-[600px] bg-[#0a0a0a] p-8 overflow-y-auto border-l border-[#1a1a1a] flex-shrink-0">
+                <div className="w-[600px] bg-surface-2 p-8 overflow-y-auto flex-shrink-0">
                     {/* Zoom Controls */}
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-semibold text-white">Live Preview</h3>
-                        <div className="flex items-center gap-2">
+                        <h3 className="text-label text-ink/60 uppercase">Live Preview</h3>
+                        <div className="flex items-center gap-1">
                             <button
                                 onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
                                 disabled={zoom <= 0.5}
-                                className="p-2 bg-[#1a1a1a] text-white rounded hover:bg-[#2a2a2a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="p-1.5 text-ink/40 hover:text-ink hover:bg-surface-3 rounded transition-colors disabled:opacity-50"
                                 title="Zoom Out"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
                                 </svg>
                             </button>
-                            <span className="text-xs text-gray-400 font-mono min-w-[50px] text-center">
+                            <span className="text-xs text-ink/60 font-mono min-w-[40px] text-center">
                                 {Math.round(zoom * 100)}%
                             </span>
                             <button
                                 onClick={() => setZoom(Math.min(2, zoom + 0.1))}
                                 disabled={zoom >= 2}
-                                className="p-2 bg-[#1a1a1a] text-white rounded hover:bg-[#2a2a2a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="p-1.5 text-ink/40 hover:text-ink hover:bg-surface-3 rounded transition-colors disabled:opacity-50"
                                 title="Zoom In"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1726,7 +1729,7 @@ const ResumeWorkspace = () => {
                             </button>
                             <button
                                 onClick={() => setZoom(1)}
-                                className="px-3 py-2 bg-[#1a1a1a] text-white text-xs rounded hover:bg-[#2a2a2a] transition-colors"
+                                className="px-2 py-1 text-ink/40 text-xs rounded hover:text-ink hover:bg-surface-3 transition-colors"
                                 title="Reset Zoom"
                             >
                                 Reset
@@ -1737,8 +1740,9 @@ const ResumeWorkspace = () => {
                     {/* Preview Container */}
                     <div
                         id="resume-preview"
-                        className="bg-white p-8 shadow-2xl transition-transform duration-200"
+                        className="bg-white shadow-paper rounded-[4px] transition-transform duration-200 mx-auto"
                         style={{
+                            width: '100%',
                             aspectRatio: '8.5/11',
                             transform: `scale(${zoom})`,
                             transformOrigin: 'top center'
@@ -1787,15 +1791,15 @@ const ResumeWorkspace = () => {
 
             {/* Resume Analyzer Modal */}
             {showAnalyzer && resume && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
-                    <div className="bg-[#0a0a0a] rounded-2xl border border-[#1a1a1a] max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8">
+                <div className="fixed inset-0 bg-ink/20 backdrop-blur-md backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
+                    <div className="bg-surface-1 rounded-2xl border border-ink/10 max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-white">Resume Analysis</h2>
+                            <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Resume Analysis</h2>
                             <button
                                 onClick={() => setShowAnalyzer(false)}
-                                className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                                className="p-2 hover:bg-surface-3 rounded-lg transition-colors"
                             >
-                                <X className="w-5 h-5 text-white" />
+                                <X className="w-5 h-5 text-ink" />
                             </button>
                         </div>
                         <ResumeAnalyzer
@@ -1808,15 +1812,15 @@ const ResumeWorkspace = () => {
 
             {/* AI Features Panel Modal */}
             {showAIPanel && resume && id && id !== 'new' && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
-                    <div className="bg-[#0a0a0a] rounded-2xl border border-[#1a1a1a] max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8">
+                <div className="fixed inset-0 bg-ink/20 backdrop-blur-md backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
+                    <div className="bg-surface-1 rounded-2xl border border-ink/10 max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-white">AI Assistant</h2>
+                            <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">AI Assistant</h2>
                             <button
                                 onClick={() => setShowAIPanel(false)}
-                                className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                                className="p-2 hover:bg-surface-3 rounded-lg transition-colors"
                             >
-                                <X className="w-5 h-5 text-white" />
+                                <X className="w-5 h-5 text-ink" />
                             </button>
                         </div>
                         <AIFeaturesPanel

@@ -71,7 +71,7 @@ const JobAIAssistant = ({ application, resumeId }) => {
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-4">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-ink flex items-center gap-2">
                     <MessageSquare className="w-5 h-5" />
                     AI Job Assistant
                 </h3>
@@ -111,7 +111,7 @@ const JobAIAssistant = ({ application, resumeId }) => {
                     <div className="space-y-4">
                         {!coverLetter ? (
                             <div className="text-center py-8">
-                                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                <FileText className="w-16 h-16 text-ink/80 mx-auto mb-4" />
                                 <h4 className="text-lg font-semibold text-gray-900 mb-2">
                                     Generate AI Cover Letter
                                 </h4>
@@ -121,7 +121,7 @@ const JobAIAssistant = ({ application, resumeId }) => {
                                 <button
                                     onClick={handleGenerateCoverLetter}
                                     disabled={loading}
-                                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+                                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-ink px-6 py-3 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
                                 >
                                     {loading ? (
                                         <>
@@ -189,7 +189,7 @@ const JobAIAssistant = ({ application, resumeId }) => {
                     <div className="space-y-4">
                         {!interviewPrep ? (
                             <div className="text-center py-8">
-                                <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                <MessageSquare className="w-16 h-16 text-ink/80 mx-auto mb-4" />
                                 <h4 className="text-lg font-semibold text-gray-900 mb-2">
                                     Prepare for Your Interview
                                 </h4>
@@ -199,7 +199,7 @@ const JobAIAssistant = ({ application, resumeId }) => {
                                 <button
                                     onClick={handleGenerateInterviewPrep}
                                     disabled={loading}
-                                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+                                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-ink px-6 py-3 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
                                 >
                                     {loading ? (
                                         <>

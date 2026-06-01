@@ -40,10 +40,10 @@ const DashboardPage = () => {
 
     if (loading) {
         return (
-            <div className="h-screen bg-[#0a0a0a] flex items-center justify-center">
+            <div className="h-screen bg-surface-1 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-gray-400">Loading your workspace...</p>
+                    <p className="text-ink/60">Loading your workspace...</p>
                 </div>
             </div>
         );
@@ -57,68 +57,68 @@ const DashboardPage = () => {
     const firstName = user?.name?.split(' ')[0] || 'there';
 
     return (
-        <div className="h-screen bg-[#0a0a0a] p-6 overflow-hidden flex flex-col">
+        <div className="h-screen bg-surface-1 p-6 overflow-hidden flex flex-col">
             {/* Header */}
             <div className="mb-6 flex-shrink-0">
-                <h1 className="text-4xl font-bold text-white mb-2">
+                <h1 className="text-4xl font-bold text-ink mb-2">
                     Welcome back, {firstName}
                 </h1>
-                <p className="text-base text-gray-400">
+                <p className="text-base text-ink/60">
                     Here's what's happening with your job search today
                 </p>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-4 gap-4 mb-6 flex-shrink-0">
-                <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-4 hover:border-white/20 transition-all">
+                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
                     <div className="flex items-center justify-between mb-3">
                         <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <FileText className="w-5 h-5 text-white" />
+                            <FileText className="w-5 h-5 text-ink" />
                         </div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-1">{stats.total}</div>
-                    <div className="text-sm text-gray-400">Resumes</div>
+                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{stats.total}</div>
+                    <div className="text-sm text-ink/60">Resumes</div>
                 </div>
 
-                <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-4 hover:border-white/20 transition-all">
+                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
                     <div className="flex items-center justify-between mb-3">
                         <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <Briefcase className="w-5 h-5 text-white" />
+                            <Briefcase className="w-5 h-5 text-ink" />
                         </div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-1">{totalApplications}</div>
-                    <div className="text-sm text-gray-400">Applications</div>
+                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{totalApplications}</div>
+                    <div className="text-sm text-ink/60">Applications</div>
                 </div>
 
-                <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-4 hover:border-white/20 transition-all">
+                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
                     <div className="flex items-center justify-between mb-3">
                         <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-white" />
+                            <TrendingUp className="w-5 h-5 text-ink" />
                         </div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-1">{successRate}%</div>
-                    <div className="text-sm text-gray-400">Success Rate</div>
+                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{successRate}%</div>
+                    <div className="text-sm text-ink/60">Success Rate</div>
                 </div>
 
-                <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-4 hover:border-white/20 transition-all">
+                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
                     <div className="flex items-center justify-between mb-3">
                         <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <Target className="w-5 h-5 text-white" />
+                            <Target className="w-5 h-5 text-ink" />
                         </div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-1">{jobStats.byStatus?.Interview || 0}</div>
-                    <div className="text-sm text-gray-400">Interviews</div>
+                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{jobStats.byStatus?.Interview || 0}</div>
+                    <div className="text-sm text-ink/60">Interviews</div>
                 </div>
             </div>
 
             {/* Main Content - Flex 1 to fill remaining space */}
             <div className="grid grid-cols-3 gap-4 flex-1 min-h-0">
                 {/* Recent Resumes */}
-                <div className="col-span-2 bg-[#111111] border border-[#1a1a1a] rounded-xl p-6 flex flex-col overflow-hidden">
+                <div className="col-span-2 bg-surface-2 border border-ink/5 rounded-xl p-6 flex flex-col overflow-hidden">
                     <div className="flex justify-between items-center mb-4 flex-shrink-0">
                         <div>
-                            <h2 className="text-xl font-bold text-white">Recent Resumes</h2>
-                            <p className="text-sm text-gray-400">Your latest versions</p>
+                            <h2 className="text-xl font-bold text-ink">Recent Resumes</h2>
+                            <p className="text-sm text-ink/60">Your latest versions</p>
                         </div>
                         <Link
                             to="/workspace"
@@ -136,23 +136,23 @@ const DashboardPage = () => {
                                     <Link
                                         key={resume._id}
                                         to={`/workspace/${resume._id}`}
-                                        className="group block p-4 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg hover:border-white/20 transition-all"
+                                        className="group block p-4 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all"
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
                                                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <FileText className="w-4 h-4 text-white" />
+                                                    <FileText className="w-4 h-4 text-ink" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="text-base font-semibold text-white truncate">
+                                                    <h3 className="text-base font-semibold text-ink truncate">
                                                         {resume.title || 'Untitled Resume'}
                                                     </h3>
-                                                    <p className="text-sm text-gray-500">
+                                                    <p className="text-sm text-ink/40">
                                                         {new Date(resume.updatedAt).toLocaleDateString()}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors flex-shrink-0" />
+                                            <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-ink transition-colors flex-shrink-0" />
                                         </div>
                                     </Link>
                                 ))}
@@ -162,8 +162,8 @@ const DashboardPage = () => {
                                 <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-3">
                                     <FileText className="w-6 h-6 text-gray-600" />
                                 </div>
-                                <h3 className="text-base font-semibold text-white mb-1">No resumes yet</h3>
-                                <p className="text-sm text-gray-400 mb-4">Create your first resume</p>
+                                <h3 className="text-base font-semibold text-ink mb-1">No resumes yet</h3>
+                                <p className="text-sm text-ink/60 mb-4">Create your first resume</p>
                                 <Link
                                     to="/workspace"
                                     className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-gray-100 transition-colors"
@@ -179,80 +179,80 @@ const DashboardPage = () => {
                 {/* Sidebar */}
                 <div className="space-y-4 flex flex-col overflow-hidden">
                     {/* Quick Actions */}
-                    <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-5 flex-shrink-0">
-                        <h3 className="text-base font-bold text-white mb-4">Quick Actions</h3>
+                    <div className="bg-surface-2 border border-ink/5 rounded-xl p-5 flex-shrink-0">
+                        <h3 className="text-base font-bold text-ink mb-4">Quick Actions</h3>
                         <div className="space-y-2">
                             <Link
                                 to="/resumes/new"
-                                className="flex items-center gap-3 p-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg hover:border-white/20 transition-all group"
+                                className="flex items-center gap-3 p-3 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all group"
                             >
                                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <FileText className="w-4 h-4 text-white" />
+                                    <FileText className="w-4 h-4 text-ink" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-semibold text-white">New Resume</div>
+                                    <div className="text-sm font-semibold text-ink">New Resume</div>
                                 </div>
-                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-white transition-colors" />
+                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-ink transition-colors" />
                             </Link>
 
                             <Link
                                 to="/applications"
-                                className="flex items-center gap-3 p-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg hover:border-white/20 transition-all group"
+                                className="flex items-center gap-3 p-3 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all group"
                             >
                                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <Briefcase className="w-4 h-4 text-white" />
+                                    <Briefcase className="w-4 h-4 text-ink" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-semibold text-white">Track Job</div>
+                                    <div className="text-sm font-semibold text-ink">Track Job</div>
                                 </div>
-                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-white transition-colors" />
+                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-ink transition-colors" />
                             </Link>
 
                             <Link
                                 to="/analytics"
-                                className="flex items-center gap-3 p-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg hover:border-white/20 transition-all group"
+                                className="flex items-center gap-3 p-3 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all group"
                             >
                                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <BarChart3 className="w-4 h-4 text-white" />
+                                    <BarChart3 className="w-4 h-4 text-ink" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-semibold text-white">Analytics</div>
+                                    <div className="text-sm font-semibold text-ink">Analytics</div>
                                 </div>
-                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-white transition-colors" />
+                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-ink transition-colors" />
                             </Link>
                         </div>
                     </div>
 
                     {/* Application Pipeline */}
-                    <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-5 flex-1 min-h-0 overflow-hidden">
-                        <h3 className="text-base font-bold text-white mb-4">Pipeline</h3>
+                    <div className="bg-surface-2 border border-ink/5 rounded-xl p-5 flex-1 min-h-0 overflow-hidden">
+                        <h3 className="text-base font-bold text-ink mb-4">Pipeline</h3>
                         <div className="space-y-3">
                             <div>
                                 <div className="flex justify-between text-xs mb-1.5">
-                                    <span className="text-gray-400">Applied</span>
-                                    <span className="text-white font-medium">{jobStats.byStatus?.Applied || 0}</span>
+                                    <span className="text-ink/60">Applied</span>
+                                    <span className="text-ink font-medium">{jobStats.byStatus?.Applied || 0}</span>
                                 </div>
-                                <div className="h-1.5 bg-[#0a0a0a] rounded-full overflow-hidden">
+                                <div className="h-1.5 bg-surface-1 rounded-full overflow-hidden">
                                     <div className="h-full bg-white/20 rounded-full" style={{ width: `${(jobStats.byStatus?.Applied || 0) / Math.max(totalApplications, 1) * 100}%` }}></div>
                                 </div>
                             </div>
 
                             <div>
                                 <div className="flex justify-between text-xs mb-1.5">
-                                    <span className="text-gray-400">Interview</span>
-                                    <span className="text-white font-medium">{jobStats.byStatus?.Interview || 0}</span>
+                                    <span className="text-ink/60">Interview</span>
+                                    <span className="text-ink font-medium">{jobStats.byStatus?.Interview || 0}</span>
                                 </div>
-                                <div className="h-1.5 bg-[#0a0a0a] rounded-full overflow-hidden">
+                                <div className="h-1.5 bg-surface-1 rounded-full overflow-hidden">
                                     <div className="h-full bg-white/40 rounded-full" style={{ width: `${(jobStats.byStatus?.Interview || 0) / Math.max(totalApplications, 1) * 100}%` }}></div>
                                 </div>
                             </div>
 
                             <div>
                                 <div className="flex justify-between text-xs mb-1.5">
-                                    <span className="text-gray-400">Offer</span>
-                                    <span className="text-white font-medium">{jobStats.byStatus?.Offer || 0}</span>
+                                    <span className="text-ink/60">Offer</span>
+                                    <span className="text-ink font-medium">{jobStats.byStatus?.Offer || 0}</span>
                                 </div>
-                                <div className="h-1.5 bg-[#0a0a0a] rounded-full overflow-hidden">
+                                <div className="h-1.5 bg-surface-1 rounded-full overflow-hidden">
                                     <div className="h-full bg-white rounded-full" style={{ width: `${(jobStats.byStatus?.Offer || 0) / Math.max(totalApplications, 1) * 100}%` }}></div>
                                 </div>
                             </div>

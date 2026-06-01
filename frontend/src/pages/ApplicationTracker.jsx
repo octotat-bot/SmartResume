@@ -86,7 +86,7 @@ const ApplicationTracker = () => {
             case 'high': return 'text-red-400 bg-red-500/10';
             case 'medium': return 'text-yellow-400 bg-yellow-500/10';
             case 'low': return 'text-green-400 bg-green-500/10';
-            default: return 'text-gray-400 bg-gray-500/10';
+            default: return 'text-ink/60 bg-gray-500/10';
         }
     };
 
@@ -97,30 +97,30 @@ const ApplicationTracker = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
+            <div className="min-h-screen bg-canvas flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p className="text-gray-400">Loading applications...</p>
+                    <p className="text-ink/60">Loading applications...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-black text-white p-8">
+        <div className="min-h-screen bg-canvas text-ink p-8">
             {/* Header */}
             <div className="max-w-7xl mx-auto mb-8">
                 <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h1 className="text-4xl font-bold mb-2">Job Tracker</h1>
-                        <p className="text-gray-400">Track your job search from discovery to offer</p>
+                        <h1 className="text-3xl font-serif font-semibold mb-2">Job Tracker</h1>
+                        <p className="text-ink/60">Track your job search from discovery to offer</p>
                     </div>
                     <button
                         onClick={() => {
                             setEditingApp(null);
                             setShowForm(true);
                         }}
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                        className="px-6 py-3 btn-primary rounded-lg font-semibold flex items-center gap-2 transition-colors"
                     >
                         <Plus className="w-5 h-5" />
                         Add Application
@@ -130,33 +130,33 @@ const ApplicationTracker = () => {
                 {/* Stats Cards */}
                 {stats && (
                     <div className="grid grid-cols-4 gap-4 mb-6">
-                        <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6">
+                        <div className="bg-surface-1 border border-ink/5 shadow-sm rounded-xl p-6">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-gray-400 text-sm">Total Applications</span>
-                                <Briefcase className="w-5 h-5 text-blue-500" />
+                                <span className="text-ink/60 text-sm">Total Applications</span>
+                                <Briefcase className="w-5 h-5 text-accent" />
                             </div>
-                            <div className="text-3xl font-bold">{stats.total}</div>
+                            <div className="text-3xl font-serif font-semibold">{stats.total}</div>
                         </div>
-                        <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6">
+                        <div className="bg-surface-1 border border-ink/5 shadow-sm rounded-xl p-6">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-gray-400 text-sm">Active</span>
+                                <span className="text-ink/60 text-sm">Active</span>
                                 <Clock className="w-5 h-5 text-purple-500" />
                             </div>
-                            <div className="text-3xl font-bold">{stats.activeApplications}</div>
+                            <div className="text-3xl font-serif font-semibold">{stats.activeApplications}</div>
                         </div>
-                        <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6">
+                        <div className="bg-surface-1 border border-ink/5 shadow-sm rounded-xl p-6">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-gray-400 text-sm">Offers</span>
+                                <span className="text-ink/60 text-sm">Offers</span>
                                 <Target className="w-5 h-5 text-green-500" />
                             </div>
-                            <div className="text-3xl font-bold">{stats.statusCounts.offer + stats.statusCounts.accepted}</div>
+                            <div className="text-3xl font-serif font-semibold">{stats.statusCounts.offer + stats.statusCounts.accepted}</div>
                         </div>
-                        <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6">
+                        <div className="bg-surface-1 border border-ink/5 shadow-sm rounded-xl p-6">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-gray-400 text-sm">Success Rate</span>
+                                <span className="text-ink/60 text-sm">Success Rate</span>
                                 <TrendingUp className="w-5 h-5 text-emerald-500" />
                             </div>
-                            <div className="text-3xl font-bold">{stats.successRate}%</div>
+                            <div className="text-3xl font-serif font-semibold">{stats.successRate}%</div>
                         </div>
                     </div>
                 )}
@@ -164,19 +164,19 @@ const ApplicationTracker = () => {
                 {/* Filters and View Toggle */}
                 <div className="flex items-center gap-4 mb-6">
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-ink/60" />
                         <input
                             type="text"
                             placeholder="Search company or position..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                            className="w-full pl-10 pr-4 py-2 bg-surface-1 border border-ink/5 shadow-sm rounded-lg text-ink placeholder-ink/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                         />
                     </div>
                     <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="px-4 py-2 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                        className="px-4 py-2 bg-surface-1 border border-ink/5 shadow-sm rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                     >
                         <option value="">All Statuses</option>
                         {statuses.map(status => (
@@ -186,7 +186,7 @@ const ApplicationTracker = () => {
                     <select
                         value={filterPriority}
                         onChange={(e) => setFilterPriority(e.target.value)}
-                        className="px-4 py-2 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                        className="px-4 py-2 bg-surface-1 border border-ink/5 shadow-sm rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                     >
                         <option value="">All Priorities</option>
                         <option value="high">High</option>
@@ -196,14 +196,14 @@ const ApplicationTracker = () => {
                     <div className="flex gap-2">
                         <button
                             onClick={() => setView('kanban')}
-                            className={`p-2 rounded-lg transition-colors ${view === 'kanban' ? 'bg-blue-600' : 'bg-[#0a0a0a] border border-[#1a1a1a] hover:bg-white/5'}`}
+                            className={`p-2 rounded-lg transition-colors ${view === 'kanban' ? 'bg-accent text-white' : 'bg-surface-1 border border-ink/5 shadow-sm hover:bg-surface-3'}`}
                             title="Kanban View"
                         >
                             <BarChart3 className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setView('list')}
-                            className={`p-2 rounded-lg transition-colors ${view === 'list' ? 'bg-blue-600' : 'bg-[#0a0a0a] border border-[#1a1a1a] hover:bg-white/5'}`}
+                            className={`p-2 rounded-lg transition-colors ${view === 'list' ? 'bg-accent text-white' : 'bg-surface-1 border border-ink/5 shadow-sm hover:bg-surface-3'}`}
                             title="List View"
                         >
                             <List className="w-5 h-5" />
@@ -217,19 +217,19 @@ const ApplicationTracker = () => {
                         {statuses.map(status => {
                             const statusApps = applications.filter(app => app.status === status.value);
                             return (
-                                <div key={status.value} className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-4 min-w-[180px]">
+                                <div key={status.value} className="bg-surface-2 rounded-xl p-4 border border-ink/5 min-w-[180px]">
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-2 min-w-0 flex-1">
                                             <span className="text-2xl flex-shrink-0">{status.icon}</span>
                                             <h3 className="font-semibold text-sm truncate">{status.label}</h3>
                                         </div>
-                                        <span className="text-sm text-gray-400 flex-shrink-0 ml-2">{statusApps.length}</span>
+                                        <span className="text-sm text-ink/60 flex-shrink-0 ml-2">{statusApps.length}</span>
                                     </div>
                                     <div className="space-y-3">
                                         {statusApps.map(app => (
                                             <div
                                                 key={app._id}
-                                                className="bg-[#111] border border-[#1a1a1a] rounded-lg p-3 hover:border-blue-500/50 transition-colors cursor-pointer group"
+                                                className="bg-surface-1 border border-ink/10 rounded-lg p-4 hover:border-accent shadow-sm hover:shadow-md transition-colors cursor-pointer group"
                                             >
                                                 <div className="flex items-start justify-between mb-2">
                                                     <h4 className="font-semibold text-sm line-clamp-1">{app.company}</h4>
@@ -239,9 +239,9 @@ const ApplicationTracker = () => {
                                                                 setEditingApp(app);
                                                                 setShowForm(true);
                                                             }}
-                                                            className="p-1 hover:bg-blue-500/20 rounded"
+                                                            className="p-1 hover:bg-accent/10 rounded"
                                                         >
-                                                            <Edit2 className="w-3 h-3 text-blue-400" />
+                                                            <Edit2 className="w-3 h-3 text-accent" />
                                                         </button>
                                                         <button
                                                             onClick={() => setDeleteDialog({ isOpen: true, id: app._id, company: app.company })}
@@ -251,12 +251,12 @@ const ApplicationTracker = () => {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <p className="text-xs text-gray-400 mb-2 line-clamp-1">{app.position}</p>
+                                                <p className="text-xs text-ink/60 mb-2 line-clamp-1">{app.position}</p>
                                                 <div className="flex items-center justify-between text-xs">
                                                     <span className={`px-2 py-0.5 rounded-full ${getPriorityColor(app.priority)}`}>
                                                         {app.priority}
                                                     </span>
-                                                    <span className="text-gray-500">{formatDate(app.applicationDate)}</span>
+                                                    <span className="text-ink/40">{formatDate(app.applicationDate)}</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -269,33 +269,33 @@ const ApplicationTracker = () => {
 
                 {/* List View */}
                 {view === 'list' && (
-                    <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl overflow-hidden">
+                    <div className="bg-surface-1 border border-ink/5 shadow-sm rounded-xl overflow-hidden">
                         <table className="w-full">
-                            <thead className="bg-[#111] border-b border-[#1a1a1a]">
+                            <thead className="bg-[#111] border-b border-ink/10">
                                 <tr>
-                                    <th className="text-left p-4 text-sm font-semibold text-gray-400">Company</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-gray-400">Position</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-gray-400">Status</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-gray-400">Priority</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-gray-400">Applied</th>
-                                    <th className="text-right p-4 text-sm font-semibold text-gray-400">Actions</th>
+                                    <th className="text-left p-4 text-sm font-semibold text-ink/60">Company</th>
+                                    <th className="text-left p-4 text-sm font-semibold text-ink/60">Position</th>
+                                    <th className="text-left p-4 text-sm font-semibold text-ink/60">Status</th>
+                                    <th className="text-left p-4 text-sm font-semibold text-ink/60">Priority</th>
+                                    <th className="text-left p-4 text-sm font-semibold text-ink/60">Applied</th>
+                                    <th className="text-right p-4 text-sm font-semibold text-ink/60">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {applications.map(app => {
                                     const statusInfo = getStatusInfo(app.status);
                                     return (
-                                        <tr key={app._id} className="border-b border-[#1a1a1a] hover:bg-white/5 transition-colors">
+                                        <tr key={app._id} className="border-b border-ink/10 hover:bg-surface-3 transition-colors">
                                             <td className="p-4">
                                                 <div className="font-semibold">{app.company}</div>
-                                                {app.location && <div className="text-xs text-gray-400">{app.location}</div>}
+                                                {app.location && <div className="text-xs text-ink/60">{app.location}</div>}
                                             </td>
                                             <td className="p-4 text-sm">{app.position}</td>
                                             <td className="p-4">
                                                 <select
                                                     value={app.status}
                                                     onChange={(e) => handleStatusChange(app._id, e.target.value)}
-                                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${statusInfo.color} text-white border-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${statusInfo.color} text-ink border-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                                 >
                                                     {statuses.map(s => (
                                                         <option key={s.value} value={s.value}>{s.label}</option>
@@ -307,7 +307,7 @@ const ApplicationTracker = () => {
                                                     {app.priority}
                                                 </span>
                                             </td>
-                                            <td className="p-4 text-sm text-gray-400">{formatDate(app.applicationDate)}</td>
+                                            <td className="p-4 text-sm text-ink/60">{formatDate(app.applicationDate)}</td>
                                             <td className="p-4">
                                                 <div className="flex items-center justify-end gap-2">
                                                     {app.jobUrl && (
@@ -315,9 +315,9 @@ const ApplicationTracker = () => {
                                                             href={app.jobUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
+                                                            className="p-2 hover:bg-accent/10 rounded-lg transition-colors"
                                                         >
-                                                            <ExternalLink className="w-4 h-4 text-blue-400" />
+                                                            <ExternalLink className="w-4 h-4 text-accent" />
                                                         </a>
                                                     )}
                                                     <button
@@ -325,9 +325,9 @@ const ApplicationTracker = () => {
                                                             setEditingApp(app);
                                                             setShowForm(true);
                                                         }}
-                                                        className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
+                                                        className="p-2 hover:bg-accent/10 rounded-lg transition-colors"
                                                     >
-                                                        <Edit2 className="w-4 h-4 text-blue-400" />
+                                                        <Edit2 className="w-4 h-4 text-accent" />
                                                     </button>
                                                     <button
                                                         onClick={() => setDeleteDialog({ isOpen: true, id: app._id, company: app.company })}
@@ -345,10 +345,10 @@ const ApplicationTracker = () => {
                         {applications.length === 0 && (
                             <div className="text-center py-12">
                                 <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                                <p className="text-gray-400">No applications found</p>
+                                <p className="text-ink/60">No applications found</p>
                                 <button
                                     onClick={() => setShowForm(true)}
-                                    className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+                                    className="mt-4 px-6 py-2 btn-primary rounded-lg font-semibold transition-colors"
                                 >
                                     Add Your First Application
                                 </button>
@@ -436,18 +436,18 @@ const ApplicationFormModal = ({ application, onClose, onSave }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8">
-            <div className="bg-[#0a0a0a] rounded-2xl border border-[#1a1a1a] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                <div className="p-6 border-b border-[#1a1a1a] flex items-center justify-between sticky top-0 bg-[#0a0a0a] z-10">
+        <div className="fixed inset-0 bg-canvas/80 backdrop-blur-sm z-50 flex items-center justify-center p-8">
+            <div className="bg-[#0a0a0a] rounded-2xl border border-ink/10 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="p-6 border-b border-ink/10 flex items-center justify-between sticky top-0 bg-[#0a0a0a] z-10">
                     <h2 className="text-2xl font-bold">{application ? 'Edit Application' : 'Add Application'}</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
+                    <button onClick={onClose} className="p-2 hover:bg-surface-3 rounded-lg transition-colors">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Company <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -455,11 +455,11 @@ const ApplicationFormModal = ({ application, onClose, onSave }) => {
                                 required
                                 value={formData.company}
                                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Position <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -467,38 +467,38 @@ const ApplicationFormModal = ({ application, onClose, onSave }) => {
                                 required
                                 value={formData.position}
                                 onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Location</label>
+                            <label className="block text-sm font-medium text-ink/80 mb-2">Location</label>
                             <input
                                 type="text"
                                 value={formData.location || ''}
                                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Job URL</label>
+                            <label className="block text-sm font-medium text-ink/80 mb-2">Job URL</label>
                             <input
                                 type="text"
                                 placeholder="https://example.com/job"
                                 value={formData.jobUrl || ''}
                                 onChange={(e) => setFormData({ ...formData, jobUrl: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             />
                         </div>
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                            <label className="block text-sm font-medium text-ink/80 mb-2">Status</label>
                             <select
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             >
                                 <option value="saved">Saved</option>
                                 <option value="wishlist">Wishlist</option>
@@ -511,11 +511,11 @@ const ApplicationFormModal = ({ application, onClose, onSave }) => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+                            <label className="block text-sm font-medium text-ink/80 mb-2">Priority</label>
                             <select
                                 value={formData.priority}
                                 onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             >
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
@@ -523,36 +523,36 @@ const ApplicationFormModal = ({ application, onClose, onSave }) => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Application Date</label>
+                            <label className="block text-sm font-medium text-ink/80 mb-2">Application Date</label>
                             <input
                                 type="date"
                                 value={formData.applicationDate}
                                 onChange={(e) => setFormData({ ...formData, applicationDate: e.target.value })}
-                                className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20"
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">Notes</label>
+                        <label className="block text-sm font-medium text-ink/80 mb-2">Notes</label>
                         <textarea
                             value={formData.notes || ''}
                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                             rows={4}
-                            className="w-full px-4 py-2 bg-[#111] border border-[#1a1a1a] rounded-lg text-white focus:outline-none focus:border-blue-500 resize-none"
+                            className="w-full px-4 py-2 bg-surface-2 border border-ink/10 rounded-lg text-ink focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 resize-none"
                         />
                     </div>
                     <div className="flex gap-3 pt-4">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 bg-[#111] border border-[#1a1a1a] rounded-lg font-semibold hover:bg-white/5 transition-colors"
+                            className="flex-1 px-6 py-3 bg-surface-2 border border-ink/10 rounded-lg font-semibold hover:bg-surface-3 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={saving}
-                            className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors disabled:opacity-50"
+                            className="flex-1 px-6 py-3 btn-primary rounded-lg font-semibold transition-colors disabled:opacity-50"
                         >
                             {saving ? 'Saving...' : application ? 'Update' : 'Add Application'}
                         </button>

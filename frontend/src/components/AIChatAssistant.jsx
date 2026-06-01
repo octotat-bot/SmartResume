@@ -121,14 +121,14 @@ const AIChatAssistant = ({ resumeId = null }) => {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
+                    className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-600 to-blue-600 text-ink p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
                     aria-label="Open AI Assistant"
                 >
                     <MessageCircle className="w-6 h-6" />
                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
 
                     {/* Tooltip */}
-                    <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-ink text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         AI Career Assistant
                         <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                     </div>
@@ -139,7 +139,7 @@ const AIChatAssistant = ({ resumeId = null }) => {
             {isOpen && (
                 <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 border border-gray-200">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+                    <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-ink p-4 rounded-t-2xl flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="relative">
                                 <Sparkles className="w-6 h-6" />
@@ -152,7 +152,7 @@ const AIChatAssistant = ({ resumeId = null }) => {
                         </div>
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="text-white hover:bg-white/20 p-1 rounded-lg transition-colors"
+                            className="text-ink hover:bg-white/20 p-1 rounded-lg transition-colors"
                             aria-label="Close chat"
                         >
                             <X className="w-5 h-5" />
@@ -168,12 +168,12 @@ const AIChatAssistant = ({ resumeId = null }) => {
                             >
                                 <div
                                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.role === 'user'
-                                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-ink'
                                         : 'bg-white text-gray-800 border border-gray-200'
                                         }`}
                                 >
                                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                                    <p className={`text-xs mt-1 ${message.role === 'user' ? 'text-purple-100' : 'text-gray-400'
+                                    <p className={`text-xs mt-1 ${message.role === 'user' ? 'text-purple-100' : 'text-ink/60'
                                         }`}>
                                         {message.timestamp.toLocaleTimeString([], {
                                             hour: '2-digit',
@@ -201,7 +201,7 @@ const AIChatAssistant = ({ resumeId = null }) => {
                     {/* Quick Actions */}
                     {messages.length <= 1 && (
                         <div className="px-4 py-2 border-t border-gray-200 bg-white">
-                            <p className="text-xs text-gray-500 mb-2">Quick actions:</p>
+                            <p className="text-xs text-ink/40 mb-2">Quick actions:</p>
                             <div className="flex flex-wrap gap-2">
                                 {quickActions.map((action, index) => (
                                     <button
@@ -231,7 +231,7 @@ const AIChatAssistant = ({ resumeId = null }) => {
                             <button
                                 type="submit"
                                 disabled={!inputMessage.trim() || isLoading}
-                                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-2 rounded-full hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="bg-gradient-to-r from-purple-600 to-blue-600 text-ink p-2 rounded-full hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 aria-label="Send message"
                             >
                                 <Send className="w-5 h-5" />

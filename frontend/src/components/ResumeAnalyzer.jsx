@@ -6,7 +6,7 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
     const getGrade = (score) => {
         if (score >= 90) return { letter: 'A+', color: 'text-green-500', label: 'Excellent' };
         if (score >= 80) return { letter: 'A', color: 'text-green-400', label: 'Great' };
-        if (score >= 70) return { letter: 'B', color: 'text-blue-500', label: 'Good' };
+        if (score >= 70) return { letter: 'B', color: 'text-accent', label: 'Good' };
         if (score >= 60) return { letter: 'C', color: 'text-yellow-500', label: 'Fair' };
         return { letter: 'D', color: 'text-red-500', label: 'Needs Work' };
     };
@@ -264,10 +264,10 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
     return (
         <div className="max-w-4xl mx-auto">
             {/* Overall Score */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 mb-6 text-white">
+            <div className="btn-primary rounded-xl p-8 mb-6 text-ink">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-3xl font-bold mb-2">Resume Score</h2>
+                        <h2 className="text-3xl font-serif font-semibold mb-2">Resume Score</h2>
                         <p className="text-blue-100">Based on industry best practices and ATS compatibility</p>
                     </div>
                     <div className="text-center">
@@ -281,8 +281,8 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
             </div>
 
             {/* Score Breakdown */}
-            <div className="bg-[#0a0a0a] rounded-xl p-6 mb-6 border border-[#1a1a1a]">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <div className="bg-surface-1 rounded-xl p-6 mb-6 border border-ink/5">
+                <h3 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
                     <BarChart className="w-5 h-5" />
                     Score Breakdown
                 </h3>
@@ -290,10 +290,10 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
                     {Object.entries(analysis.scores).map(([key, score]) => (
                         <div key={key}>
                             <div className="flex justify-between text-sm mb-1">
-                                <span className="text-gray-300 capitalize">
+                                <span className="text-ink/80 capitalize">
                                     {key.replace(/([A-Z])/g, ' $1').trim()}
                                 </span>
-                                <span className="text-white font-semibold">{score}%</span>
+                                <span className="text-ink font-semibold">{score}%</span>
                             </div>
                             <div className="w-full bg-gray-700 rounded-full h-2">
                                 <div
@@ -309,14 +309,14 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
             <div className="grid grid-cols-2 gap-6">
                 {/* Strengths */}
                 {analysis.strengths.length > 0 && (
-                    <div className="bg-[#0a0a0a] rounded-xl p-6 border border-[#1a1a1a]">
-                        <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <div className="bg-surface-1 rounded-xl p-6 border border-ink/5">
+                        <h3 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
                             <Award className="w-5 h-5 text-green-500" />
                             Strengths
                         </h3>
                         <ul className="space-y-2">
                             {analysis.strengths.map((strength, index) => (
-                                <li key={index} className="flex items-start gap-2 text-sm text-gray-300">
+                                <li key={index} className="flex items-start gap-2 text-sm text-ink/80">
                                     <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                                     {strength}
                                 </li>
@@ -326,8 +326,8 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
                 )}
 
                 {/* Suggestions */}
-                <div className="bg-[#0a0a0a] rounded-xl p-6 border border-[#1a1a1a]">
-                    <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <div className="bg-surface-1 rounded-xl p-6 border border-ink/5">
+                    <h3 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
                         <Zap className="w-5 h-5 text-yellow-500" />
                         Suggestions
                     </h3>
@@ -336,12 +336,12 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
                             <li key={index} className="flex items-start gap-2 text-sm">
                                 {suggestion.type === 'error' && <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />}
                                 {suggestion.type === 'warning' && <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />}
-                                {suggestion.type === 'info' && <TrendingUp className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />}
+                                {suggestion.type === 'info' && <TrendingUp className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />}
                                 <div>
-                                    <span className="text-gray-300">{suggestion.text}</span>
+                                    <span className="text-ink/80">{suggestion.text}</span>
                                     <span className={`ml-2 text-xs px-2 py-0.5 rounded ${suggestion.impact === 'critical' ? 'bg-red-500/20 text-red-400' :
                                         suggestion.impact === 'high' ? 'bg-yellow-500/20 text-yellow-400' :
-                                            'bg-blue-500/20 text-blue-400'
+                                            'bg-blue-500/20 text-accent'
                                         }`}>
                                         {suggestion.impact}
                                     </span>
@@ -356,7 +356,7 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
             <div className="mt-6 text-center">
                 <button
                     onClick={onClose}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                    className="px-6 py-3 btn-primary text-ink rounded-lg hover:bg-blue-700 transition-colors font-semibold"
                 >
                     Close Analysis
                 </button>

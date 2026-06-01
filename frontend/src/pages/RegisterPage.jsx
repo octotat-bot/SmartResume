@@ -63,7 +63,7 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] flex">
+        <div className="min-h-screen bg-surface-1 flex">
             {/* Left Side - Form */}
             <div className="flex-1 flex items-center justify-center p-8">
                 <div className="w-full max-w-md">
@@ -72,15 +72,15 @@ const RegisterPage = () => {
                         <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                             <FileText className="w-6 h-6 text-black" />
                         </div>
-                        <span className="text-2xl font-bold text-white">SmartResume</span>
+                        <span className="text-2xl font-serif font-semibold text-ink">SmartResume</span>
                     </Link>
 
                     {/* Header */}
                     <div className="mb-10">
-                        <h1 className="text-4xl font-bold text-white mb-3">
+                        <h1 className="text-4xl font-bold text-ink mb-3">
                             Create your account
                         </h1>
-                        <p className="text-gray-400 text-lg">
+                        <p className="text-ink/60 text-lg">
                             Start building professional resumes today
                         </p>
                     </div>
@@ -96,7 +96,7 @@ const RegisterPage = () => {
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Full Name
                             </label>
                             <input
@@ -104,14 +104,14 @@ const RegisterPage = () => {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                className="w-full px-4 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
                                 placeholder="John Doe"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Email
                             </label>
                             <input
@@ -119,14 +119,14 @@ const RegisterPage = () => {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                className="w-full px-4 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
                                 placeholder="you@example.com"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Password
                             </label>
                             <div className="relative">
@@ -135,14 +135,14 @@ const RegisterPage = () => {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    className="w-full px-4 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                    className="w-full px-4 pr-12 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
                                     placeholder="••••••••"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/80 transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -160,8 +160,8 @@ const RegisterPage = () => {
                                         ))}
                                     </div>
                                     {strength > 0 && (
-                                        <p className="text-xs text-gray-400">
-                                            Password strength: <span className="text-gray-300 font-medium">{strengthLabels[strength - 1]}</span>
+                                        <p className="text-xs text-ink/60">
+                                            Password strength: <span className="text-ink/80 font-medium">{strengthLabels[strength - 1]}</span>
                                         </p>
                                     )}
                                 </div>
@@ -169,7 +169,7 @@ const RegisterPage = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Confirm Password
                             </label>
                             <div className="relative">
@@ -178,7 +178,7 @@ const RegisterPage = () => {
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
-                                    className="w-full px-4 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                    className="w-full px-4 pr-12 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -214,33 +214,33 @@ const RegisterPage = () => {
                     </form>
 
                     {/* Divider */}
-                    <div className="mt-8 pt-8 border-t border-[#2a2a2a]">
-                        <p className="text-center text-sm text-gray-400">
+                    <div className="mt-8 pt-8 border-t border-ink/10">
+                        <p className="text-center text-sm text-ink/60">
                             Already have an account?{' '}
-                            <Link to="/login" className="text-white hover:underline font-medium">
+                            <Link to="/login" className="text-ink hover:underline font-medium">
                                 Sign in
                             </Link>
                         </p>
                     </div>
 
                     {/* Terms */}
-                    <p className="mt-6 text-center text-xs text-gray-500">
+                    <p className="mt-6 text-center text-xs text-ink/40">
                         By creating an account, you agree to our{' '}
-                        <a href="#" className="text-gray-400 hover:text-white transition-colors">Terms</a>
+                        <a href="#" className="text-ink/60 hover:text-ink transition-colors">Terms</a>
                         {' '}and{' '}
-                        <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" className="text-ink/60 hover:text-ink transition-colors">Privacy Policy</a>
                     </p>
                 </div>
             </div>
 
             {/* Right Side - Benefits */}
-            <div className="hidden lg:flex flex-1 bg-[#111111] items-center justify-center p-16 border-l border-[#1a1a1a]">
+            <div className="hidden lg:flex flex-1 bg-surface-2 items-center justify-center p-16 border-l border-ink/5">
                 <div className="max-w-md">
                     <div className="mb-12">
-                        <h2 className="text-3xl font-bold text-white mb-4">
+                        <h2 className="text-3xl font-serif font-semibold text-ink mb-4">
                             Everything you need to succeed
                         </h2>
-                        <p className="text-gray-400 text-lg leading-relaxed">
+                        <p className="text-ink/60 text-lg leading-relaxed">
                             Get access to powerful tools that help you create, optimize, and track your job applications.
                         </p>
                     </div>
@@ -248,38 +248,38 @@ const RegisterPage = () => {
                     <div className="space-y-6">
                         <div className="flex gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <FileText className="w-5 h-5 text-white" />
+                                <FileText className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold mb-1">Professional Templates</h3>
-                                <p className="text-gray-400 text-sm">Choose from ATS-optimized templates designed by experts</p>
+                                <h3 className="text-ink font-semibold mb-1">Professional Templates</h3>
+                                <p className="text-ink/60 text-sm">Choose from ATS-optimized templates designed by experts</p>
                             </div>
                         </div>
 
                         <div className="flex gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <Shield className="w-5 h-5 text-white" />
+                                <Shield className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold mb-1">Secure & Private</h3>
-                                <p className="text-gray-400 text-sm">Your data is encrypted and never shared with third parties</p>
+                                <h3 className="text-ink font-semibold mb-1">Secure & Private</h3>
+                                <p className="text-ink/60 text-sm">Your data is encrypted and never shared with third parties</p>
                             </div>
                         </div>
 
                         <div className="flex gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <Check className="w-5 h-5 text-white" />
+                                <Check className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold mb-1">Free Forever</h3>
-                                <p className="text-gray-400 text-sm">Core features are completely free, no credit card required</p>
+                                <h3 className="text-ink font-semibold mb-1">Free Forever</h3>
+                                <p className="text-ink/60 text-sm">Core features are completely free, no credit card required</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-12 p-6 bg-white/5 border border-white/10 rounded-lg">
-                        <p className="text-sm text-gray-400 mb-4">Trusted by professionals at</p>
-                        <div className="flex items-center gap-6 text-gray-500">
+                    <div className="mt-12 p-6 bg-white/5 border border-ink/5 rounded-lg">
+                        <p className="text-sm text-ink/60 mb-4">Trusted by professionals at</p>
+                        <div className="flex items-center gap-6 text-ink/40">
                             <span className="font-semibold">Google</span>
                             <span className="font-semibold">Microsoft</span>
                             <span className="font-semibold">Amazon</span>

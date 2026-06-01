@@ -86,7 +86,7 @@ const AuthPage = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] flex relative overflow-hidden">
+        <div className="min-h-screen bg-surface-1 flex relative overflow-hidden">
             {/* Animated Particles Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 {particles.map((particle) => (
@@ -116,18 +116,18 @@ const AuthPage = () => {
                         <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-300 rounded-lg flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 shadow-lg group-hover:shadow-xl">
                             <FileText className="w-6 h-6 text-black" />
                         </div>
-                        <span className="text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">SmartResume</span>
+                        <span className="text-2xl font-serif font-semibold text-ink group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">SmartResume</span>
                     </Link>
 
                     {/* Form Card with Glassmorphism */}
-                    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl animate-slideUp">
+                    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-ink/5 shadow-2xl animate-slideUp">
                         {/* Animated Header */}
                         <div className="mb-8 overflow-hidden relative h-24">
                             <div className={`absolute w-full transition-all duration-700 ${isLogin ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
                                 <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-3">
                                     Welcome back
                                 </h1>
-                                <p className="text-gray-400 text-lg">
+                                <p className="text-ink/60 text-lg">
                                     Sign in to continue to your workspace
                                 </p>
                             </div>
@@ -135,7 +135,7 @@ const AuthPage = () => {
                                 <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">
                                     Create account
                                 </h1>
-                                <p className="text-gray-400 text-lg">
+                                <p className="text-ink/60 text-lg">
                                     Start building your perfect resume today
                                 </p>
                             </div>
@@ -152,14 +152,14 @@ const AuthPage = () => {
                         <form onSubmit={handleSubmit} className="space-y-5">
                             {/* Name Field - Only for Register */}
                             <div className={`transition-all duration-500 overflow-hidden ${!isLogin ? 'max-h-28 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                     Full Name
                                 </label>
                                 <input
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all backdrop-blur-sm hover:bg-white/10"
+                                    className="w-full px-4 py-3.5 bg-white/5 border border-ink/5 rounded-lg text-ink placeholder-ink/40 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all backdrop-blur-sm hover:bg-surface-3"
                                     placeholder="John Doe"
                                     required={!isLogin}
                                 />
@@ -167,14 +167,14 @@ const AuthPage = () => {
 
                             {/* Email Field */}
                             <div className="transform transition-all duration-300 hover:scale-[1.02]">
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                     Email
                                 </label>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all backdrop-blur-sm hover:bg-white/10"
+                                    className="w-full px-4 py-3.5 bg-white/5 border border-ink/5 rounded-lg text-ink placeholder-ink/40 focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all backdrop-blur-sm hover:bg-surface-3"
                                     placeholder="you@example.com"
                                     required
                                 />
@@ -182,7 +182,7 @@ const AuthPage = () => {
 
                             {/* Password Field */}
                             <div className="transform transition-all duration-300 hover:scale-[1.02]">
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-ink/80 mb-2">
                                     Password
                                 </label>
                                 <div className="relative">
@@ -190,14 +190,14 @@ const AuthPage = () => {
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 pr-12 py-3.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 transition-all backdrop-blur-sm hover:bg-white/10"
+                                        className="w-full px-4 pr-12 py-3.5 bg-white/5 border border-ink/5 rounded-lg text-ink placeholder-ink/40 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 transition-all backdrop-blur-sm hover:bg-surface-3"
                                         placeholder="Enter your password"
                                         required
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-all hover:scale-110"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/80 transition-all hover:scale-110"
                                     >
                                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                     </button>
@@ -212,11 +212,11 @@ const AuthPage = () => {
                                             type="checkbox"
                                             className="w-4 h-4 rounded border-gray-600 bg-white/5 text-purple-500 focus:ring-0 focus:ring-offset-0"
                                         />
-                                        <span className="ml-2 text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                                        <span className="ml-2 text-sm text-ink/60 group-hover:text-ink/80 transition-colors">
                                             Remember me
                                         </span>
                                     </label>
-                                    <a href="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors">
+                                    <a href="#" className="text-sm text-ink/60 hover:text-purple-400 transition-colors">
                                         Forgot password?
                                     </a>
                                 </div>
@@ -226,7 +226,7 @@ const AuthPage = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-size-200 bg-pos-0 hover:bg-pos-100 text-white font-semibold rounded-lg transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 active:scale-95 group"
+                                className="w-full py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-size-200 bg-pos-0 hover:bg-pos-100 text-ink font-semibold rounded-lg transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 active:scale-95 group"
                             >
                                 {loading ? (
                                     <>
@@ -243,8 +243,8 @@ const AuthPage = () => {
                         </form>
 
                         {/* Toggle Mode */}
-                        <div className="mt-8 pt-8 border-t border-white/10">
-                            <p className="text-center text-sm text-gray-400">
+                        <div className="mt-8 pt-8 border-t border-ink/5">
+                            <p className="text-center text-sm text-ink/60">
                                 {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
                                 <button
                                     onClick={toggleMode}
@@ -257,12 +257,12 @@ const AuthPage = () => {
 
                         {/* Demo Credentials - Only for Login */}
                         {isLogin && (
-                            <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg animate-fadeIn backdrop-blur-sm">
-                                <p className="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                            <div className="mt-6 p-4 bg-white/5 border border-ink/5 rounded-lg animate-fadeIn backdrop-blur-sm">
+                                <p className="text-xs text-ink/40 mb-2 flex items-center gap-2">
                                     <Star className="w-3 h-3" />
                                     Demo Credentials:
                                 </p>
-                                <p className="text-xs text-gray-400">demo@smartresume.com / demo123</p>
+                                <p className="text-xs text-ink/60">demo@smartresume.com / demo123</p>
                             </div>
                         )}
                     </div>
@@ -270,7 +270,7 @@ const AuthPage = () => {
             </div>
 
             {/* Right Side - Animated Feature Showcase */}
-            <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#111111] to-[#0a0a0a] items-center justify-center p-16 border-l border-white/10 relative overflow-hidden">
+            <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#111111] to-[#0a0a0a] items-center justify-center p-16 border-l border-ink/5 relative overflow-hidden">
                 {/* Animated gradient overlay */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${isLogin ? 'from-purple-500/5 to-pink-500/5' : 'from-blue-500/5 to-cyan-500/5'} transition-all duration-1000`}></div>
 
@@ -278,18 +278,18 @@ const AuthPage = () => {
                     {/* Animated Header */}
                     <div className="mb-12 overflow-hidden relative h-32">
                         <div className={`absolute w-full transition-all duration-700 ${isLogin ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-full opacity-0 scale-95'}`}>
-                            <h2 className="text-3xl font-bold text-white mb-4 animate-slideRight">
+                            <h2 className="text-3xl font-serif font-semibold text-ink mb-4 animate-slideRight">
                                 Welcome to SmartResume
                             </h2>
-                            <p className="text-gray-400 text-lg leading-relaxed">
+                            <p className="text-ink/60 text-lg leading-relaxed">
                                 Your AI-powered career companion. Build stunning resumes and track your job search.
                             </p>
                         </div>
                         <div className={`absolute w-full transition-all duration-700 ${!isLogin ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}`}>
-                            <h2 className="text-3xl font-bold text-white mb-4 animate-slideLeft">
+                            <h2 className="text-3xl font-serif font-semibold text-ink mb-4 animate-slideLeft">
                                 Start Your Journey
                             </h2>
-                            <p className="text-gray-400 text-lg leading-relaxed">
+                            <p className="text-ink/60 text-lg leading-relaxed">
                                 Join thousands of professionals who landed their dream jobs with SmartResume.
                             </p>
                         </div>
@@ -300,35 +300,35 @@ const AuthPage = () => {
                         {features.map((feature, index) => (
                             <div
                                 key={index}
-                                className="p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl hover:border-white/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl group cursor-pointer"
+                                className="p-6 bg-white/5 backdrop-blur-xl border border-ink/5 rounded-xl hover:border-white/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl group cursor-pointer"
                                 style={{
                                     animationDelay: `${index * 100}ms`,
                                     animation: 'fadeInUp 0.6s ease-out forwards'
                                 }}
                             >
                                 <div className={`w-12 h-12 bg-gradient-to-br ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg`}>
-                                    <feature.icon className="w-6 h-6 text-white" />
+                                    <feature.icon className="w-6 h-6 text-ink" />
                                 </div>
-                                <h3 className="text-white font-semibold mb-2 text-sm group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all">{feature.title}</h3>
-                                <p className="text-gray-400 text-xs leading-relaxed">{feature.description}</p>
+                                <h3 className="text-ink font-semibold mb-2 text-sm group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all">{feature.title}</h3>
+                                <p className="text-ink/60 text-xs leading-relaxed">{feature.description}</p>
                             </div>
                         ))}
                     </div>
 
                     {/* Animated Stats */}
-                    <div className="pt-8 border-t border-white/10">
+                    <div className="pt-8 border-t border-ink/5">
                         <div className="grid grid-cols-3 gap-8">
                             <div className="text-center transform hover:scale-110 transition-all duration-300 cursor-pointer group">
-                                <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">10+</div>
-                                <div className="text-sm text-gray-400">AI Features</div>
+                                <div className="text-3xl font-serif font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">10+</div>
+                                <div className="text-sm text-ink/60">AI Features</div>
                             </div>
                             <div className="text-center transform hover:scale-110 transition-all duration-300 cursor-pointer group">
-                                <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">10</div>
-                                <div className="text-sm text-gray-400">Templates</div>
+                                <div className="text-3xl font-serif font-semibold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">10</div>
+                                <div className="text-sm text-ink/60">Templates</div>
                             </div>
                             <div className="text-center transform hover:scale-110 transition-all duration-300 cursor-pointer group">
-                                <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">95%</div>
-                                <div className="text-sm text-gray-400">Success</div>
+                                <div className="text-3xl font-serif font-semibold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">95%</div>
+                                <div className="text-sm text-ink/60">Success</div>
                             </div>
                         </div>
                     </div>

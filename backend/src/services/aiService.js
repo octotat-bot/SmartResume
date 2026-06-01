@@ -124,7 +124,7 @@ Return ONLY valid JSON, no explanations.`;
 
         try {
             // Extract JSON from response
-            const jsonMatch = response.match(/\{[\s\S]*\}/);
+            const jsonMatch = response.match(/(?:\{[\s\S]*\}|\[[\s\S]*\])/);
             if (jsonMatch) {
                 return JSON.parse(jsonMatch[0]);
             }
@@ -205,7 +205,7 @@ Return ONLY valid JSON, no explanations.`;
         const response = await this.generateContent(prompt);
 
         try {
-            const jsonMatch = response.match(/\{[\s\S]*\}/);
+            const jsonMatch = response.match(/(?:\{[\s\S]*\}|\[[\s\S]*\])/);
             if (jsonMatch) {
                 return JSON.parse(jsonMatch[0]);
             }
@@ -250,7 +250,7 @@ Return ONLY valid JSON, no explanations.`;
         const response = await this.generateContent(prompt);
 
         try {
-            const jsonMatch = response.match(/\{[\s\S]*\}/);
+            const jsonMatch = response.match(/(?:\{[\s\S]*\}|\[[\s\S]*\])/);
             if (jsonMatch) {
                 return JSON.parse(jsonMatch[0]);
             }
@@ -339,7 +339,7 @@ Return ONLY the JSON array, no explanations.`;
         const response = await this.generateContent(prompt);
 
         try {
-            const jsonMatch = response.match(/\[[\s\S]*\]/);
+            const jsonMatch = response.match(/(?:\{[\s\S]*\}|\[[\s\S]*\])/);
             if (jsonMatch) {
                 return JSON.parse(jsonMatch[0]);
             }
@@ -377,7 +377,7 @@ Return ONLY valid JSON, no explanations.`;
         const response = await this.generateContent(prompt);
 
         try {
-            const jsonMatch = response.match(/\{[\s\S]*\}/);
+            const jsonMatch = response.match(/(?:\{[\s\S]*\}|\[[\s\S]*\])/);
             if (jsonMatch) {
                 return JSON.parse(jsonMatch[0]);
             }

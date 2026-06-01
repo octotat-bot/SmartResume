@@ -69,26 +69,26 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg w-full max-w-2xl max-h-[80vh] flex flex-col">
+        <div className="fixed inset-0 bg-canvas/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-surface-1 border border-ink/5 rounded-lg w-full max-w-2xl max-h-[80vh] flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-[#1a1a1a]">
+                <div className="flex items-center justify-between p-6 border-b border-ink/5">
                     <div>
-                        <h2 className="text-2xl font-bold text-white">Version History</h2>
-                        <p className="text-sm text-gray-400 mt-1">Restore or manage previous versions</p>
+                        <h2 className="text-2xl font-serif font-semibold text-ink">Version History</h2>
+                        <p className="text-sm text-ink/60 mt-1">Restore or manage previous versions</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        className="p-2 hover:bg-surface-2 rounded-lg transition-colors"
                     >
-                        <X className="w-5 h-5 text-gray-400" />
+                        <X className="w-5 h-5 text-ink/60" />
                     </button>
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto p-6">
                     {loading && (
-                        <div className="text-center py-12 text-gray-400">
+                        <div className="text-center py-12 text-ink/60">
                             Loading versions...
                         </div>
                     )}
@@ -101,7 +101,7 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
                     )}
 
                     {!loading && !error && versions.length === 0 && (
-                        <div className="text-center py-12 text-gray-400">
+                        <div className="text-center py-12 text-ink/60">
                             No version history available
                         </div>
                     )}
@@ -111,12 +111,12 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
                             {versions.map((version, index) => (
                                 <div
                                     key={version._id}
-                                    className="p-4 bg-[#111111] border border-[#1a1a1a] rounded-lg hover:border-white/10 transition-colors group"
+                                    className="p-4 bg-surface-2 border border-ink/5 rounded-lg hover:border-ink/5 transition-colors group"
                                 >
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-3 mb-2">
-                                                <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded border border-blue-500/20">
+                                                <span className="px-2 py-1 bg-blue-500/10 text-accent text-xs font-semibold rounded border border-blue-500/20">
                                                     v{version.versionNumber}
                                                 </span>
                                                 {index === 0 && (
@@ -126,15 +126,15 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <h3 className="font-semibold text-white mb-1">
+                                            <h3 className="font-semibold text-ink mb-1">
                                                 {version.title}
                                             </h3>
                                             {version.changes && (
-                                                <p className="text-sm text-gray-400 mb-2">
+                                                <p className="text-sm text-ink/60 mb-2">
                                                     {version.changes}
                                                 </p>
                                             )}
-                                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                                            <div className="flex items-center gap-2 text-xs text-ink/40">
                                                 <Clock className="w-3 h-3" />
                                                 {formatDate(version.createdAt)}
                                             </div>
@@ -145,7 +145,7 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
                                                 <button
                                                     onClick={() => handleRestore(version._id)}
                                                     disabled={restoring === version._id}
-                                                    className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2 text-sm font-medium"
+                                                    className="p-2 bg-blue-500/10 hover:bg-accent/10 text-accent rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2 text-sm font-medium"
                                                     title="Restore this version"
                                                 >
                                                     <RotateCcw className="w-4 h-4" />
@@ -170,8 +170,8 @@ const VersionHistory = ({ resumeId, onClose, onRestore }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t border-[#1a1a1a] bg-[#0a0a0a]">
-                    <p className="text-xs text-gray-500 text-center">
+                <div className="p-6 border-t border-ink/5 bg-surface-1">
+                    <p className="text-xs text-ink/40 text-center">
                         Versions are automatically created when you make significant changes
                     </p>
                 </div>

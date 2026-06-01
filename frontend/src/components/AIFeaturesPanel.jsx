@@ -145,7 +145,7 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
             <div className="flex items-center gap-2 mb-6">
                 <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-2 rounded-lg">
-                    <Sparkles className="w-5 h-5 text-white" />
+                    <Sparkles className="w-5 h-5 text-ink" />
                 </div>
                 <div>
                     <h2 className="text-xl font-bold text-gray-900">AI Assistant</h2>
@@ -213,7 +213,7 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
                             <button
                                 onClick={handleEnhanceBullet}
                                 disabled={loading || !bulletInput.trim()}
-                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-ink py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -257,7 +257,7 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
                             <button
                                 onClick={handleGenerateSummary}
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-ink py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -320,7 +320,7 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
                             <button
                                 onClick={handleAnalyzeATS}
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-ink py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -394,7 +394,7 @@ const AIFeaturesPanel = ({ resumeId, resumeData, onUpdate }) => {
                             <button
                                 onClick={handleSuggestSkills}
                                 disabled={loading || !jobDescInput.trim()}
-                                className="w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-orange-600 to-amber-600 text-ink py-2 px-4 rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>

@@ -28,7 +28,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] flex">
+        <div className="min-h-screen bg-surface-1 flex">
             {/* Left Side - Form */}
             <div className="flex-1 flex items-center justify-center p-8">
                 <div className="w-full max-w-md">
@@ -37,15 +37,15 @@ const LoginPage = () => {
                         <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                             <FileText className="w-6 h-6 text-black" />
                         </div>
-                        <span className="text-2xl font-bold text-white">SmartResume</span>
+                        <span className="text-2xl font-serif font-semibold text-ink">SmartResume</span>
                     </Link>
 
                     {/* Header */}
                     <div className="mb-10">
-                        <h1 className="text-4xl font-bold text-white mb-3">
+                        <h1 className="text-4xl font-bold text-ink mb-3">
                             Welcome back
                         </h1>
-                        <p className="text-gray-400 text-lg">
+                        <p className="text-ink/60 text-lg">
                             Sign in to continue to your workspace
                         </p>
                     </div>
@@ -60,21 +60,21 @@ const LoginPage = () => {
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Email
                             </label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                className="w-full px-4 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
                                 placeholder="you@example.com"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-ink/80 mb-2">
                                 Password
                             </label>
                             <div className="relative">
@@ -82,14 +82,14 @@ const LoginPage = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 pr-12 py-3.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:border-white focus:outline-none transition-colors"
+                                    className="w-full px-4 pr-12 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
                                     placeholder="••••••••"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/80 transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -100,13 +100,13 @@ const LoginPage = () => {
                             <label className="flex items-center cursor-pointer group">
                                 <input
                                     type="checkbox"
-                                    className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] text-white focus:ring-0 focus:ring-offset-0"
+                                    className="w-4 h-4 rounded border-gray-600 bg-surface-3 text-ink focus:ring-0 focus:ring-offset-0"
                                 />
-                                <span className="ml-2 text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                                <span className="ml-2 text-sm text-ink/60 group-hover:text-ink/80 transition-colors">
                                     Remember me
                                 </span>
                             </label>
-                            <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">
+                            <a href="#" className="text-sm text-ink/60 hover:text-ink transition-colors">
                                 Forgot password?
                             </a>
                         </div>
@@ -131,31 +131,31 @@ const LoginPage = () => {
                     </form>
 
                     {/* Divider */}
-                    <div className="mt-8 pt-8 border-t border-[#2a2a2a]">
-                        <p className="text-center text-sm text-gray-400">
+                    <div className="mt-8 pt-8 border-t border-ink/10">
+                        <p className="text-center text-sm text-ink/60">
                             Don't have an account?{' '}
-                            <Link to="/register" className="text-white hover:underline font-medium">
+                            <Link to="/register" className="text-ink hover:underline font-medium">
                                 Create account
                             </Link>
                         </p>
                     </div>
 
                     {/* Demo Credentials */}
-                    <div className="mt-6 p-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg">
-                        <p className="text-xs text-gray-500 mb-2">Demo Credentials:</p>
-                        <p className="text-xs text-gray-400">demo@smartresume.com / demo123</p>
+                    <div className="mt-6 p-4 bg-surface-3 border border-ink/10 rounded-lg">
+                        <p className="text-xs text-ink/40 mb-2">Demo Credentials:</p>
+                        <p className="text-xs text-ink/60">demo@smartresume.com / demo123</p>
                     </div>
                 </div>
             </div>
 
             {/* Right Side - Feature Showcase */}
-            <div className="hidden lg:flex flex-1 bg-[#111111] items-center justify-center p-16 border-l border-[#1a1a1a]">
+            <div className="hidden lg:flex flex-1 bg-surface-2 items-center justify-center p-16 border-l border-ink/5">
                 <div className="max-w-md">
                     <div className="mb-12">
-                        <h2 className="text-3xl font-bold text-white mb-4">
+                        <h2 className="text-3xl font-serif font-semibold text-ink mb-4">
                             Build resumes that get you hired
                         </h2>
-                        <p className="text-gray-400 text-lg leading-relaxed">
+                        <p className="text-ink/60 text-lg leading-relaxed">
                             Join thousands of professionals who landed their dream jobs with SmartResume's AI-powered platform.
                         </p>
                     </div>
@@ -163,48 +163,48 @@ const LoginPage = () => {
                     <div className="space-y-6">
                         <div className="flex gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-white" />
+                                <CheckCircle className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold mb-1">AI-Powered Enhancement</h3>
-                                <p className="text-gray-400 text-sm">Transform your content with intelligent suggestions</p>
+                                <h3 className="text-ink font-semibold mb-1">AI-Powered Enhancement</h3>
+                                <p className="text-ink/60 text-sm">Transform your content with intelligent suggestions</p>
                             </div>
                         </div>
 
                         <div className="flex gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-white" />
+                                <CheckCircle className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold mb-1">ATS-Optimized Templates</h3>
-                                <p className="text-gray-400 text-sm">Get past applicant tracking systems</p>
+                                <h3 className="text-ink font-semibold mb-1">ATS-Optimized Templates</h3>
+                                <p className="text-ink/60 text-sm">Get past applicant tracking systems</p>
                             </div>
                         </div>
 
                         <div className="flex gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-white" />
+                                <CheckCircle className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold mb-1">Track Your Progress</h3>
-                                <p className="text-gray-400 text-sm">Monitor applications and interviews in one place</p>
+                                <h3 className="text-ink font-semibold mb-1">Track Your Progress</h3>
+                                <p className="text-ink/60 text-sm">Monitor applications and interviews in one place</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-12 pt-8 border-t border-white/10">
+                    <div className="mt-12 pt-8 border-t border-ink/5">
                         <div className="flex items-center gap-8">
                             <div>
-                                <div className="text-3xl font-bold text-white">10K+</div>
-                                <div className="text-sm text-gray-400">Active Users</div>
+                                <div className="text-3xl font-serif font-semibold text-ink">10K+</div>
+                                <div className="text-sm text-ink/60">Active Users</div>
                             </div>
                             <div>
-                                <div className="text-3xl font-bold text-white">95%</div>
-                                <div className="text-sm text-gray-400">Success Rate</div>
+                                <div className="text-3xl font-serif font-semibold text-ink">95%</div>
+                                <div className="text-sm text-ink/60">Success Rate</div>
                             </div>
                             <div>
-                                <div className="text-3xl font-bold text-white">4.9★</div>
-                                <div className="text-sm text-gray-400">User Rating</div>
+                                <div className="text-3xl font-serif font-semibold text-ink">4.9★</div>
+                                <div className="text-sm text-ink/60">User Rating</div>
                             </div>
                         </div>
                     </div>

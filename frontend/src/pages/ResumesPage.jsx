@@ -73,30 +73,30 @@ const ResumesPage = () => {
 
     if (loading && page === 1) {
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+            <div className="min-h-screen bg-surface-1 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-gray-400">Loading resumes...</p>
+                    <p className="text-ink/60">Loading resumes...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] p-6">
+        <div className="min-h-screen bg-surface-1 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex justify-between items-start mb-6">
                         <div>
-                            <h1 className="text-4xl font-bold text-white mb-2">My Resumes</h1>
-                            <p className="text-base text-gray-400">Manage and create professional resumes</p>
+                            <h1 className="text-4xl font-bold text-ink mb-2">My Resumes</h1>
+                            <p className="text-base text-ink/60">Manage and create professional resumes</p>
                         </div>
                         <div className="flex gap-3">
                             {resumes.length > 0 && (
                                 <button
                                     onClick={() => alert('Bulk export feature requires JSZip package. Run: npm install jszip')}
-                                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+                                    className="px-6 py-3 btn-primary text-ink font-semibold rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
                                     title="Export all resumes as ZIP"
                                 >
                                     <Download className="w-5 h-5" />
@@ -117,13 +117,13 @@ const ResumesPage = () => {
                     <div className="flex flex-col md:flex-row gap-4">
                         {/* Search */}
                         <div className="flex-1 relative">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink/40" />
                             <input
                                 type="text"
                                 placeholder="Search resumes by title or role..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-[#111111] border border-[#1a1a1a] rounded-lg text-white placeholder-gray-500 focus:border-white/30 focus:outline-none transition-all"
+                                className="w-full pl-12 pr-4 py-3 bg-surface-2 border border-ink/5 rounded-lg text-ink placeholder-ink/40 focus:border-white/30 focus:outline-none transition-all"
                             />
                         </div>
 
@@ -131,7 +131,7 @@ const ResumesPage = () => {
                         <select
                             value={filterActive}
                             onChange={(e) => setFilterActive(e.target.value)}
-                            className="px-4 py-3 bg-[#111111] border border-[#1a1a1a] rounded-lg text-white focus:border-white/30 focus:outline-none transition-all"
+                            className="px-4 py-3 bg-surface-2 border border-ink/5 rounded-lg text-ink focus:border-white/30 focus:outline-none transition-all"
                         >
                             <option value="all">All Resumes</option>
                             <option value="active">Active Only</option>
@@ -142,7 +142,7 @@ const ResumesPage = () => {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="px-4 py-3 bg-[#111111] border border-[#1a1a1a] rounded-lg text-white focus:border-white/30 focus:outline-none transition-all"
+                            className="px-4 py-3 bg-surface-2 border border-ink/5 rounded-lg text-ink focus:border-white/30 focus:outline-none transition-all"
                         >
                             <option value="lastModified">Last Modified</option>
                             <option value="title">Title</option>
@@ -152,7 +152,7 @@ const ResumesPage = () => {
                         {/* Sort Order */}
                         <button
                             onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-                            className="px-4 py-3 bg-[#111111] border border-[#1a1a1a] rounded-lg text-white hover:bg-[#161616] transition-all flex items-center gap-2"
+                            className="px-4 py-3 bg-surface-2 border border-ink/5 rounded-lg text-ink hover:bg-[#161616] transition-all flex items-center gap-2"
                             title={sortOrder === 'desc' ? 'Descending' : 'Ascending'}
                         >
                             <SortAsc className={`w-5 h-5 transition-transform ${sortOrder === 'asc' ? 'rotate-180' : ''}`} />
@@ -165,29 +165,29 @@ const ResumesPage = () => {
                     {/* Create New Card */}
                     <Link
                         to="/resumes/new"
-                        className="group flex flex-col items-center justify-center p-6 bg-[#111111] border-2 border-dashed border-[#333] rounded-xl hover:border-white/50 hover:bg-[#161616] transition-all min-h-[220px] gap-4"
+                        className="group flex flex-col items-center justify-center p-6 bg-surface-2 border-2 border-dashed border-[#333] rounded-xl hover:border-white/50 hover:bg-[#161616] transition-all min-h-[220px] gap-4"
                     >
-                        <div className="w-14 h-14 rounded-full bg-[#222] flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                            <Plus className="w-7 h-7 text-gray-400 group-hover:text-white transition-colors" />
+                        <div className="w-14 h-14 rounded-full bg-surface-3 hover:brightness-95 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                            <Plus className="w-7 h-7 text-ink/60 group-hover:text-ink transition-colors" />
                         </div>
-                        <span className="font-semibold text-gray-400 group-hover:text-white transition-colors">Create New Resume</span>
+                        <span className="font-semibold text-ink/60 group-hover:text-ink transition-colors">Create New Resume</span>
                     </Link>
 
                     {resumes.map((resume) => (
                         <div
                             key={resume._id}
-                            className="group relative bg-[#111111] border border-[#1a1a1a] rounded-xl p-6 hover:border-white/20 transition-all flex flex-col min-h-[220px] shadow-sm hover:shadow-xl hover:shadow-black/50"
+                            className="group relative bg-surface-2 border border-ink/5 rounded-xl p-6 hover:border-white/20 transition-all flex flex-col min-h-[220px] shadow-sm hover:shadow-xl hover:shadow-black/50"
                         >
                             {/* Header */}
                             <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] flex items-center justify-center text-gray-500 group-hover:text-white group-hover:bg-[#222] border border-[#222] group-hover:border-[#333] transition-all">
+                                <div className="w-12 h-12 rounded-xl bg-surface-3 flex items-center justify-center text-ink/40 group-hover:text-ink group-hover:bg-surface-3 hover:brightness-95 border border-[#222] group-hover:border-[#333] transition-all">
                                     <FileText className="w-6 h-6" />
                                 </div>
                                 <div className="relative z-20 flex gap-1">
                                     <button
                                         onClick={(e) => handleDuplicate(resume._id, e)}
                                         disabled={duplicating === resume._id}
-                                        className="p-2 text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                                        className="p-2 text-gray-600 hover:text-accent hover:bg-blue-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
                                         title="Duplicate"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -212,10 +212,10 @@ const ResumesPage = () => {
 
                             {/* Content */}
                             <div className="flex-1 mb-4">
-                                <h3 className="text-xl font-bold text-white mb-2 line-clamp-2 leading-tight group-hover:text-blue-400 transition-colors">
+                                <h3 className="text-xl font-bold text-ink mb-2 line-clamp-2 leading-tight group-hover:text-accent transition-colors">
                                     {resume.title || 'Untitled Resume'}
                                 </h3>
-                                <p className="text-sm text-gray-400 line-clamp-2 mb-2">
+                                <p className="text-sm text-ink/60 line-clamp-2 mb-2">
                                     {resume.metadata?.targetRole || 'No role specified'}
                                 </p>
                                 {/* Tags */}
@@ -224,13 +224,13 @@ const ResumesPage = () => {
                                         {resume.tags.slice(0, 3).map((tag, idx) => (
                                             <span
                                                 key={idx}
-                                                className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30"
+                                                className="px-2 py-0.5 bg-blue-500/20 text-accent text-xs rounded-full border border-blue-500/30"
                                             >
                                                 {tag}
                                             </span>
                                         ))}
                                         {resume.tags.length > 3 && (
-                                            <span className="px-2 py-0.5 bg-gray-500/20 text-gray-400 text-xs rounded-full">
+                                            <span className="px-2 py-0.5 bg-gray-500/20 text-ink/60 text-xs rounded-full">
                                                 +{resume.tags.length - 3}
                                             </span>
                                         )}
@@ -239,8 +239,8 @@ const ResumesPage = () => {
                             </div>
 
                             {/* Footer */}
-                            <div className="flex items-center justify-between pt-4 border-t border-[#1a1a1a] mt-auto">
-                                <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                            <div className="flex items-center justify-between pt-4 border-t border-ink/5 mt-auto">
+                                <div className="flex items-center gap-2 text-xs text-ink/40 font-medium">
                                     <Clock className="w-3.5 h-3.5" />
                                     <span>{new Date(resume.lastModified || resume.updatedAt || Date.now()).toLocaleDateString()}</span>
                                 </div>
@@ -269,7 +269,7 @@ const ResumesPage = () => {
                         <button
                             onClick={() => setPage(p => Math.max(1, p - 1))}
                             disabled={page === 1}
-                            className="px-4 py-2 bg-[#111111] border border-[#1a1a1a] rounded-lg text-white hover:bg-[#161616] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                            className="px-4 py-2 bg-surface-2 border border-ink/5 rounded-lg text-ink hover:bg-[#161616] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                             Previous
                         </button>
@@ -281,7 +281,7 @@ const ResumesPage = () => {
                                     onClick={() => setPage(i + 1)}
                                     className={`w-10 h-10 rounded-lg font-semibold transition-all ${page === i + 1
                                         ? 'bg-white text-black'
-                                        : 'bg-[#111111] border border-[#1a1a1a] text-white hover:bg-[#161616]'
+                                        : 'bg-surface-2 border border-ink/5 text-ink hover:bg-[#161616]'
                                         }`}
                                 >
                                     {i + 1}
@@ -292,7 +292,7 @@ const ResumesPage = () => {
                         <button
                             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages}
-                            className="px-4 py-2 bg-[#111111] border border-[#1a1a1a] rounded-lg text-white hover:bg-[#161616] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                            className="px-4 py-2 bg-surface-2 border border-ink/5 rounded-lg text-ink hover:bg-[#161616] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                             Next
                         </button>
@@ -303,8 +303,8 @@ const ResumesPage = () => {
                 {!loading && resumes.length === 0 && (
                     <div className="text-center py-12">
                         <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-white mb-2">No resumes found</h3>
-                        <p className="text-gray-400 mb-6">
+                        <h3 className="text-xl font-semibold text-ink mb-2">No resumes found</h3>
+                        <p className="text-ink/60 mb-6">
                             {searchTerm || filterActive !== 'all'
                                 ? 'Try adjusting your filters or search term'
                                 : 'Create your first resume to get started'}

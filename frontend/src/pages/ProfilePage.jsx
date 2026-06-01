@@ -68,27 +68,27 @@ const ProfilePage = () => {
     };
 
     return (
-        <div className="h-screen bg-[#0a0a0a] p-6 overflow-y-auto">
+        <div className="h-screen bg-surface-1 p-6 overflow-y-auto">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-white mb-2">Profile Settings</h1>
-                    <p className="text-base text-gray-400">Manage your personal information</p>
+                    <h1 className="text-4xl font-bold text-ink mb-2">Profile Settings</h1>
+                    <p className="text-base text-ink/60">Manage your personal information</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-6">
                     {/* Left Sidebar */}
                     <div className="space-y-6">
                         {/* Avatar Card */}
-                        <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-6">
+                        <div className="bg-surface-2 border border-ink/5 rounded-xl p-6">
                             <div className="text-center">
-                                <div className="w-24 h-24 mx-auto mb-4 bg-white/10 rounded-full flex items-center justify-center text-3xl font-bold text-white">
+                                <div className="w-24 h-24 mx-auto mb-4 bg-white/10 rounded-full flex items-center justify-center text-3xl font-serif font-semibold text-ink">
                                     {user?.name?.charAt(0).toUpperCase()}
                                 </div>
-                                <h2 className="text-xl font-bold text-white mb-1">{user?.name}</h2>
-                                <p className="text-sm text-gray-400 mb-4">{user?.email}</p>
+                                <h2 className="text-xl font-bold text-ink mb-1">{user?.name}</h2>
+                                <p className="text-sm text-ink/60 mb-4">{user?.email}</p>
                                 <div className="flex gap-2 justify-center">
-                                    <div className="px-3 py-1 bg-white/10 text-white text-xs rounded-full border border-white/20 font-medium">
+                                    <div className="px-3 py-1 bg-white/10 text-ink text-xs rounded-full border border-white/20 font-medium">
                                         Active
                                     </div>
                                 </div>
@@ -96,8 +96,8 @@ const ProfilePage = () => {
                         </div>
 
                         {/* Enhanced Stats Card */}
-                        <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-6">
-                            <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider flex items-center gap-2">
+                        <div className="bg-surface-2 border border-ink/5 rounded-xl p-6">
+                            <h3 className="text-sm font-bold text-ink/60 mb-4 uppercase tracking-wider flex items-center gap-2">
                                 <Activity className="w-4 h-4" />
                                 Your Stats
                             </h3>
@@ -105,24 +105,24 @@ const ProfilePage = () => {
                                 {/* Total Resumes */}
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2">
-                                        <FileText className="w-4 h-4 text-blue-400" />
-                                        <span className="text-sm text-gray-400">Total Resumes</span>
+                                        <FileText className="w-4 h-4 text-accent" />
+                                        <span className="text-sm text-ink/60">Total Resumes</span>
                                     </div>
-                                    <span className="text-2xl font-bold text-white">{stats.resumes}</span>
+                                    <span className="text-2xl font-serif font-semibold text-ink">{stats.resumes}</span>
                                 </div>
 
                                 {/* Active/Inactive Breakdown */}
-                                <div className="p-3 bg-[#0a0a0a] rounded-lg border border-[#1a1a1a]">
+                                <div className="p-3 bg-surface-1 rounded-lg border border-ink/5">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-xs text-gray-500">Active</span>
+                                        <span className="text-xs text-ink/40">Active</span>
                                         <span className="text-xs font-semibold text-green-400">{stats.activeResumes}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs text-gray-500">Inactive</span>
+                                        <span className="text-xs text-ink/40">Inactive</span>
                                         <span className="text-xs font-semibold text-gray-600">{stats.resumes - stats.activeResumes}</span>
                                     </div>
                                     {/* Progress Bar */}
-                                    <div className="mt-2 h-2 bg-[#1a1a1a] rounded-full overflow-hidden">
+                                    <div className="mt-2 h-2 bg-surface-3 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all"
                                             style={{ width: `${stats.resumes > 0 ? (stats.activeResumes / stats.resumes) * 100 : 0}%` }}
@@ -134,22 +134,22 @@ const ProfilePage = () => {
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2">
                                         <Briefcase className="w-4 h-4 text-purple-400" />
-                                        <span className="text-sm text-gray-400">Applications</span>
+                                        <span className="text-sm text-ink/60">Applications</span>
                                     </div>
-                                    <span className="text-2xl font-bold text-white">{stats.applications}</span>
+                                    <span className="text-2xl font-serif font-semibold text-ink">{stats.applications}</span>
                                 </div>
 
-                                <div className="flex justify-between items-center pt-4 border-t border-[#1a1a1a]">
-                                    <span className="text-sm text-gray-400">Member Since</span>
-                                    <span className="text-sm font-semibold text-white">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</span>
+                                <div className="flex justify-between items-center pt-4 border-t border-ink/5">
+                                    <span className="text-sm text-ink/60">Member Since</span>
+                                    <span className="text-sm font-semibold text-ink">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Recent Resumes Widget */}
                         {stats.recentResumes && stats.recentResumes.length > 0 && (
-                            <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-6">
-                                <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider flex items-center gap-2">
+                            <div className="bg-surface-2 border border-ink/5 rounded-xl p-6">
+                                <h3 className="text-sm font-bold text-ink/60 mb-4 uppercase tracking-wider flex items-center gap-2">
                                     <Clock className="w-4 h-4" />
                                     Recent Resumes
                                 </h3>
@@ -158,15 +158,15 @@ const ProfilePage = () => {
                                         <Link
                                             key={resume._id}
                                             to={`/resumes/${resume._id}`}
-                                            className="block p-3 bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] hover:border-white/20 transition-all group"
+                                            className="block p-3 bg-surface-1 rounded-lg border border-ink/5 hover:border-white/20 transition-all group"
                                         >
                                             <div className="flex items-start justify-between gap-2">
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors truncate">
+                                                    <h4 className="text-sm font-semibold text-ink group-hover:text-accent transition-colors truncate">
                                                         {resume.title || 'Untitled Resume'}
                                                     </h4>
                                                     {resume.metadata?.targetRole && (
-                                                        <p className="text-xs text-gray-500 mt-1 truncate">
+                                                        <p className="text-xs text-ink/40 mt-1 truncate">
                                                             {resume.metadata.targetRole}
                                                         </p>
                                                     )}
@@ -184,7 +184,7 @@ const ProfilePage = () => {
                         {/* Logout Button */}
                         <button
                             onClick={handleLogout}
-                            className="w-full px-6 py-3 bg-[#111111] border border-[#1a1a1a] text-gray-400 rounded-xl hover:border-white/20 hover:text-white transition-all flex items-center justify-center gap-3 group font-medium"
+                            className="w-full px-6 py-3 bg-surface-2 border border-ink/5 text-ink/60 rounded-xl hover:border-white/20 hover:text-ink transition-all flex items-center justify-center gap-3 group font-medium"
                         >
                             <LogOut className="w-5 h-5" />
                             <span>Logout</span>
@@ -193,90 +193,90 @@ const ProfilePage = () => {
 
                     {/* Main Form */}
                     <div className="col-span-2">
-                        <div className="bg-[#111111] border border-[#1a1a1a] rounded-xl p-8">
-                            <h3 className="text-2xl font-bold mb-8 text-white">Personal Information</h3>
+                        <div className="bg-surface-2 border border-ink/5 rounded-xl p-8">
+                            <h3 className="text-2xl font-serif font-semibold mb-8 text-ink">Personal Information</h3>
 
                             <div className="space-y-5">
                                 {/* Name */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">Full Name</label>
                                     <input
                                         type="text"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="John Doe"
                                     />
                                 </div>
 
                                 {/* Email */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">Email</label>
                                     <input
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="you@example.com"
                                     />
                                 </div>
 
                                 {/* Phone */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Phone</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">Phone</label>
                                     <input
                                         type="tel"
                                         value={formData.phone}
                                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="+1 (555) 123-4567"
                                     />
                                 </div>
 
                                 {/* Location */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Location</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">Location</label>
                                     <input
                                         type="text"
                                         value={formData.location}
                                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="San Francisco, CA"
                                     />
                                 </div>
 
                                 {/* Website */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Website</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">Website</label>
                                     <input
                                         type="url"
                                         value={formData.website}
                                         onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="https://yourwebsite.com"
                                     />
                                 </div>
 
                                 {/* LinkedIn */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">LinkedIn</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">LinkedIn</label>
                                     <input
                                         type="url"
                                         value={formData.linkedin}
                                         onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="linkedin.com/in/johndoe"
                                     />
                                 </div>
 
                                 {/* GitHub */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">GitHub</label>
+                                    <label className="block text-sm font-medium text-ink/80 mb-2">GitHub</label>
                                     <input
                                         type="url"
                                         value={formData.github}
                                         onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0a0a0a] text-white border border-[#1a1a1a] rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-gray-500"
+                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/5 rounded-lg focus:border-white/30 focus:outline-none transition-all placeholder-ink/40"
                                         placeholder="github.com/johndoe"
                                     />
                                 </div>

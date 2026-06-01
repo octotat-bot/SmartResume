@@ -116,19 +116,19 @@ const ResumeStats = ({ resume, onClose }) => {
     ];
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="fixed inset-0 bg-canvas/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gradient-to-br from-gray-900 to-black border border-ink/5 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
                 {/* Header */}
-                <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-purple-600 p-6 flex items-center justify-between border-b border-white/10">
+                <div className="sticky top-0 btn-primary p-6 flex items-center justify-between border-b border-ink/5">
                     <div>
-                        <h2 className="text-2xl font-bold text-white">Resume Statistics</h2>
+                        <h2 className="text-2xl font-serif font-semibold text-ink">Resume Statistics</h2>
                         <p className="text-blue-100 text-sm mt-1">Detailed analysis of your resume</p>
                     </div>
                     <button
                         onClick={onClose}
                         className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                     >
-                        <X className="w-6 h-6 text-white" />
+                        <X className="w-6 h-6 text-ink" />
                     </button>
                 </div>
 
@@ -139,27 +139,27 @@ const ResumeStats = ({ resume, onClose }) => {
                         {statCards.map((stat, index) => (
                             <div
                                 key={index}
-                                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all"
+                                className="bg-white/5 backdrop-blur-sm border border-ink/5 rounded-xl p-4 hover:bg-surface-3 transition-all"
                             >
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className={`p-2 rounded-lg bg-${stat.color}-500/20`}>
                                         <stat.icon className={`w-5 h-5 text-${stat.color}-400`} />
                                     </div>
                                     <div className="flex-1">
-                                        <div className="text-2xl font-bold text-white">{stat.value}</div>
-                                        <div className="text-sm text-gray-400">{stat.label}</div>
+                                        <div className="text-2xl font-serif font-semibold text-ink">{stat.value}</div>
+                                        <div className="text-sm text-ink/60">{stat.label}</div>
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500">{stat.description}</p>
+                                <p className="text-xs text-ink/40">{stat.description}</p>
                             </div>
                         ))}
                     </div>
 
                     {/* Completeness Bar */}
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+                    <div className="bg-white/5 backdrop-blur-sm border border-ink/5 rounded-xl p-6">
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-lg font-semibold text-white">Profile Completeness</h3>
-                            <span className="text-2xl font-bold text-white">{stats.completeness}%</span>
+                            <h3 className="text-lg font-semibold text-ink">Profile Completeness</h3>
+                            <span className="text-2xl font-serif font-semibold text-ink">{stats.completeness}%</span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
                             <div
@@ -170,7 +170,7 @@ const ResumeStats = ({ resume, onClose }) => {
                                 style={{ width: `${stats.completeness}%` }}
                             />
                         </div>
-                        <p className="text-sm text-gray-400 mt-2">
+                        <p className="text-sm text-ink/60 mt-2">
                             {stats.completeness >= 80 ? '✨ Excellent! Your resume is well-detailed.' :
                                 stats.completeness >= 50 ? '👍 Good progress! Add more details to improve.' :
                                     '📝 Keep going! Add more sections to strengthen your resume.'}
@@ -178,20 +178,20 @@ const ResumeStats = ({ resume, onClose }) => {
                     </div>
 
                     {/* Section Breakdown */}
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-                        <h3 className="text-lg font-semibold text-white mb-4">Section Breakdown</h3>
+                    <div className="bg-white/5 backdrop-blur-sm border border-ink/5 rounded-xl p-6">
+                        <h3 className="text-lg font-semibold text-ink mb-4">Section Breakdown</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {sectionStats.map((section, index) => (
                                 <div
                                     key={index}
-                                    className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-all"
+                                    className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-surface-3 transition-all"
                                 >
                                     <div className={`p-2 rounded-lg bg-${section.color}-500/20`}>
                                         <section.icon className={`w-4 h-4 text-${section.color}-400`} />
                                     </div>
                                     <div>
-                                        <div className="text-xl font-bold text-white">{section.count}</div>
-                                        <div className="text-xs text-gray-400">{section.label}</div>
+                                        <div className="text-xl font-bold text-ink">{section.count}</div>
+                                        <div className="text-xs text-ink/60">{section.label}</div>
                                     </div>
                                 </div>
                             ))}
@@ -201,8 +201,8 @@ const ResumeStats = ({ resume, onClose }) => {
                     {/* Recommendations */}
                     {stats.completeness < 100 && (
                         <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6">
-                            <h3 className="text-lg font-semibold text-blue-400 mb-3">💡 Recommendations</h3>
-                            <ul className="space-y-2 text-sm text-gray-300">
+                            <h3 className="text-lg font-semibold text-accent mb-3">💡 Recommendations</h3>
+                            <ul className="space-y-2 text-sm text-ink/80">
                                 {stats.sections.experience === 0 && (
                                     <li>• Add your work experience to showcase your professional background</li>
                                 )}
