@@ -53,6 +53,8 @@ const ResumeWorkspace = () => {
 
     // UI State
     const [rightPanelOpen, setRightPanelOpen] = useState(true);
+    const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+    const [previewMode, setPreviewMode] = useState(false);
     const [docSettings, setDocSettings] = useState({ font: 'inter', color: '#141210', margin: 'normal', spacing: 'normal' });
 
     // 1. Fetch data on mount
@@ -173,9 +175,9 @@ const ResumeWorkspace = () => {
     }
 
     return (
-        <div className="h-screen flex flex-col font-sans bg-surface-1 overflow-hidden animate-[fadeInScale_300ms_ease-out]" style={{ '--doc-color': docSettings.color }}>
+        <div className="h-screen flex flex-col font-sans bg-surface-1 overflow-hidden animate-[fadeInScale_300ms_ease-out] print:bg-white print:h-auto" style={{ '--doc-color': docSettings.color }}>
             {/* TOP BAR */}
-            <header className="h-[52px] bg-white border-b border-ink/5 px-4 flex items-center justify-between shrink-0 z-10">
+            <header className="h-[52px] bg-white border-b border-ink/5 px-4 flex items-center justify-between shrink-0 z-10 print:hidden">
                 <div className="flex flex-1 items-center gap-4">
                     <button onClick={() => navigate('/dashboard')} className="text-[13px] text-ink/60 hover:text-ink flex items-center gap-1.5 transition-colors">
                         <ArrowLeft className="w-4 h-4" /> Dashboard
@@ -200,20 +202,33 @@ const ResumeWorkspace = () => {
                             <><Check className="w-3 h-3" /> Saved</>
                         )}
                     </div>
-                    <button className="btn-ghost text-[13px] h-[32px] px-3 font-medium">Preview</button>
-                    <button className="btn-primary text-[13px] h-[32px] px-4 rounded-lg flex items-center gap-2 font-medium">
+                    <button 
+                        onClick={() => setPreviewMode(!previewMode)}
+                        className={`btn-ghost text-[13px] h-[32px] px-3 font-medium ${previewMode ? 'bg-ink/5 text-ink' : ''}`}
+                    >
+                        {previewMode ? 'Exit Preview' : 'Preview'}
+                    </button>
+                    <button 
+                        onClick={() => window.print()}
+                        className="btn-primary text-[13px] h-[32px] px-4 rounded-lg flex items-center gap-2 font-medium"
+                    >
                         <Download className="w-4 h-4" /> PDF
                     </button>
                     <div className="w-px h-4 bg-ink/10 mx-2" />
-                    <button className="p-2 text-ink/60 hover:bg-surface-2 rounded-lg transition-colors">
+                    <button 
+                        onClick={() => setLeftPanelOpen(!leftPanelOpen)}
+                        className={`p-2 rounded-lg transition-colors ${leftPanelOpen ? 'text-ink bg-surface-2' : 'text-ink/60 hover:bg-surface-2'}`}
+                        title="Toggle Layout Panel"
+                    >
                         <Layout className="w-4 h-4" />
                     </button>
                 </div>
             </header>
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden print:overflow-visible">
                 {/* LEFT PANEL */}
-                <aside className="w-[240px] bg-white border-r border-ink/5 flex flex-col shrink-0 z-10">
+                {leftPanelOpen && !previewMode && (
+                <aside className="w-[240px] bg-white border-r border-ink/5 flex flex-col shrink-0 z-10 print:hidden animate-[slideInLeft_300ms_ease-out]">
                     <div className="p-4 flex-1 overflow-y-auto hide-scrollbar">
                         <h3 className="text-[11px] font-mono font-bold tracking-widest uppercase text-ink/40 mb-4">Sections</h3>
                         <div className="space-y-1 mb-4">
@@ -237,6 +252,18 @@ const ResumeWorkspace = () => {
                             <h3 className="text-[11px] font-mono font-bold tracking-widest uppercase text-ink/40 mb-4">Document Style</h3>
                             <div className="space-y-5">
                                 <div>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Font</label>
+                                    <select 
+                                        className="w-full h-[36px] text-[13px] border border-ink/10 rounded-lg px-2 bg-white appearance-none cursor-pointer"
+                                        value={docSettings.font}
+                                        onChange={(e) => setDocSettings({...docSettings, font: e.target.value})}
+                                    >
+                                        <option value="font-serif">Classic (Playfair)</option>
+                                        <option value="font-sans">Modern (Inter)</option>
+                                        <option value="font-mono">Technical (Mono)</option>
+                                    </select>
+                                </div>
+                                <div>
                                     <label className="text-[12px] font-medium text-ink/80 block mb-2">Color accent</label>
                                     <div className="flex gap-2">
                                         {['#141210', '#2B5BA8', '#2D6A4F', '#92622A', '#6B2B85'].map(color => (
@@ -251,24 +278,51 @@ const ResumeWorkspace = () => {
                                         ))}
                                     </div>
                                 </div>
+                                <div>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Page margins</label>
+                                    <input 
+                                        type="range" 
+                                        className="w-full cursor-pointer" 
+                                        min="0" max="2" 
+                                        value={docSettings.margin === 'narrow' ? 0 : docSettings.margin === 'normal' ? 1 : 2}
+                                        onChange={(e) => setDocSettings({...docSettings, margin: e.target.value === '0' ? 'narrow' : e.target.value === '1' ? 'normal' : 'wide'})}
+                                    />
+                                    <div className="flex justify-between text-[11px] text-ink/40 mt-1">
+                                        <span>Narrow</span><span>Normal</span><span>Wide</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Line spacing</label>
+                                    <input 
+                                        type="range" 
+                                        className="w-full cursor-pointer" 
+                                        min="0" max="2" 
+                                        value={docSettings.spacing === 'compact' ? 0 : docSettings.spacing === 'normal' ? 1 : 2}
+                                        onChange={(e) => setDocSettings({...docSettings, spacing: e.target.value === '0' ? 'compact' : e.target.value === '1' ? 'normal' : 'loose'})}
+                                    />
+                                    <div className="flex justify-between text-[11px] text-ink/40 mt-1">
+                                        <span>Compact</span><span>Normal</span><span>Loose</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </aside>
+                )}
 
                 {/* CENTER CANVAS */}
-                <main className="flex-1 bg-[#ECEAE4] overflow-y-auto flex justify-center py-12 px-8 relative hide-scrollbar">
-                    <div className="w-[794px] min-h-[1123px] shrink-0 bg-white shadow-[0_8px_40px_rgba(20,18,16,0.12)] rounded-[2px] p-16 transition-all relative group">
+                <main className="flex-1 bg-[#ECEAE4] overflow-y-auto flex justify-center py-12 px-8 relative hide-scrollbar print:bg-white print:p-0 print:overflow-visible">
+                    <div className={`w-[794px] min-h-[1123px] shrink-0 bg-white shadow-[0_8px_40px_rgba(20,18,16,0.12)] rounded-[2px] ${docSettings.margin === 'narrow' ? 'p-10' : docSettings.margin === 'wide' ? 'p-20' : 'p-16'} transition-all relative group ${docSettings.font} print:shadow-none print:m-0 ${previewMode ? 'pointer-events-none' : ''}`}>
                         
                         {/* HEADER - Personal Info */}
                         <div className="mb-8 border border-transparent hover:border-ink/10 p-4 -m-4 rounded transition-colors group/section">
                             <EditableField 
                                 value={resumeData.personalInfo?.fullName || ''} 
                                 onChange={(val) => updatePersonalInfo('fullName', val)} 
-                                className="font-serif text-[42px] text-ink leading-tight text-center w-full"
+                                className={`text-[42px] text-ink leading-tight text-center w-full ${docSettings.font}`}
                                 placeholder="Your Name"
                             />
-                            <div className="flex flex-wrap items-center justify-center gap-2 text-[14px] text-ink/80 mt-2 font-sans tracking-wide">
+                            <div className="flex flex-wrap items-center justify-center gap-2 text-[14px] text-ink/80 mt-2 tracking-wide">
                                 <EditableField value={resumeData.personalInfo?.location || ''} onChange={(val) => updatePersonalInfo('location', val)} placeholder="Location" className="text-center w-auto inline-block min-w-[100px]" /> • 
                                 <EditableField value={resumeData.personalInfo?.email || ''} onChange={(val) => updatePersonalInfo('email', val)} placeholder="Email" className="text-center w-auto inline-block min-w-[150px]" /> • 
                                 <EditableField value={resumeData.personalInfo?.phone || ''} onChange={(val) => updatePersonalInfo('phone', val)} placeholder="Phone" className="text-center w-auto inline-block min-w-[120px]" /> • 
@@ -283,7 +337,7 @@ const ResumeWorkspace = () => {
                             {resumeData.experience.map((exp, expIndex) => (
                                 <div key={exp._id || expIndex} className="mb-6 group/exp relative">
                                     <button 
-                                        className="absolute -left-10 top-0 p-1 text-status-error opacity-0 group-hover/exp:opacity-100 transition-opacity rounded hover:bg-status-error/10"
+                                        className="absolute -left-10 top-0 p-1 text-status-error opacity-0 group-hover/exp:opacity-100 transition-opacity rounded hover:bg-status-error/10 print:hidden pointer-events-auto"
                                         onClick={() => setResumeData(prev => ({...prev, experience: prev.experience.filter((_, i) => i !== expIndex)}))}
                                     >
                                         <X className="w-4 h-4" />
@@ -299,7 +353,7 @@ const ResumeWorkspace = () => {
                                             <EditableField value={exp.endDate} onChange={(v) => updateExperience(expIndex, 'endDate', v)} className="text-left w-14" />
                                         </div>
                                     </div>
-                                    <ul className="mt-2 space-y-1.5 text-[14px] text-ink/80">
+                                    <ul className={`mt-2 ${docSettings.spacing === 'compact' ? 'space-y-0.5' : docSettings.spacing === 'loose' ? 'space-y-2.5' : 'space-y-1.5'} text-[14px] text-ink/80`}>
                                         {exp.achievements?.map((ach, achIndex) => (
                                             <li key={achIndex} className="flex items-start gap-2 group/ach relative">
                                                 <span className="text-[8px] mt-1.5 opacity-60" style={{color: 'var(--doc-color)'}}>▪</span> 
@@ -310,7 +364,7 @@ const ResumeWorkspace = () => {
                                                     className="flex-1"
                                                 />
                                                 <button 
-                                                    className="absolute -left-5 top-1 p-0.5 text-status-error opacity-0 group-hover/ach:opacity-100 transition-opacity"
+                                                    className="absolute -left-5 top-1 p-0.5 text-status-error opacity-0 group-hover/ach:opacity-100 transition-opacity print:hidden pointer-events-auto"
                                                     onClick={() => setResumeData(prev => {
                                                         const nExp = [...prev.experience];
                                                         nExp[expIndex].achievements = nExp[expIndex].achievements.filter((_, i) => i !== achIndex);
@@ -321,7 +375,7 @@ const ResumeWorkspace = () => {
                                                 </button>
                                             </li>
                                         ))}
-                                        <li className="opacity-0 group-hover/exp:opacity-100 transition-opacity mt-1">
+                                        <li className="opacity-0 group-hover/exp:opacity-100 transition-opacity mt-1 print:hidden pointer-events-auto">
                                             <button onClick={() => addExperienceAchievement(expIndex)} className="text-[11px] text-ink/40 hover:text-ink flex items-center gap-1">
                                                 <Plus className="w-3 h-3" /> Add bullet
                                             </button>
@@ -337,7 +391,7 @@ const ResumeWorkspace = () => {
                             {resumeData.education.map((edu, eduIndex) => (
                                 <div key={edu._id || eduIndex} className="mb-4 group/edu relative">
                                     <button 
-                                        className="absolute -left-10 top-0 p-1 text-status-error opacity-0 group-hover/edu:opacity-100 transition-opacity rounded hover:bg-status-error/10"
+                                        className="absolute -left-10 top-0 p-1 text-status-error opacity-0 group-hover/edu:opacity-100 transition-opacity rounded hover:bg-status-error/10 print:hidden pointer-events-auto"
                                         onClick={() => setResumeData(prev => ({...prev, education: prev.education.filter((_, i) => i !== eduIndex)}))}
                                     >
                                         <X className="w-4 h-4" />
@@ -378,8 +432,8 @@ const ResumeWorkspace = () => {
                 </main>
 
                 {/* RIGHT PANEL (AI/ATS) */}
-                {rightPanelOpen && (
-                    <aside className="w-[300px] bg-white border-l border-ink/5 flex flex-col shrink-0 z-10 animate-[slideInRight_300ms_ease-out]">
+                {rightPanelOpen && !previewMode && (
+                    <aside className="w-[300px] bg-white border-l border-ink/5 flex flex-col shrink-0 z-10 animate-[slideInRight_300ms_ease-out] print:hidden">
                         <div className="p-6 border-b border-ink/5 bg-surface-1/50">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-[14px] font-semibold text-ink">ATS Live Score</h3>
@@ -421,10 +475,10 @@ const ResumeWorkspace = () => {
                 )}
 
                 {/* Floating AI Button */}
-                {!rightPanelOpen && (
+                {!rightPanelOpen && !previewMode && (
                     <button 
                         onClick={() => setRightPanelOpen(true)}
-                        className="absolute right-6 top-20 w-12 h-12 bg-white rounded-full shadow-lg border border-ink/5 flex items-center justify-center text-accent hover:scale-105 transition-transform z-20 group"
+                        className="absolute right-6 top-20 w-12 h-12 bg-white rounded-full shadow-lg border border-ink/5 flex items-center justify-center text-accent hover:scale-105 transition-transform z-20 group print:hidden"
                     >
                         <Sparkles className="w-5 h-5 group-hover:animate-pulse" />
                     </button>

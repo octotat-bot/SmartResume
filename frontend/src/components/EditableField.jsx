@@ -6,7 +6,7 @@ const EditableField = ({
     placeholder = 'Empty', 
     className = '', 
     multiline = false,
-    tagName = 'span' // not used for textarea/input but good for semantics if we switched to contentEditable
+    readOnly = false
 }) => {
     const inputRef = useRef(null);
 
@@ -26,7 +26,7 @@ const EditableField = ({
         }
     }, [value, multiline]);
 
-    const commonClasses = `bg-transparent border-transparent hover:bg-black/5 focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent rounded transition-colors resize-none overflow-hidden m-[-2px] p-[2px] ${className}`;
+    const commonClasses = `bg-transparent border-transparent hover:bg-black/5 focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent rounded transition-colors resize-none overflow-hidden m-[-2px] p-[2px] ${className} ${readOnly ? 'pointer-events-none hover:bg-transparent' : ''}`;
 
     if (multiline) {
         return (
@@ -37,6 +37,7 @@ const EditableField = ({
                 placeholder={placeholder}
                 className={`w-full block ${commonClasses}`}
                 rows={1}
+                readOnly={readOnly}
             />
         );
     }
@@ -48,6 +49,7 @@ const EditableField = ({
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className={`w-full inline-block ${commonClasses}`}
+            readOnly={readOnly}
         />
     );
 };
