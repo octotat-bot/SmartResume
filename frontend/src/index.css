@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +12,17 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-normal;
   }
+
+  .inter { font-family: 'Inter', sans-serif; }
+  .roboto { font-family: 'Roboto', sans-serif; }
+  .playfair { font-family: 'Playfair Display', serif; }
+  .merriweather { font-family: 'Merriweather', serif; }
+  .mono { font-family: 'Fira Code', monospace; }
+  .lora { font-family: 'Lora', serif; }
+  .outfit { font-family: 'Outfit', sans-serif; }
+  .lato { font-family: 'Lato', sans-serif; }
+  .poppins { font-family: 'Poppins', sans-serif; }
+  .space-mono { font-family: 'Space Mono', monospace; }
 }
 
 @layer components {

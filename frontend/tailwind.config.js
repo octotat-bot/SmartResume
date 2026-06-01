@@ -33,6 +33,14 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         serif: ['"Playfair Display"', 'Georgia', 'serif'],
         mono: ['"IBM Plex Mono"', 'monospace'],
+        roboto: ['Roboto', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        merriweather: ['Merriweather', 'serif'],
+        lora: ['Lora', 'serif'],
+        ptserif: ['"PT Serif"', 'serif'],
+        robotomono: ['"Roboto Mono"', 'monospace'],
+        firacode: ['"Fira Code"', 'monospace']
       },
       boxShadow: {
         'paper': '0 8px 48px rgba(20,18,16,0.12)',
