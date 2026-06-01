@@ -1,7 +1,16 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, FileText, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
+
+const GoogleIcon = () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+    </svg>
+);
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -9,6 +18,11 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    
+    // Focus states for floating labels
+    const [emailFocused, setEmailFocused] = useState(false);
+    const [passwordFocused, setPasswordFocused] = useState(false);
+    
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -28,183 +42,136 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-surface-1 flex">
-            {/* Left Side - Form */}
-            <div className="flex-1 flex items-center justify-center p-8">
-                <div className="w-full max-w-md">
-                    {/* Logo */}
-                    <Link to="/" className="inline-flex items-center gap-3 mb-12 group">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                            <FileText className="w-6 h-6 text-black" />
+        <div className="min-h-screen flex bg-surface-1">
+            {/* Left Brand Side (40%) */}
+            <div className="hidden md:flex w-[40%] bg-canvas flex-col justify-between p-12 border-r border-ink/5">
+                <div className="flex-1 flex flex-col justify-center">
+                    <h2 className="font-serif italic text-ink/50 text-[40px] leading-[1.1] mb-12">
+                        Every great career<br />
+                        starts with a<br />
+                        great first impression.
+                    </h2>
+                    
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3 text-[13px] text-ink/60 font-sans">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+                            Resume reviewed by 50,000+ professionals
                         </div>
-                        <span className="text-2xl font-serif font-semibold text-ink">SmartResume</span>
-                    </Link>
+                        <div className="flex items-center gap-3 text-[13px] text-ink/60 font-sans">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+                            Average ATS score improvement: 34 points
+                        </div>
+                        <div className="flex items-center gap-3 text-[13px] text-ink/60 font-sans">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+                            Trusted by engineers, designers & executives
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="text-[14px] font-sans font-semibold text-ink">
+                    SmartResume
+                </div>
+            </div>
 
-                    {/* Header */}
-                    <div className="mb-10">
-                        <h1 className="text-4xl font-bold text-ink mb-3">
+            {/* Right Form Side (60%) */}
+            <div className="flex-1 flex flex-col p-6 md:p-12 relative overflow-y-auto">
+                {/* Mobile Logo */}
+                <div className="md:hidden text-[14px] font-sans font-semibold text-ink text-center mt-5 mb-10">
+                    SmartResume
+                </div>
+                
+                <div className="flex-1 flex flex-col justify-center items-center w-full">
+                    <div className="w-full max-w-[360px]">
+                        <h1 className="font-serif text-[32px] text-ink mb-2">
                             Welcome back
                         </h1>
-                        <p className="text-ink/60 text-lg">
-                            Sign in to continue to your workspace
+                        <p className="text-[14px] text-ink/60 font-sans mb-8">
+                            Please enter your details to sign in.
                         </p>
-                    </div>
 
-                    {/* Error Message */}
-                    {error && (
-                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                            <p className="text-sm text-red-400">{error}</p>
-                        </div>
-                    )}
+                        {error && (
+                            <div className="mb-6 text-[13px] text-status-error flex items-center gap-2">
+                                <AlertCircle className="w-4 h-4" />
+                                {error}
+                            </div>
+                        )}
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        <div>
-                            <label className="block text-sm font-medium text-ink/80 mb-2">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
-                                placeholder="you@example.com"
-                                required
-                            />
+                        <button type="button" className="w-full h-[46px] bg-white border border-ink/15 rounded-xl flex items-center justify-center gap-3 hover:bg-ink/5 transition-colors mb-6 group">
+                            <GoogleIcon />
+                            <span className="text-[14px] font-sans font-medium text-ink/80 group-hover:text-ink transition-colors">Continue with Google</span>
+                        </button>
+
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="flex-1 h-px bg-ink/10" />
+                            <span className="text-[12px] text-ink/40 font-sans">or</span>
+                            <div className="flex-1 h-px bg-ink/10" />
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-ink/80 mb-2">
-                                Password
-                            </label>
-                            <div className="relative">
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="relative pt-4">
+                                <label 
+                                    className={`absolute left-0 transition-all duration-200 pointer-events-none font-sans
+                                        ${emailFocused || email ? '-top-1 text-[12px] text-accent' : 'top-6 text-[15px] text-ink/40'}
+                                    `}
+                                >
+                                    Email address
+                                </label>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    onFocus={() => setEmailFocused(true)}
+                                    onBlur={() => setEmailFocused(false)}
+                                    className={`w-full h-[48px] bg-transparent border-0 border-b outline-none transition-colors font-sans text-[15px] p-0
+                                        ${emailFocused ? 'border-accent' : 'border-ink/15'}
+                                    `}
+                                    required
+                                />
+                            </div>
+
+                            <div className="relative pt-4">
+                                <label 
+                                    className={`absolute left-0 transition-all duration-200 pointer-events-none font-sans
+                                        ${passwordFocused || password ? '-top-1 text-[12px] text-accent' : 'top-6 text-[15px] text-ink/40'}
+                                    `}
+                                >
+                                    Password
+                                </label>
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 pr-12 py-3.5 bg-surface-3 border border-ink/10 rounded-lg text-ink placeholder-ink/40 focus:border-white focus:outline-none transition-colors"
-                                    placeholder="••••••••"
+                                    onFocus={() => setPasswordFocused(true)}
+                                    onBlur={() => setPasswordFocused(false)}
+                                    className={`w-full h-[48px] bg-transparent border-0 border-b outline-none transition-colors font-sans text-[15px] p-0 pr-10
+                                        ${passwordFocused ? 'border-accent' : 'border-ink/15'}
+                                    `}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/80 transition-colors"
+                                    className="absolute right-0 top-7 text-ink/40 hover:text-ink/80 transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                             </div>
-                        </div>
 
-                        <div className="flex items-center justify-between pt-2">
-                            <label className="flex items-center cursor-pointer group">
-                                <input
-                                    type="checkbox"
-                                    className="w-4 h-4 rounded border-gray-600 bg-surface-3 text-ink focus:ring-0 focus:ring-offset-0"
-                                />
-                                <span className="ml-2 text-sm text-ink/60 group-hover:text-ink/80 transition-colors">
-                                    Remember me
-                                </span>
-                            </label>
-                            <a href="#" className="text-sm text-ink/60 hover:text-ink transition-colors">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full h-[48px] mt-6 bg-accent text-white font-sans font-medium text-[15px] rounded-xl hover:brightness-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign in'}
+                            </button>
+                        </form>
+
+                        <div className="mt-6 flex flex-col gap-4 text-center">
+                            <Link to="/forgot-password" className="text-[13px] text-ink/60 hover:text-accent transition-colors font-sans">
                                 Forgot password?
-                            </a>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8"
-                        >
-                            {loading ? (
-                                <>
-                                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                                    Signing in...
-                                </>
-                            ) : (
-                                <>
-                                    Sign In
-                                    <ArrowRight className="w-5 h-5" />
-                                </>
-                            )}
-                        </button>
-                    </form>
-
-                    {/* Divider */}
-                    <div className="mt-8 pt-8 border-t border-ink/10">
-                        <p className="text-center text-sm text-ink/60">
-                            Don't have an account?{' '}
-                            <Link to="/register" className="text-ink hover:underline font-medium">
-                                Create account
                             </Link>
-                        </p>
-                    </div>
-
-                    {/* Demo Credentials */}
-                    <div className="mt-6 p-4 bg-surface-3 border border-ink/10 rounded-lg">
-                        <p className="text-xs text-ink/40 mb-2">Demo Credentials:</p>
-                        <p className="text-xs text-ink/60">demo@smartresume.com / demo123</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Side - Feature Showcase */}
-            <div className="hidden lg:flex flex-1 bg-surface-2 items-center justify-center p-16 border-l border-ink/5">
-                <div className="max-w-md">
-                    <div className="mb-12">
-                        <h2 className="text-3xl font-serif font-semibold text-ink mb-4">
-                            Build resumes that get you hired
-                        </h2>
-                        <p className="text-ink/60 text-lg leading-relaxed">
-                            Join thousands of professionals who landed their dream jobs with SmartResume's AI-powered platform.
-                        </p>
-                    </div>
-
-                    <div className="space-y-6">
-                        <div className="flex gap-4">
-                            <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-ink" />
-                            </div>
-                            <div>
-                                <h3 className="text-ink font-semibold mb-1">AI-Powered Enhancement</h3>
-                                <p className="text-ink/60 text-sm">Transform your content with intelligent suggestions</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-ink" />
-                            </div>
-                            <div>
-                                <h3 className="text-ink font-semibold mb-1">ATS-Optimized Templates</h3>
-                                <p className="text-ink/60 text-sm">Get past applicant tracking systems</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-ink" />
-                            </div>
-                            <div>
-                                <h3 className="text-ink font-semibold mb-1">Track Your Progress</h3>
-                                <p className="text-ink/60 text-sm">Monitor applications and interviews in one place</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-12 pt-8 border-t border-ink/5">
-                        <div className="flex items-center gap-8">
-                            <div>
-                                <div className="text-3xl font-serif font-semibold text-ink">10K+</div>
-                                <div className="text-sm text-ink/60">Active Users</div>
-                            </div>
-                            <div>
-                                <div className="text-3xl font-serif font-semibold text-ink">95%</div>
-                                <div className="text-sm text-ink/60">Success Rate</div>
-                            </div>
-                            <div>
-                                <div className="text-3xl font-serif font-semibold text-ink">4.9★</div>
-                                <div className="text-sm text-ink/60">User Rating</div>
+                            <div className="text-[13px] text-ink/60 font-sans">
+                                Don't have an account? <Link to="/register" className="text-ink hover:text-accent font-medium transition-colors">Create account</Link>
                             </div>
                         </div>
                     </div>

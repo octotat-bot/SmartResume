@@ -5,7 +5,9 @@ import Layout from './components/Layout';
 
 // Pages
 import LandingPage from './pages/LandingPage';
-import AuthPage from './pages/AuthPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import OnboardingPage from './pages/OnboardingPage';
 import DashboardPage from './pages/DashboardPage';
 import ResumesPage from './pages/ResumesPage';
 import ResumeWorkspace from './pages/ResumeWorkspace';
@@ -15,8 +17,7 @@ import ProfilePage from './pages/ProfilePage';
 import ApplicationTracker from './pages/ApplicationTracker';
 import NotFoundPage from './pages/NotFoundPage';
 
-// AI Components
-import AIChatAssistant from './components/AIChatAssistant';
+import AIChatPage from './pages/AIChatPage';
 
 // Public Route Component - shows landing page to non-authenticated users
 const PublicRoute = ({ children }) => {
@@ -44,22 +45,7 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
-// Component to conditionally render AI Chat
-const ConditionalAIChat = () => {
-  const location = useLocation();
 
-  // Hide AI chat on resume workspace pages and public pages
-  const hideOnPaths = ['/resumes/new', '/workspace', '/', '/login', '/register'];
-  const shouldHide = hideOnPaths.some(path => location.pathname === path || location.pathname.startsWith(path)) ||
-    location.pathname.match(/^\/resumes\/[^/]+$/) ||
-    location.pathname.match(/^\/workspace\/[^/]+$/);
-
-  if (shouldHide) {
-    return null;
-  }
-
-  return <AIChatAssistant />;
-};
 
 function App() {
   return (
@@ -75,8 +61,16 @@ function App() {
               </PublicRoute>
             }
           />
-          <Route path="/login" element={<AuthPage />} />
-          <Route path="/register" element={<AuthPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route 
+            path="/onboarding" 
+            element={
+              <ProtectedRoute>
+                <OnboardingPage />
+              </ProtectedRoute>
+            } 
+          />
 
           {/* Protected Routes with Layout */}
           <Route
@@ -173,14 +167,22 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/ai-assistant"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AIChatPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* 404 */}
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
 
-        {/* Conditional AI Chat Assistant */}
-        <ConditionalAIChat />
       </Router>
     </AuthProvider>
   );

@@ -1,1855 +1,288 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { resumeService } from '../services/api';
-import { Plus, Trash2, ArrowLeft, ChevronRight, Layout, User, Briefcase, GraduationCap, Code, Award, FileText, Download, Share2, Palette, Wand2, RefreshCcw, Save, X, Search, Check, Loader, AlertCircle, Undo, Redo, Linkedin, Github, Terminal, Cpu, BarChart, Globe, History, TrendingUp, BarChart3 } from 'lucide-react';
-import StandardTemplate from '../templates/StandardTemplate';
-import ModernTemplate from '../templates/ModernTemplate';
-import MinimalistTemplate from '../templates/MinimalistTemplate';
-import CreativeTemplate from '../templates/CreativeTemplate';
-import ProfessionalTemplate from '../templates/ProfessionalTemplate';
-import TechnicalTemplate from '../templates/TechnicalTemplate';
-import CompactTemplate from '../templates/CompactTemplate';
-import ElegantTemplate from '../templates/ElegantTemplate';
-import BoldTemplate from '../templates/BoldTemplate';
-import TimelineTemplate from '../templates/TimelineTemplate';
-import VersionHistory from '../components/VersionHistory';
-import ResumeAnalyzer from '../components/ResumeAnalyzer';
-import AIFeaturesPanel from '../components/AIFeaturesPanel';
-import ResumeStats from '../components/ResumeStats';
+import { ArrowLeft, Layout, Settings2, GripVertical, Plus, Sparkles, Check, X, Download, ZoomIn, ZoomOut } from 'lucide-react';
 
 const ResumeWorkspace = () => {
-
-    const POPULAR_SKILLS = [
-        // Programming Languages
-        "JavaScript", "TypeScript", "Python", "Java", "C++", "C#", "Go", "Rust", "Swift", "Kotlin",
-        "PHP", "Ruby", "Scala", "R", "MATLAB", "Dart", "Perl", "Shell Scripting", "Assembly", "Lua",
-        "Haskell", "Julia", "Objective-C", "VBA",
-
-        // Web Frontend
-        "React", "Angular", "Vue.js", "Next.js", "Nuxt.js", "Svelte", "HTML5", "CSS3", "Sass/SCSS",
-        "Tailwind CSS", "Bootstrap", "Material UI", "Chakra UI", "Redux", "MobX", "Recoil", "Webpack",
-        "Vite", "Babel", "jQuery", "Web Assembly", "Three.js", "D3.js", "Responsive Design",
-
-        // Web Backend
-        "Node.js", "Express.js", "NestJS", "Django", "Flask", "FastAPI", "Spring Boot", "ASP.NET Core",
-        "Laravel", "Ruby on Rails", "GraphQL", "REST API", "gRPC", "WebSockets", "Microservices",
-        "Serverless", "Socket.io",
-
-        // Database
-        "SQL", "MySQL", "PostgreSQL", "MongoDB", "NoSQL", "Redis", "Elasticsearch", "Cassandra",
-        "Oracle", "Microsoft SQL Server", "SQLite", "DynamoDB", "Firebase", "Supabase", "MariaDB",
-        "Neo4j", "Prisma", "Mongoose", "Sequelize", "TypeORM",
-
-        // DevOps & Cloud
-        "AWS", "Amazon Web Services", "Azure", "Google Cloud Platform (GCP)", "Docker", "Kubernetes",
-        "Jenkins", "Git", "GitHub", "GitLab", "Bitbucket", "CI/CD", "Terraform", "Ansible", "Puppet",
-        "Chef", "Linux", "Nginx", "Apache", "Heroku", "Vercel", "Netlify", "DigitalOcean", "Prometheus",
-        "Grafana", "Splunk", "New Relic",
-
-        // Mobile Development
-        "React Native", "Flutter", "iOS Development", "Android Development", "Expo", "Ionic",
-        "Xamarin", "Mobile App Design",
-
-        // Data Science & AI/ML
-        "Machine Learning", "Artificial Intelligence", "Deep Learning", "Data Science", "Data Analysis",
-        "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "PyTorch", "Keras", "OpenCV", "NLP",
-        "Computer Vision", "Big Data", "Hadoop", "Spark", "Hive", "Tableau", "Power BI", "Data Visualization",
-        "Matplotlib", "Seaborn", "Jupyter Notebooks",
-
-        // Cyber Security
-        "Cybersecurity", "Network Security", "Ethical Hacking", "Penetration Testing", "Cryptography",
-        "Firewalls", "SIEM", "Wireshark", "Metasploit", "Information Security", "Risk Assessment",
-        "Incident Response", "Vulnerability Assessment",
-
-        // Design & Creative
-        "UI/UX Design", "Graphic Design", "Web Design", "Figma", "Adobe XD", "Sketch", "Photoshop",
-        "Illustrator", "InDesign", "After Effects", "Premiere Pro", "Canva", "Prototyping", "Wireframing",
-        "User Research", "Video Editing", "Animation", "3D Modeling", "Blender",
-
-        // Software Engineering & Methodologies
-        "Agile", "Scrum", "Kanban", "Software Architecture", "Design Patterns", "TDD", "BDD",
-        "Object-Oriented Programming (OOP)", "Functional Programming", "System Design", "UML",
-        "Version Control", "Unit Testing", "Integration Testing", "Debugging",
-
-        // Product & Management
-        "Product Management", "Project Management", "Business Analysis", "JIRA", "Asana", "Trello",
-        "Confluence", "Roadmapping", "Strategic Planning", "Leadership", "Team Management",
-        "Stakeholder Management", "Risk Management",
-
-        // Marketing & Content
-        "Digital Marketing", "SEO", "SEM", "Content Marketing", "Social Media Marketing", "Email Marketing",
-        "Copywriting", "Branding", "Google Analytics", "Google Ads", "Facebook Ads", "Marketing Strategy",
-        "Storytelling", "Public Relations",
-
-        // Finance & Business
-        "Accounting", "Financial Analysis", "Bookkeeping", "Excel (Advanced)", "Financial Modeling",
-        "Business Strategy", "Market Research", "Sales", "Customer Service", "CRM", "Salesforce",
-        "Operations Management", "Supply Chain Management", "Human Resources",
-
-        // Soft Skills
-        "Communication", "Teamwork", "Problem Solving", "Critical Thinking", "Time Management",
-        "Adaptability", "Creativity", "Emotional Intelligence", "Public Speaking", "Negotiation",
-        "Conflict Resolution", "Decision Making", "Mentoring", "Presentation Skills", "Active Listening",
-        "Work Ethic", "Attention to Detail", "Collaboration"
-    ];
     const { id } = useParams();
     const navigate = useNavigate();
     const [resume, setResume] = useState(null);
-    const [activeSection, setActiveSection] = useState('personal');
-    const [saving, setSaving] = useState(false);
-    const [autoSaveStatus, setAutoSaveStatus] = useState('saved');
-    const [undoStack, setUndoStack] = useState([]);
-    const [redoStack, setRedoStack] = useState([]);
-    const [skillInput, setSkillInput] = useState('');
-    const [showVersionHistory, setShowVersionHistory] = useState(false);
-    const [zoom, setZoom] = useState(1); // 1 = 100%, 0.5 = 50%, 1.5 = 150%
-    const [showAnalyzer, setShowAnalyzer] = useState(false);
-    const [showAIPanel, setShowAIPanel] = useState(false);
-    const [showStats, setShowStats] = useState(false);
+    
+    // UI State
+    const [rightPanelOpen, setRightPanelOpen] = useState(true);
+    const [selectedTemplate, setSelectedTemplate] = useState('modern');
+    const [docSettings, setDocSettings] = useState({ font: 'inter', color: '#141210', margin: 'normal', spacing: 'normal' });
 
     useEffect(() => {
-        if (id && id !== 'new') {
-            loadResume();
-        } else {
-            initializeNewResume();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // Mock loading resume
+        setTimeout(() => {
+            setResume({
+                title: 'Senior Frontend Engineer',
+                personalInfo: { firstName: 'John', lastName: 'Doe', email: 'john@example.com' },
+                experience: [],
+                education: [],
+                skills: { technical: [] }
+            });
+        }, 500);
     }, [id]);
 
-    // Auto-save
-    useEffect(() => {
-        if (!resume || id === 'new') return;
-        const timer = setTimeout(() => handleAutoSave(), 3000);
-        return () => clearTimeout(timer);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resume]);
-
-    // Keyboard shortcuts
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                handleSave();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-                e.preventDefault();
-                handleUndo();
-            }
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
-                e.preventDefault();
-                handleRedo();
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resume, undoStack, redoStack]);
-
-    const loadResume = async () => {
-        try {
-            const data = await resumeService.getResumeById(id);
-            setResume(data);
-        } catch (error) {
-            console.error('Failed to load resume:', error);
-            alert('Failed to load resume');
-        }
-    };
-
-    const initializeNewResume = () => {
-        setResume({
-            title: 'Untitled Resume',
-            personalInfo: {
-                fullName: '', email: '', phone: '', location: '',
-                linkedin: '', github: '', portfolio: '', summary: ''
-            },
-            experience: [],
-            education: [],
-            skills: { technical: [], soft: [], languages: [], tools: [] },
-            projects: [],
-            certifications: []
-        });
-    };
-
-    const handleSave = async () => {
-        if (!resume) return;
-        setSaving(true);
-        setAutoSaveStatus('saving');
-        try {
-            const isNewResume = id === 'new' || window.location.pathname.includes('/resumes/new');
-            if (isNewResume) {
-                const created = await resumeService.createResume(resume);
-                if (created && created._id) {
-                    navigate(`/resumes/${created._id}`, { replace: true });
-                    setAutoSaveStatus('saved');
-                }
-            } else {
-                await resumeService.updateResume(id, resume);
-                setAutoSaveStatus('saved');
-            }
-        } catch (error) {
-            console.error('Save failed:', error);
-            setAutoSaveStatus('error');
-            alert(`Failed to save resume: ${error.response?.data?.message || error.message}`);
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleAutoSave = async () => {
-        if (id === 'new' || !id || !resume) return;
-        setAutoSaveStatus('saving');
-        try {
-            await resumeService.updateResume(id, resume);
-            setAutoSaveStatus('saved');
-        } catch (error) {
-            console.error('Auto-save failed:', error);
-            setAutoSaveStatus('error');
-        }
-    };
-
-    const handleDownload = () => {
-        const printWindow = window.open('', '_blank');
-        const resumeElement = document.getElementById('resume-preview');
-        if (resumeElement && printWindow) {
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>${resume.title || 'Resume'}</title>
-                    <style>
-                        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-                        @media print { body { margin: 0; padding: 0; } }
-                    </style>
-                </head>
-                <body>${resumeElement.innerHTML}</body>
-                </html>
-            `);
-            printWindow.document.close();
-            setTimeout(() => printWindow.print(), 250);
-        }
-    };
-
-    const handleUndo = () => {
-        if (undoStack.length === 0) return;
-        const previous = undoStack[undoStack.length - 1];
-        setRedoStack([...redoStack, JSON.parse(JSON.stringify(resume))]);
-        setResume(previous);
-        setUndoStack(undoStack.slice(0, -1));
-    };
-
-    const handleRedo = () => {
-        if (redoStack.length === 0) return;
-        const next = redoStack[redoStack.length - 1];
-        setUndoStack([...undoStack, JSON.parse(JSON.stringify(resume))]);
-        setResume(next);
-        setRedoStack(redoStack.slice(0, -1));
-    };
-
-    const saveToUndoStack = () => {
-        setUndoStack([...undoStack, JSON.parse(JSON.stringify(resume))]);
-        setRedoStack([]);
-    };
-
-    const addItem = (section) => {
-        saveToUndoStack();
-        const templates = {
-            experience: { company: '', position: '', location: '', startDate: '', endDate: '', current: false, description: '' },
-            education: { institution: '', degree: '', field: '', location: '', startDate: '', endDate: '', gpa: '' },
-            projects: { name: '', description: '', technologies: [], link: '', highlights: [] },
-            certifications: { name: '', issuer: '', date: '', credentialId: '', link: '' },
-            coCurricular: { activity: '', role: '', date: '', description: '' }
-        };
-        setResume({ ...resume, [section]: [...(resume[section] || []), templates[section]] });
-    };
-
-    const removeItem = (section, index) => {
-        saveToUndoStack();
-        const newItems = [...resume[section]];
-        newItems.splice(index, 1);
-        setResume({ ...resume, [section]: newItems });
-    };
-
-    const updateItem = (section, index, field, value) => {
-        const newItems = [...resume[section]];
-        newItems[index] = { ...newItems[index], [field]: value };
-        setResume({ ...resume, [section]: newItems });
-    };
-
     if (!resume) {
-        return (
-            <div className="min-h-screen bg-surface-1 flex items-center justify-center">
-                <div className="text-ink/60">Loading workspace...</div>
-            </div>
-        );
+        return <div className="h-screen flex items-center justify-center bg-surface-1 font-sans text-ink/60">Loading workspace...</div>;
     }
 
-    const sections = [
-        { id: 'personal', label: 'General' },
-        { id: 'social', label: 'Social Links' },
-        { id: 'education', label: 'Education' },
-        { id: 'experience', label: 'Experience' },
-        { id: 'certifications', label: 'Certificates' },
-        { id: 'projects', label: 'Projects' },
-        { id: 'skills', label: 'Skills' },
-        { id: 'coCurricular', label: 'Co-curricular & POR' },
-        { id: 'templates', label: 'Templates', icon: Layout }
-    ];
-
-    const statusIcons = {
-        saved: <Check className="w-3 h-3 text-ink" />,
-        saving: <Loader className="w-3 h-3 animate-spin text-ink" />,
-        error: <AlertCircle className="w-3 h-3 text-red-400" />
-    };
-
-    const statusText = {
-        saved: 'Saved',
-        saving: 'Saving...',
-        error: 'Error'
-    };
-
     return (
-        <div className="h-screen bg-canvas flex flex-col font-sans">
-            {/* Top Toolbar - Modern Design */}
-            <div className="h-16 bg-surface-1 border-b border-ink/5 px-6 flex items-center justify-between flex-shrink-0">
-                {/* Left Section */}
-                <div className="flex items-center gap-6">
-                    <button
-                        onClick={() => navigate('/resumes')}
-                        className="group p-2.5 hover:bg-surface-2 rounded-xl transition-all duration-200"
-                        title="Back to Resumes"
-                    >
-                        <ArrowLeft className="w-5 h-5 text-ink/60 group-hover:text-ink transition-colors" />
-                    </button>
-
-                    <div className="flex flex-col">
-                        <input
-                            type="text"
-                            value={resume.title}
-                            onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                            className="text-lg font-serif bg-transparent border-none focus:outline-none text-ink w-80 placeholder-ink/40"
-                            placeholder="Untitled Resume"
-                        />
-                        <div className="flex items-center gap-2 mt-1">
-                            <div className={`flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full ${autoSaveStatus === 'saved' ? 'bg-emerald-500/20 text-emerald-400' :
-                                autoSaveStatus === 'saving' ? 'bg-accent/10 text-accent border border-accent/20' :
-                                    'bg-red-500/20 text-red-400'
-                                }`}>
-                                {statusIcons[autoSaveStatus]}
-                                <span>{statusText[autoSaveStatus]}</span>
-                            </div>
-                            {autoSaveStatus === 'saved' && (
-                                <span className="text-xs text-ink/40">Last saved {new Date().toLocaleTimeString()}</span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-
-                {/* Center Section - Tools */}
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={handleUndo}
-                        disabled={undoStack.length === 0}
-                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200 disabled:opacity-30"
-                        title="Undo (Ctrl+Z)"
-                    >
-                        <Undo className="w-4 h-4 text-ink/60 group-hover:text-ink" />
-                    </button>
-                    <button
-                        onClick={handleRedo}
-                        disabled={redoStack.length === 0}
-                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200 disabled:opacity-30"
-                        title="Redo (Ctrl+Y)"
-                    >
-                        <Redo className="w-4 h-4 text-ink/60 group-hover:text-ink" />
-                    </button>
-
-                    <div className="w-px h-4 bg-ink/10 mx-2"></div>
-
-                    <button
-                        onClick={() => setShowVersionHistory(true)}
-                        disabled={id === 'new'}
-                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200 disabled:opacity-30"
-                        title="Version History"
-                    >
-                        <History className="w-4 h-4 text-ink/60 group-hover:text-ink" />
-                    </button>
-                    <button
-                        onClick={() => setShowAnalyzer(true)}
-                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200"
-                        title="Analyze Resume"
-                    >
-                        <TrendingUp className="w-4 h-4 text-ink/60 group-hover:text-ink" />
-                    </button>
-                    <button
-                        onClick={() => setShowAIPanel(true)}
-                        className="group p-2 hover:bg-accent/10 rounded-lg transition-all duration-200 relative"
-                        title="AI Assistant"
-                    >
-                        <Wand2 className="w-4 h-4 text-accent group-hover:text-accent/80" />
-                        <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-                    </button>
-                    <button
-                        onClick={() => setShowStats(true)}
-                        className="group p-2 hover:bg-surface-2 rounded-lg transition-all duration-200"
-                        title="Resume Statistics"
-                    >
-                        <BarChart3 className="w-4 h-4 text-ink/60 group-hover:text-ink" />
+        <div className="h-screen flex flex-col font-sans bg-surface-1 overflow-hidden animate-[fadeInScale_300ms_ease-out]">
+            {/* TOP BAR */}
+            <header className="h-[52px] bg-white border-b border-ink/5 px-4 flex items-center justify-between shrink-0 z-10">
+                <div className="flex flex-1 items-center gap-4">
+                    <button onClick={() => navigate('/dashboard')} className="text-[13px] text-ink/60 hover:text-ink flex items-center gap-1.5 transition-colors">
+                        <ArrowLeft className="w-4 h-4" /> Dashboard
                     </button>
                 </div>
-
-                {/* Right Section */}
-                <div className="flex items-center gap-3">
-                    <button
-                        onClick={handleDownload}
-                        className="btn-ghost flex items-center gap-2"
-                        title="Export PDF"
-                    >
-                        <Download className="w-4 h-4" />
-                        <span>Export</span>
+                
+                <div className="flex-1 flex justify-center">
+                    <input 
+                        type="text" 
+                        value={resume.title}
+                        onChange={(e) => setResume({...resume, title: e.target.value})}
+                        className="font-serif text-[16px] text-ink text-center bg-transparent border-b border-transparent hover:border-ink/20 focus:border-accent focus:outline-none px-2 py-1 transition-colors w-64"
+                    />
+                </div>
+                
+                <div className="flex flex-1 items-center justify-end gap-4">
+                    <span className="text-[12px] text-ink/40">Last saved 2 min ago</span>
+                    <button className="btn-ghost text-[13px] h-[32px] px-3 font-medium">Preview</button>
+                    <button className="btn-primary text-[13px] h-[32px] px-4 rounded-lg flex items-center gap-2 font-medium">
+                        <Download className="w-4 h-4" /> Download PDF
                     </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="btn-primary flex items-center gap-2 disabled:opacity-50"
-                    >
-                        <Save className="w-4 h-4" />
-                        {saving ? 'Saving...' : 'Save'}
+                    <div className="w-px h-4 bg-ink/10 mx-2" />
+                    <button className="p-2 text-ink/60 hover:bg-surface-2 rounded-lg transition-colors">
+                        <Layout className="w-4 h-4" />
                     </button>
                 </div>
-            </div>
+            </header>
 
-            {/* Main Content */}
             <div className="flex flex-1 overflow-hidden">
-                {/* Left Sidebar - Sections */}
-                <div className="w-[240px] bg-surface-2 overflow-y-auto flex-shrink-0">
-                    <div className="p-6">
+                {/* LEFT PANEL */}
+                <aside className="w-[240px] bg-white border-r border-ink/5 flex flex-col shrink-0 z-10">
+                    <div className="p-4 flex-1 overflow-y-auto hide-scrollbar">
                         <h3 className="text-caption text-ink/40 mb-4">Sections</h3>
-                        <div className="space-y-1">
-                            {sections.map((section) => (
-                                <button
-                                    key={section.id}
-                                    onClick={() => setActiveSection(section.id)}
-                                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all ${activeSection === section.id
-                                        ? 'bg-accent/10 text-accent font-medium border-l-2 border-accent'
-                                        : 'text-ink/60 hover:text-ink hover:bg-surface-3'
-                                        }`}
-                                >
-                                    {section.label}
-                                </button>
+                        <div className="space-y-1 mb-4">
+                            {['Contact', 'Summary', 'Experience', 'Education', 'Skills', 'Projects', 'Certifications'].map(sec => (
+                                <div key={sec} className="group flex items-center gap-2 p-2 hover:bg-surface-2 rounded-lg cursor-pointer">
+                                    <GripVertical className="w-3.5 h-3.5 text-ink/20 group-hover:text-ink/40 transition-colors" />
+                                    <span className="text-[14px] text-ink flex-1">{sec}</span>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-status-success/80" />
+                                </div>
                             ))}
                         </div>
-                    </div>
-                </div>
+                        <button className="text-[13px] text-ink/60 hover:text-ink font-medium flex items-center gap-1.5 p-2 transition-colors">
+                            <Plus className="w-4 h-4" /> Add section
+                        </button>
 
-                {/* Center - Editor */}
-                <div className="flex-1 overflow-y-auto bg-surface-1 p-8">
-                    <div className="max-w-3xl mx-auto">
-                        {/* Personal Info */}
-                        {activeSection === 'personal' && (
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Personal Information</h2>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-ink/80">Full Name</label>
-                                        <input
-                                            type="text"
-                                            value={resume.personalInfo?.fullName || ''}
-                                            onChange={(e) => setResume({
-                                                ...resume,
-                                                personalInfo: { ...resume.personalInfo, fullName: e.target.value }
-                                            })}
-                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none transition-all placeholder-ink/40"
-                                            placeholder="John Doe"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-ink/80">Email</label>
-                                        <input
-                                            type="email"
-                                            value={resume.personalInfo?.email || ''}
-                                            onChange={(e) => setResume({
-                                                ...resume,
-                                                personalInfo: { ...resume.personalInfo, email: e.target.value }
-                                            })}
-                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                            placeholder="you@example.com"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-ink/80">Phone</label>
-                                        <input
-                                            type="tel"
-                                            value={resume.personalInfo?.phone || ''}
-                                            onChange={(e) => setResume({
-                                                ...resume,
-                                                personalInfo: { ...resume.personalInfo, phone: e.target.value }
-                                            })}
-                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                            placeholder="+1 (555) 123-4567"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-ink/80">Location</label>
-                                        <input
-                                            type="text"
-                                            value={resume.personalInfo?.location || ''}
-                                            onChange={(e) => setResume({
-                                                ...resume,
-                                                personalInfo: { ...resume.personalInfo, location: e.target.value }
-                                            })}
-                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                            placeholder="San Francisco, CA"
-                                        />
-                                    </div>
-
-                                    {/* Tags */}
-                                    <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-ink/80">
-                                            Tags
-                                            <span className="text-xs text-ink/40 ml-2">(Organize your resumes)</span>
-                                        </label>
-                                        <div className="space-y-2">
-                                            <div className="flex gap-2">
-                                                <input
-                                                    type="text"
-                                                    value={skillInput}
-                                                    onChange={(e) => setSkillInput(e.target.value)}
-                                                    onKeyPress={(e) => {
-                                                        if (e.key === 'Enter' && skillInput.trim()) {
-                                                            e.preventDefault();
-                                                            const newTag = skillInput.trim().toLowerCase();
-                                                            if (!resume.tags?.includes(newTag)) {
-                                                                setResume({
-                                                                    ...resume,
-                                                                    tags: [...(resume.tags || []), newTag]
-                                                                });
-                                                            }
-                                                            setSkillInput('');
-                                                        }
-                                                    }}
-                                                    className="flex-1 px-4 py-2 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    placeholder="Add tags (e.g., frontend, react, senior)..."
-                                                />
-                                                <button
-                                                    onClick={() => {
-                                                        if (skillInput.trim()) {
-                                                            const newTag = skillInput.trim().toLowerCase();
-                                                            if (!resume.tags?.includes(newTag)) {
-                                                                setResume({
-                                                                    ...resume,
-                                                                    tags: [...(resume.tags || []), newTag]
-                                                                });
-                                                            }
-                                                            setSkillInput('');
-                                                        }
-                                                    }}
-                                                    className="px-4 py-2 bg-blue-600 text-ink rounded-lg hover:bg-blue-700 transition-colors"
-                                                >
-                                                    Add
-                                                </button>
-                                            </div>
-                                            {resume.tags && resume.tags.length > 0 && (
-                                                <div className="flex flex-wrap gap-2">
-                                                    {resume.tags.map((tag, index) => (
-                                                        <span
-                                                            key={index}
-                                                            className="px-3 py-1 bg-accent/10 text-accent border border-accent/20 rounded-full text-sm flex items-center gap-2 border "
-                                                        >
-                                                            {tag}
-                                                            <button
-                                                                onClick={() => {
-                                                                    setResume({
-                                                                        ...resume,
-                                                                        tags: resume.tags.filter((_, i) => i !== index)
-                                                                    });
-                                                                }}
-                                                                className="hover:text-red-600 transition-colors"
-                                                            >
-                                                                <X className="w-3 h-3" />
-                                                            </button>
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-2 text-ink/80">Professional Summary</label>
-                                        <textarea
-                                            value={resume.personalInfo?.summary || ''}
-                                            onChange={(e) => setResume({
-                                                ...resume,
-                                                personalInfo: { ...resume.personalInfo, summary: e.target.value }
-                                            })}
-                                            rows={4}
-                                            className="w-full px-4 py-3 bg-surface-2 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
-                                            placeholder="Brief professional summary..."
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Social Links */}
-                        {activeSection === 'social' && (
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Social Links</h2>
-                                <div className="space-y-4">
-                                    {/* Social Links Loop */}
-                                    {[
-                                        { id: 'linkedin', icon: Linkedin, label: 'LinkedIn', placeholder: 'https://www.linkedin.com/in/username' },
-                                        { id: 'github', icon: Github, label: 'GitHub', placeholder: 'https://github.com/username' },
-                                        { id: 'hackerearth', icon: Terminal, label: 'HackerEarth', placeholder: 'https://www.hackerearth.com/@username' },
-                                        { id: 'hackerrank', icon: Code, label: 'HackerRank', placeholder: 'https://www.hackerrank.com/username' },
-                                        { id: 'codechef', icon: Cpu, label: 'CodeChef', placeholder: 'https://www.codechef.com/users/username' },
-                                        { id: 'leetcode', icon: Code, label: 'LeetCode', placeholder: 'https://leetcode.com/u/username' },
-                                        { id: 'codeforces', icon: BarChart, label: 'CodeForces', placeholder: 'https://codeforces.com/profile/username' },
-                                        { id: 'portfolio', icon: Globe, label: 'Portfolio', placeholder: 'https://personal-portfolio.com' }
-                                    ].map((platform) => (
-                                        <div key={platform.id} className="flex items-center gap-4">
-                                            <input
-                                                type="checkbox"
-                                                checked={!!resume.personalInfo?.[platform.id]}
-                                                onChange={(e) => {
-                                                    if (!e.target.checked) {
-                                                        const newInfo = { ...resume.personalInfo };
-                                                        delete newInfo[platform.id];
-                                                        setResume({
-                                                            ...resume,
-                                                            personalInfo: newInfo
-                                                        });
-                                                    } else {
-                                                        setResume({
-                                                            ...resume,
-                                                            personalInfo: { ...resume.personalInfo, [platform.id]: 'https://' }
-                                                        });
-                                                    }
-                                                }}
-                                                className="w-5 h-5 rounded border-ink/10 bg-surface-1 text-blue-500 focus:ring-0 focus:ring-offset-0 checked:bg-blue-500 checked:border-blue-500 cursor-pointer"
-                                            />
-                                            <div className="flex-1 flex items-center bg-surface-1 border border-ink/10 rounded-lg overflow-hidden focus-within:border-white/30 transition-colors">
-                                                <div className="bg-surface-2 px-3 py-3 border-r border-ink/10 flex items-center gap-2 text-ink/60 min-w-[140px]">
-                                                    <platform.icon className="w-4 h-4" />
-                                                    <span className="text-sm font-medium">{platform.label}</span>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    value={resume.personalInfo?.[platform.id] || ''}
-                                                    onChange={(e) => setResume({
-                                                        ...resume,
-                                                        personalInfo: { ...resume.personalInfo, [platform.id]: e.target.value }
-                                                    })}
-                                                    placeholder={platform.placeholder}
-                                                    className="flex-1 px-4 py-3 bg-transparent text-ink focus:outline-none placeholder-gray-600"
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Experience */}
-                        {activeSection === 'experience' && (
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Experience</h2>
-                                    <button
-                                        onClick={() => addItem('experience')}
-                                        className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                        Add Experience
-                                    </button>
-                                </div>
-
-                                {resume.experience?.map((exp, index) => (
-                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
-                                        <button
-                                            onClick={() => removeItem('experience', index)}
-                                            className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                        <div className="space-y-4 pr-12">
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Experience Type <span className="text-red-400">*</span>
-                                                </label>
-                                                <select
-                                                    value={exp.experienceType || ''}
-                                                    onChange={(e) => updateItem('experience', index, 'experienceType', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
-                                                >
-                                                    <option value="">Select type of experience</option>
-                                                    <option value="Full-time">Full-time</option>
-                                                    <option value="Part-time">Part-time</option>
-                                                    <option value="Internship">Internship</option>
-                                                    <option value="Freelance">Freelance</option>
-                                                    <option value="Contract">Contract</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Designation <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={exp.position || ''}
-                                                    onChange={(e) => updateItem('experience', index, 'position', e.target.value)}
-                                                    placeholder="Enter your role"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <label className="flex items-start gap-2 text-sm text-ink/80 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={exp.isTechnical || false}
-                                                    onChange={(e) => updateItem('experience', index, 'isTechnical', e.target.checked)}
-                                                    className="w-4 h-4 mt-0.5 rounded border-ink/10 bg-surface-1 text-ink focus:ring-white/30"
-                                                />
-                                                This position involve tasks of programming languages, APIs, or frameworks
-                                            </label>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Company Name <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={exp.company || ''}
-                                                    onChange={(e) => updateItem('experience', index, 'company', e.target.value)}
-                                                    placeholder="Enter Company Name"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Domain of Experience
-                                                </label>
-                                                <select
-                                                    value={exp.domain || ''}
-                                                    onChange={(e) => updateItem('experience', index, 'domain', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
-                                                >
-                                                    <option value="">Select domain of experience</option>
-                                                    <option value="Software Development">Software Development</option>
-                                                    <option value="Data Science">Data Science</option>
-                                                    <option value="Product Management">Product Management</option>
-                                                    <option value="Design">Design</option>
-                                                    <option value="Marketing">Marketing</option>
-                                                    <option value="Sales">Sales</option>
-                                                    <option value="Finance">Finance</option>
-                                                    <option value="Operations">Operations</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Start Date <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={exp.startDate || ''}
-                                                        onChange={(e) => updateItem('experience', index, 'startDate', e.target.value)}
-                                                        placeholder="DD/MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        End Date <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={exp.endDate || ''}
-                                                        onChange={(e) => updateItem('experience', index, 'endDate', e.target.value)}
-                                                        placeholder="DD/MM/YYYY"
-                                                        disabled={exp.current}
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40 disabled:opacity-50"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <label className="flex items-center gap-2 text-sm text-ink/80 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={exp.current || false}
-                                                    onChange={(e) => updateItem('experience', index, 'current', e.target.checked)}
-                                                    className="w-4 h-4 rounded border-ink/10 bg-surface-1 text-ink focus:ring-white/30"
-                                                />
-                                                I am currently working here
-                                            </label>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Location of work <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={exp.location || ''}
-                                                    onChange={(e) => updateItem('experience', index, 'location', e.target.value)}
-                                                    placeholder="Enter the city you work in"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Description <span className="text-red-400">*</span>
-                                                </label>
-                                                <textarea
-                                                    value={exp.description || ''}
-                                                    onChange={(e) => updateItem('experience', index, 'description', e.target.value)}
-                                                    placeholder="Describe your experience using bullet points: roles, impact with data, skills/tools used, optional achievements."
-                                                    rows={5}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {resume.experience?.length === 0 && (
-                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
-                                        <p>No experience added yet. Click "Add Experience" to get started.</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Education */}
-                        {activeSection === 'education' && (
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Education</h2>
-                                    <button
-                                        onClick={() => addItem('education')}
-                                        className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                        Add Education
-                                    </button>
-                                </div>
-
-                                {resume.education?.map((edu, index) => (
-                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
-                                        <button
-                                            onClick={() => removeItem('education', index)}
-                                            className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                        <div className="space-y-4 pr-12">
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Education Type <span className="text-red-400">*</span>
-                                                </label>
-                                                <select
-                                                    value={edu.educationType || ''}
-                                                    onChange={(e) => updateItem('education', index, 'educationType', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
-                                                >
-                                                    <option value="">Select level of education</option>
-                                                    <option value="High School">High School</option>
-                                                    <option value="Associate">Associate Degree</option>
-                                                    <option value="Bachelor">Bachelor's Degree</option>
-                                                    <option value="Master">Master's Degree</option>
-                                                    <option value="PhD">PhD</option>
-                                                    <option value="Diploma">Diploma</option>
-                                                    <option value="Certificate">Certificate</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Institute <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={edu.institution || ''}
-                                                    onChange={(e) => updateItem('education', index, 'institution', e.target.value)}
-                                                    placeholder="Enter your Institute Name"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Degree <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={edu.degree || ''}
-                                                    onChange={(e) => updateItem('education', index, 'degree', e.target.value)}
-                                                    placeholder="ex. Bachelor of Education"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Field of Study <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={edu.field || ''}
-                                                    onChange={(e) => updateItem('education', index, 'field', e.target.value)}
-                                                    placeholder="ex. Computer Science"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Start Date <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={edu.startDate || ''}
-                                                        onChange={(e) => updateItem('education', index, 'startDate', e.target.value)}
-                                                        placeholder="DD/MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        End Date <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={edu.endDate || ''}
-                                                        onChange={(e) => updateItem('education', index, 'endDate', e.target.value)}
-                                                        placeholder="DD/MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Grade Type <span className="text-red-400">*</span>
-                                                </label>
-                                                <select
-                                                    value={edu.gradeType || ''}
-                                                    onChange={(e) => updateItem('education', index, 'gradeType', e.target.value)}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none"
-                                                >
-                                                    <option value="">Select grade type</option>
-                                                    <option value="Percentage">Percentage</option>
-                                                    <option value="CGPA">CGPA</option>
-                                                    <option value="GPA">GPA</option>
-                                                </select>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Grade <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={edu.grade || ''}
-                                                        onChange={(e) => updateItem('education', index, 'grade', e.target.value)}
-                                                        placeholder="Percentage or CGPA"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Max Grade <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={edu.maxGrade || ''}
-                                                        onChange={(e) => updateItem('education', index, 'maxGrade', e.target.value)}
-                                                        placeholder="Percentage or CGPA"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {resume.education?.length === 0 && (
-                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
-                                        <p>No education added yet. Click "Add Education" to get started.</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Skills */}
-                        {activeSection === 'skills' && (
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Skills</h2>
+                        <div className="mt-8 border-t border-ink/5 pt-6">
+                            <h3 className="text-caption text-ink/40 mb-4">Document settings</h3>
+                            <div className="space-y-5">
                                 <div>
-                                    <div className="relative mb-6">
-                                        <div className="relative">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink/40 pointer-events-none" />
-                                            <input
-                                                type="text"
-                                                value={skillInput}
-                                                onChange={(e) => setSkillInput(e.target.value)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        if (skillInput.trim()) {
-                                                            const newSkills = [...(resume.skills?.technical || [])];
-                                                            if (!newSkills.includes(skillInput.trim())) {
-                                                                newSkills.push(skillInput.trim());
-                                                                setResume({ ...resume, skills: { ...resume.skills, technical: newSkills } });
-                                                            }
-                                                            setSkillInput('');
-                                                        }
-                                                    }
-                                                }}
-                                                placeholder="Search Skills..."
-                                                className="w-full pr-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                style={{ paddingLeft: '48px' }}
-                                            />
-                                        </div>
-
-                                        <div className="mt-4 max-h-60 overflow-y-auto border border-ink/10 rounded-lg bg-surface-1 p-2 space-y-1 custom-scrollbar">
-                                            {POPULAR_SKILLS
-                                                .filter(skill => skill.toLowerCase().includes(skillInput.toLowerCase()))
-                                                .map((skill, index) => {
-                                                    const isSelected = resume.skills?.technical?.includes(skill);
-                                                    return (
-                                                        <label key={index} className="flex items-center gap-3 p-2 hover:bg-surface-3 rounded-lg cursor-pointer transition-colors group">
-                                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-white border-white' : 'border-gray-600 group-hover:border-gray-400'}`}>
-                                                                {isSelected && <Check className="w-3.5 h-3.5 text-black" />}
-                                                            </div>
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={isSelected || false}
-                                                                onChange={() => {
-                                                                    const currentSkills = resume.skills?.technical || [];
-                                                                    let newSkills;
-                                                                    if (isSelected) {
-                                                                        newSkills = currentSkills.filter(s => s !== skill);
-                                                                    } else {
-                                                                        newSkills = [...currentSkills, skill];
-                                                                    }
-                                                                    setResume({ ...resume, skills: { ...resume.skills, technical: newSkills } });
-                                                                }}
-                                                                className="hidden"
-                                                            />
-                                                            <span className={isSelected ? 'text-ink font-medium' : 'text-ink/60 group-hover:text-gray-200'}>{skill}</span>
-                                                        </label>
-                                                    );
-                                                })}
-
-                                            {skillInput && !POPULAR_SKILLS.some(s => s.toLowerCase() === skillInput.toLowerCase()) && (
-                                                <button
-                                                    onClick={() => {
-                                                        const newSkills = [...(resume.skills?.technical || [])];
-                                                        if (!newSkills.includes(skillInput.trim())) {
-                                                            newSkills.push(skillInput.trim());
-                                                            setResume({ ...resume, skills: { ...resume.skills, technical: newSkills } });
-                                                        }
-                                                        setSkillInput('');
-                                                    }}
-                                                    className="w-full text-left p-2 text-blue-400 hover:bg-surface-3 rounded-lg transition-colors flex items-center gap-2"
-                                                >
-                                                    <Plus className="w-4 h-4" />
-                                                    Add "{skillInput}" as custom skill
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {resume.skills?.technical?.map((skill, index) => (
-                                            <div key={index} className="flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-lg text-sm font-semibold shadow-sm group">
-                                                {skill}
-                                                <button
-                                                    onClick={() => {
-                                                        const newSkills = resume.skills.technical.filter((_, i) => i !== index);
-                                                        setResume({ ...resume, skills: { ...resume.skills, technical: newSkills } });
-                                                    }}
-                                                    className="text-ink/40 hover:text-red-600 transition-colors"
-                                                >
-                                                    <X className="w-4 h-4" />
-                                                </button>
-                                            </div>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Font</label>
+                                    <select className="w-full h-[36px] text-[13px] border border-ink/10 rounded-lg px-2 bg-white appearance-none cursor-pointer">
+                                        <option>Classic (Playfair)</option>
+                                        <option>Modern (Inter)</option>
+                                        <option>Technical (Mono)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Color accent</label>
+                                    <div className="flex gap-2">
+                                        {['#141210', '#2B5BA8', '#2D6A4F', '#92622A', '#6B2B85'].map(color => (
+                                            <button 
+                                                key={color} 
+                                                className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${docSettings.color === color ? 'ring-2 ring-offset-1 ring-accent' : ''}`} 
+                                                style={{backgroundColor: color}}
+                                                onClick={() => setDocSettings({...docSettings, color})}
+                                            >
+                                                {docSettings.color === color && <Check className="w-3 h-3 text-white" />}
+                                            </button>
                                         ))}
                                     </div>
-                                    {(!resume.skills?.technical || resume.skills.technical.length === 0) && (
-                                        <p className="text-ink/40 text-sm mt-2">Selected skills will appear here.</p>
-                                    )}
                                 </div>
-                            </div>
-                        )}
-
-                        {/* Projects */}
-                        {activeSection === 'projects' && (
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Projects</h2>
-                                    <button
-                                        onClick={() => addItem('projects')}
-                                        className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                        Add Project
-                                    </button>
-                                </div>
-
-                                {resume.projects?.map((proj, index) => (
-                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
-                                        <button
-                                            onClick={() => removeItem('projects', index)}
-                                            className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Title <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={proj.name || ''}
-                                                    onChange={(e) => updateItem('projects', index, 'name', e.target.value)}
-                                                    placeholder="Name of your project"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40 pr-12"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Role <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={proj.role || ''}
-                                                    onChange={(e) => updateItem('projects', index, 'role', e.target.value)}
-                                                    placeholder="Enter your role"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Code URL
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={proj.codeUrl || ''}
-                                                    onChange={(e) => updateItem('projects', index, 'codeUrl', e.target.value)}
-                                                    placeholder="Enter the code URL for the project (e.g., GitHub)"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Hosted URL
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={proj.hostedUrl || ''}
-                                                    onChange={(e) => updateItem('projects', index, 'hostedUrl', e.target.value)}
-                                                    placeholder="Enter the hosted URL for the project"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Start Date <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={proj.startDate || ''}
-                                                        onChange={(e) => updateItem('projects', index, 'startDate', e.target.value)}
-                                                        placeholder="MM/YYYY"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        End Date <span className="text-red-400">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={proj.endDate || ''}
-                                                        onChange={(e) => updateItem('projects', index, 'endDate', e.target.value)}
-                                                        placeholder="MM/YYYY"
-                                                        disabled={proj.current}
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40 disabled:opacity-50"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <label className="flex items-center gap-2 text-sm text-ink/80 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={proj.current || false}
-                                                    onChange={(e) => updateItem('projects', index, 'current', e.target.checked)}
-                                                    className="w-4 h-4 rounded border-ink/10 bg-surface-1 text-ink focus:ring-white/30"
-                                                />
-                                                I am currently working on this project
-                                            </label>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Description <span className="text-red-400">*</span>
-                                                </label>
-                                                <textarea
-                                                    value={proj.description || ''}
-                                                    onChange={(e) => updateItem('projects', index, 'description', e.target.value)}
-                                                    placeholder="Describe your projects using bullet points: objectives/scope, findings/insights, skills/tools used, project impact."
-                                                    rows={5}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {resume.projects?.length === 0 && (
-                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
-                                        <p>No projects added yet. Click "Add Project" to get started.</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Certifications */}
-                        {activeSection === 'certifications' && (
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Certifications</h2>
-                                    <button
-                                        onClick={() => addItem('certifications')}
-                                        className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                        Add Certification
-                                    </button>
-                                </div>
-
-                                {resume.certifications?.map((cert, index) => (
-                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
-                                        <button
-                                            onClick={() => removeItem('certifications', index)}
-                                            className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                        <div className="space-y-4 pr-12">
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Certificate Title <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={cert.name || ''}
-                                                    onChange={(e) => updateItem('certifications', index, 'name', e.target.value)}
-                                                    placeholder="Enter certificate title"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Provider Organisation Name <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={cert.issuer || ''}
-                                                    onChange={(e) => updateItem('certifications', index, 'issuer', e.target.value)}
-                                                    placeholder="Enter Organisation Name"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Start Date <span className="text-red-400">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={cert.date || ''}
-                                                    onChange={(e) => updateItem('certifications', index, 'date', e.target.value)}
-                                                    placeholder="DD/MM/YYYY"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Certification Link
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={cert.link || ''}
-                                                    onChange={(e) => updateItem('certifications', index, 'link', e.target.value)}
-                                                    placeholder="Enter Certification Name"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Description
-                                                </label>
-                                                <textarea
-                                                    value={cert.description || ''}
-                                                    onChange={(e) => updateItem('certifications', index, 'description', e.target.value)}
-                                                    placeholder="Mention details about the certificate along with the skills required"
-                                                    rows={4}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {resume.certifications?.length === 0 && (
-                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
-                                        <p>No certifications added yet. Click "Add Certification" to get started.</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Co-curricular & POR */}
-                        {activeSection === 'coCurricular' && (
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Co-curricular & POR</h2>
-                                    <button
-                                        onClick={() => addItem('coCurricular')}
-                                        className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                        Add Item
-                                    </button>
-                                </div>
-
-                                {resume.coCurricular?.map((item, index) => (
-                                    <div key={index} className="p-6 bg-surface-2 border border-ink/10 rounded-lg relative group overflow-hidden">
-                                        <button
-                                            onClick={() => removeItem('coCurricular', index)}
-                                            className="absolute top-4 right-4 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-red-500/20 z-10"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                        <div className="space-y-4 pr-12">
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Activity / Event Name
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={item.activity || ''}
-                                                    onChange={(e) => updateItem('coCurricular', index, 'activity', e.target.value)}
-                                                    placeholder="e.g. Annual Tech Fest"
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Role / Position
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={item.role || ''}
-                                                        onChange={(e) => updateItem('coCurricular', index, 'role', e.target.value)}
-                                                        placeholder="e.g. Lead Organizer"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                        Date
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={item.date || ''}
-                                                        onChange={(e) => updateItem('coCurricular', index, 'date', e.target.value)}
-                                                        placeholder="e.g. Mar 2023"
-                                                        className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none placeholder-ink/40"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-ink/80 mb-2">
-                                                    Description
-                                                </label>
-                                                <textarea
-                                                    value={item.description || ''}
-                                                    onChange={(e) => updateItem('coCurricular', index, 'description', e.target.value)}
-                                                    placeholder="Describe your role and impact..."
-                                                    rows={4}
-                                                    className="w-full px-4 py-3 bg-surface-1 text-ink border border-ink/10 rounded-lg focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none resize-none placeholder-ink/40"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {resume.coCurricular?.length === 0 && (
-                                    <div className="text-center py-12 text-ink/40 bg-surface-2 border border-ink/10 rounded-lg">
-                                        <p>No items added yet. Click "Add Item" to get started.</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Templates Selection */}
-                        {activeSection === 'templates' && (
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink mb-6">Choose Template</h2>
-
-                                {/* Built-in Templates */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-ink/60 mb-3 uppercase tracking-wider">Built-in Templates</h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {/* Standard */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'standard' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${(resume.metadata?.layout || 'standard') === 'standard' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-full h-3 bg-gray-900 mb-2" />
-                                                <div className="w-2/3 h-1.5 bg-gray-500 mb-4" />
-                                                <div className="space-y-2">
-                                                    <div className="w-full h-1 bg-gray-200" />
-                                                    <div className="w-full h-1 bg-gray-200" />
-                                                    <div className="w-full h-1 bg-gray-200" />
-                                                    <div className="w-3/4 h-1 bg-gray-200" />
-                                                </div>
-                                                <div className="mt-4 w-1/3 h-1.5 bg-gray-400 mb-2" />
-                                                <div className="space-y-2">
-                                                    <div className="w-full h-1 bg-gray-200" />
-                                                    <div className="w-5/6 h-1 bg-gray-200" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${(resume.metadata?.layout || 'standard') === 'standard' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Classic Serif
-                                                </span>
-                                                <p className="text-xs text-ink/40">Traditional, elegant, and perfect for academic or executive roles.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Modern */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'modern' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'modern' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden flex select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-1/3 bg-gray-100 h-full p-2 border-r border-gray-200">
-                                                    <div className="w-full h-2 bg-gray-300 mb-4 rounded" />
-                                                    <div className="w-full h-1 bg-gray-300 mb-2 rounded" />
-                                                    <div className="w-full h-1 bg-gray-300 mb-2 rounded" />
-                                                </div>
-                                                <div className="w-2/3 p-3">
-                                                    <div className="w-full h-4 bg-black mb-2" />
-                                                    <div className="w-3/4 h-2 bg-gray-600 mb-6" />
-                                                    <div className="space-y-2">
-                                                        <div className="w-1/3 h-2 bg-gray-800 mb-2" />
-                                                        <div className="w-full h-1 bg-gray-200" />
-                                                        <div className="w-full h-1 bg-gray-200" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'modern' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Modern Bold
-                                                </span>
-                                                <p className="text-xs text-ink/40">Contemporary two-column design with bold typography.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Minimalist */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'minimalist' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'minimalist' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-4 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-2/3 h-2 bg-gray-900 mb-6 mx-auto" />
-                                                <div className="w-1/2 h-1 bg-gray-400 mb-8 mx-auto" />
-                                                <div className="space-y-3">
-                                                    <div className="w-full h-0.5 bg-gray-200" />
-                                                    <div className="w-full h-0.5 bg-gray-200" />
-                                                    <div className="w-3/4 h-0.5 bg-gray-200 mx-auto" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'minimalist' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Minimalist Clean
-                                                </span>
-                                                <p className="text-xs text-ink/40">Centered layout with lots of white space and thin lines.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Creative */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'creative' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'creative' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-full h-3 bg-gradient-to-r from-purple-500 to-pink-500 mb-3 rounded" />
-                                                <div className="w-2/3 h-2 bg-gray-900 mb-2" />
-                                                <div className="w-1/2 h-1.5 bg-gray-500 mb-4" />
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    <div className="space-y-1">
-                                                        <div className="w-full h-1 bg-gray-200" />
-                                                        <div className="w-full h-1 bg-gray-200" />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <div className="w-full h-1 bg-gray-200" />
-                                                        <div className="w-full h-1 bg-gray-200" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'creative' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Creative Portfolio
-                                                </span>
-                                                <p className="text-xs text-ink/40">Vibrant gradient header with two-column design.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Professional */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'professional' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'professional' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-full h-4 bg-gray-900 mb-2 border-b-4 border-gray-800" />
-                                                <div className="w-2/3 h-1.5 bg-gray-600 mb-4" />
-                                                <div className="space-y-2">
-                                                    <div className="w-full h-1 bg-gray-200" />
-                                                    <div className="w-full h-1 bg-gray-200" />
-                                                    <div className="w-3/4 h-1 bg-gray-200" />
-                                                </div>
-                                                <div className="mt-4 w-1/2 h-1.5 bg-gray-400 mb-2 border-b-2 border-gray-300" />
-                                                <div className="space-y-1">
-                                                    <div className="w-full h-0.5 bg-gray-200" />
-                                                    <div className="w-5/6 h-0.5 bg-gray-200" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'professional' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Executive Professional
-                                                </span>
-                                                <p className="text-xs text-ink/40">Formal serif font with bold headers for senior roles.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Technical */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'technical' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'technical' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-gray-50 w-full rounded-md shadow-sm overflow-hidden select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="bg-gray-900 p-2">
-                                                    <div className="flex gap-1 mb-2">
-                                                        <div className="w-2 h-2 rounded-full bg-red-500" />
-                                                        <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                                                        <div className="w-2 h-2 rounded-full bg-green-500" />
-                                                    </div>
-                                                    <div className="w-2/3 h-2 bg-green-400 mb-1" />
-                                                    <div className="w-1/2 h-1 bg-green-300" />
-                                                </div>
-                                                <div className="p-2 space-y-2">
-                                                    <div className="w-full h-1 bg-blue-200" />
-                                                    <div className="w-3/4 h-1 bg-gray-300" />
-                                                    <div className="w-5/6 h-1 bg-gray-300" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'technical' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Tech Developer
-                                                </span>
-                                                <p className="text-xs text-ink/40">Terminal-style with monospace font for developers.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Compact */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'compact' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'compact' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-2 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-full h-2 bg-gray-900 mb-1 border-b-2 border-gray-900" />
-                                                <div className="grid grid-cols-3 gap-1">
-                                                    <div className="space-y-1">
-                                                        <div className="w-full h-0.5 bg-gray-300" />
-                                                        <div className="w-full h-0.5 bg-gray-200" />
-                                                        <div className="w-full h-0.5 bg-gray-200" />
-                                                    </div>
-                                                    <div className="col-span-2 space-y-1">
-                                                        <div className="w-full h-0.5 bg-gray-300" />
-                                                        <div className="w-full h-0.5 bg-gray-200" />
-                                                        <div className="w-3/4 h-0.5 bg-gray-200" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'compact' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Compact Dense
-                                                </span>
-                                                <p className="text-xs text-ink/40">Space-efficient with small fonts and tight spacing.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Elegant */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'elegant' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'elegant' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-2/3 h-3 bg-gray-200 mb-2 mx-auto" />
-                                                <div className="w-1/2 h-1 bg-gray-300 mb-3 mx-auto" />
-                                                <div className="w-full h-px bg-gray-300 mb-3" />
-                                                <div className="space-y-2">
-                                                    <div className="w-full h-0.5 bg-gray-200 mx-auto" />
-                                                    <div className="w-5/6 h-0.5 bg-gray-200 mx-auto" />
-                                                    <div className="w-4/5 h-0.5 bg-gray-200 mx-auto" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'elegant' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Elegant Refined
-                                                </span>
-                                                <p className="text-xs text-ink/40">Sophisticated serif with centered, classical layout.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Bold */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'bold' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'bold' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-white w-full rounded-md shadow-sm overflow-hidden select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="bg-gray-900 p-2">
-                                                    <div className="w-3/4 h-3 bg-white mb-1" />
-                                                    <div className="w-1/2 h-1.5 bg-gray-400" />
-                                                </div>
-                                                <div className="p-2 space-y-2">
-                                                    <div className="w-full h-1 bg-gray-900 border-b-2 border-gray-900" />
-                                                    <div className="border-l-4 border-gray-400 pl-2 space-y-1">
-                                                        <div className="w-3/4 h-1 bg-gray-800" />
-                                                        <div className="w-full h-0.5 bg-gray-300" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'bold' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Bold Impact
-                                                </span>
-                                                <p className="text-xs text-ink/40">Strong typography with high contrast and thick borders.</p>
-                                            </div>
-                                        </button>
-
-                                        {/* Timeline */}
-                                        <button
-                                            onClick={() => setResume({ ...resume, templateId: null, metadata: { ...resume.metadata, layout: 'timeline' } })}
-                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col gap-3 group text-left ${resume.metadata?.layout === 'timeline' && !resume.templateId
-                                                ? 'bg-surface-3 border-blue-500'
-                                                : 'bg-surface-1 border-ink/10 hover:border-accent/40'
-                                                }`}
-                                        >
-                                            <div className="aspect-[8.5/11] bg-gradient-to-br from-slate-50 to-gray-100 w-full rounded-md shadow-sm overflow-hidden p-3 select-none pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <div className="w-2/3 h-2 bg-gray-900 mb-2 mx-auto" />
-                                                <div className="relative pl-3 border-l-2 border-blue-300 mt-3">
-                                                    <div className="absolute -left-[5px] top-0 w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                    <div className="w-full h-3 bg-white rounded mb-2 shadow-sm" />
-                                                    <div className="absolute -left-[5px] top-5 w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                    <div className="w-full h-3 bg-white rounded mb-2 shadow-sm" />
-                                                    <div className="absolute -left-[5px] top-10 w-2 h-2 bg-green-500 rounded-full"></div>
-                                                    <div className="w-3/4 h-2 bg-white rounded shadow-sm" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span className={`block font-bold text-lg mb-1 ${resume.metadata?.layout === 'timeline' ? 'text-blue-400' : 'text-ink'}`}>
-                                                    Timeline Visual
-                                                </span>
-                                                <p className="text-xs text-ink/40">Vertical timeline with colored dots and cards.</p>
-                                            </div>
-                                        </button>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Page margins</label>
+                                    <input type="range" className="w-full accent-accent cursor-pointer" min="0" max="2" defaultValue="1" />
+                                    <div className="flex justify-between text-[11px] text-ink/40 mt-1">
+                                        <span>Narrow</span><span>Normal</span><span>Wide</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-[12px] font-medium text-ink/80 block mb-2">Line spacing</label>
+                                    <input type="range" className="w-full accent-accent cursor-pointer" min="0" max="2" defaultValue="1" />
+                                    <div className="flex justify-between text-[11px] text-ink/40 mt-1">
+                                        <span>Compact</span><span>Normal</span><span>Loose</span>
                                     </div>
                                 </div>
                             </div>
-                        )}
-
+                        </div>
                     </div>
-                </div>
+                </aside>
 
-                {/* Right - Live Preview */}
-                <div className="w-[600px] bg-surface-2 p-8 overflow-y-auto flex-shrink-0">
-                    {/* Zoom Controls */}
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-label text-ink/60 uppercase">Live Preview</h3>
-                        <div className="flex items-center gap-1">
-                            <button
-                                onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
-                                disabled={zoom <= 0.5}
-                                className="p-1.5 text-ink/40 hover:text-ink hover:bg-surface-3 rounded transition-colors disabled:opacity-50"
-                                title="Zoom Out"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
-                                </svg>
-                            </button>
-                            <span className="text-xs text-ink/60 font-mono min-w-[40px] text-center">
-                                {Math.round(zoom * 100)}%
-                            </span>
-                            <button
-                                onClick={() => setZoom(Math.min(2, zoom + 0.1))}
-                                disabled={zoom >= 2}
-                                className="p-1.5 text-ink/40 hover:text-ink hover:bg-surface-3 rounded transition-colors disabled:opacity-50"
-                                title="Zoom In"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={() => setZoom(1)}
-                                className="px-2 py-1 text-ink/40 text-xs rounded hover:text-ink hover:bg-surface-3 transition-colors"
-                                title="Reset Zoom"
-                            >
-                                Reset
-                            </button>
+                {/* CENTER CANVAS */}
+                <main className="flex-1 bg-[#ECEAE4] overflow-y-auto flex justify-center py-12 px-8 relative hide-scrollbar">
+                    <div className="w-[794px] min-h-[1123px] shrink-0 bg-white shadow-[0_8px_40px_rgba(20,18,16,0.12)] rounded-[2px] p-16 transition-all relative group">
+                        
+                        {/* Fake document content based on spec */}
+                        <div className="mb-8 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
+                            <h1 className="font-serif text-[42px] text-ink leading-tight text-center">John Doe</h1>
+                            <p className="text-[14px] text-ink/80 mt-2 text-center font-sans tracking-wide">
+                                San Francisco, CA • john@example.com • (555) 123-4567 • linkedin.com/in/johndoe
+                            </p>
+                        </div>
+                        
+                        <div className="mb-6 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
+                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4">Experience</h2>
+                            
+                            <div className="mb-6">
+                                <div className="flex justify-between items-baseline mb-1">
+                                    <h3 className="font-semibold text-ink text-[15px]">Senior Frontend Engineer <span className="font-normal text-ink/60">at Stripe</span></h3>
+                                    <span className="text-[13px] text-ink/60">2021 - Present</span>
+                                </div>
+                                <ul className="mt-2 space-y-1.5 text-[14px] text-ink/80">
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
+                                        <span>Led frontend architecture for the new billing portal, decreasing time-to-market for new payment features by 30%.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
+                                        <span>Decreased bundle size by 40%, improving Time to Interactive (TTI) by 1.2s across the dashboard.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
+                                        <span>Mentored 4 junior engineers and established new React testing patterns using React Testing Library.</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-baseline mb-1">
+                                    <h3 className="font-semibold text-ink text-[15px]">Software Engineer <span className="font-normal text-ink/60">at Airbnb</span></h3>
+                                    <span className="text-[13px] text-ink/60">2018 - 2021</span>
+                                </div>
+                                <ul className="mt-2 space-y-1.5 text-[14px] text-ink/80">
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
+                                        <span>Developed and maintained core UI components in the shared design system used by 50+ engineers.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="text-[8px] mt-1.5 opacity-60">▪</span> 
+                                        <span>Migrated legacy Redux codebase to React Context and Hooks, reducing boilerplate code by 25%.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div className="mb-6 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
+                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4">Education</h2>
+                            <div>
+                                <div className="flex justify-between items-baseline mb-1">
+                                    <h3 className="font-semibold text-ink text-[15px]">B.S. Computer Science <span className="font-normal text-ink/60">at UC Berkeley</span></h3>
+                                    <span className="text-[13px] text-ink/60">2014 - 2018</span>
+                                </div>
+                                <p className="text-[14px] text-ink/80">GPA: 3.8/4.0 • Dean's List all semesters</p>
+                            </div>
+                        </div>
+
+                        <div className="mb-6 border border-transparent hover:border-accent p-4 -m-4 rounded transition-colors cursor-text group/section">
+                            <h2 className="text-[14px] font-bold text-ink uppercase tracking-wider border-b border-ink/8 pb-2 mb-4">Skills</h2>
+                            <p className="text-[14px] text-ink/80 leading-relaxed">
+                                <span className="font-semibold text-ink">Languages:</span> JavaScript, TypeScript, HTML/CSS, Python, SQL<br/>
+                                <span className="font-semibold text-ink">Frameworks:</span> React, Next.js, Node.js, Express, Tailwind CSS<br/>
+                                <span className="font-semibold text-ink">Tools:</span> Git, Webpack, Vite, Jest, Cypress, Figma, AWS
+                            </p>
+                        </div>
+                        
+                        {/* Page break indicator */}
+                        <div className="absolute top-[1123px] left-0 w-full border-t border-dashed border-status-error/40 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <div className="absolute right-4 -top-3 bg-white border border-status-error/20 text-status-error text-[11px] px-2 py-0.5 rounded shadow-sm">
+                                Content below this line won't print on page 1
+                            </div>
                         </div>
                     </div>
 
-                    {/* Preview Container */}
-                    <div
-                        id="resume-preview"
-                        className="bg-white shadow-paper rounded-[4px] transition-transform duration-200 mx-auto"
-                        style={{
-                            width: '100%',
-                            aspectRatio: '8.5/11',
-                            transform: `scale(${zoom})`,
-                            transformOrigin: 'top center'
-                        }}
+                    {/* Canvas Controls */}
+                    <div className="fixed bottom-6 right-[324px] flex items-center gap-2 bg-white rounded-lg border border-ink/10 p-1 shadow-sm transition-all z-20">
+                        <button className="p-1.5 hover:bg-surface-2 rounded text-ink/60 transition-colors"><ZoomOut className="w-4 h-4" /></button>
+                        <span className="text-[12px] font-medium px-2 text-ink">100%</span>
+                        <button className="p-1.5 hover:bg-surface-2 rounded text-ink/60 transition-colors"><ZoomIn className="w-4 h-4" /></button>
+                    </div>
+                </main>
+
+                {/* RIGHT PANEL (AI/ATS) */}
+                {rightPanelOpen && (
+                    <aside className="w-[300px] bg-white border-l border-ink/5 flex flex-col shrink-0 z-10 animate-[slideInRight_300ms_ease-out]">
+                        <div className="p-6 border-b border-ink/5 bg-surface-1/50">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-[14px] font-semibold text-ink">ATS Live Score</h3>
+                                <button onClick={() => setRightPanelOpen(false)} className="text-ink/40 hover:text-ink transition-colors">
+                                    <X className="w-4 h-4" />
+                                </button>
+                            </div>
+                            <div className="flex items-baseline gap-2 mb-4">
+                                <span className="font-serif text-[42px] text-status-success leading-none tracking-tight">82</span>
+                                <span className="text-[13px] text-ink/40 font-medium uppercase tracking-wider">/ 100</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-surface-2 rounded-full overflow-hidden mb-3">
+                                <div className="h-full bg-status-success rounded-full" style={{width: '82%'}} />
+                            </div>
+                            <div className="text-[12px] text-ink/60">Based on your current content</div>
+                        </div>
+
+                        <div className="p-6 flex-1 overflow-y-auto hide-scrollbar">
+                            <h3 className="text-[14px] font-semibold text-ink mb-5 flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-accent" /> AI Suggestions
+                            </h3>
+
+                            <div className="space-y-4">
+                                {/* Suggestion Card */}
+                                <div className="bg-white border border-ink/5 border-l-[3px] border-l-accent rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                    <div className="inline-block px-2 py-1 bg-surface-2 rounded text-[10px] font-semibold uppercase tracking-wider text-ink/60 mb-3">
+                                        Bullet enhancement
+                                    </div>
+                                    <p className="text-[13px] text-ink mb-4 leading-relaxed">
+                                        Instead of "Improved performance", try: <span className="font-medium bg-accent/5 px-1 py-0.5 rounded text-accent">"Decreased bundle size by 40%, improving TTI by 1.2s"</span>
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                        <button className="bg-accent text-white h-[28px] px-3 text-[12px] rounded-lg font-medium hover:brightness-95 transition-all">Apply</button>
+                                        <button className="bg-surface-2 text-ink/60 hover:text-ink hover:bg-ink/5 h-[28px] px-3 text-[12px] rounded-lg font-medium transition-all">Dismiss</button>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-white border border-ink/5 border-l-[3px] border-l-status-warning rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                    <div className="inline-block px-2 py-1 bg-surface-2 rounded text-[10px] font-semibold uppercase tracking-wider text-ink/60 mb-3">
+                                        Keyword missing
+                                    </div>
+                                    <p className="text-[13px] text-ink mb-4 leading-relaxed">
+                                        Consider adding <span className="font-medium bg-status-warning/10 px-1 py-0.5 rounded text-status-warning">"React Context"</span> to your skills section based on your target role.
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                        <button className="bg-accent text-white h-[28px] px-3 text-[12px] rounded-lg font-medium hover:brightness-95 transition-all">Apply</button>
+                                        <button className="bg-surface-2 text-ink/60 hover:text-ink hover:bg-ink/5 h-[28px] px-3 text-[12px] rounded-lg font-medium transition-all">Dismiss</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                )}
+
+                {/* Floating AI Button (when collapsed) */}
+                {!rightPanelOpen && (
+                    <button 
+                        onClick={() => setRightPanelOpen(true)}
+                        className="absolute right-6 top-20 w-12 h-12 bg-white rounded-full shadow-lg border border-ink/5 flex items-center justify-center text-accent hover:scale-105 transition-transform z-20 group"
+                        title="AI Assistant"
                     >
-                        {/* Dynamic Template Renderer */}
-                        {(() => {
-                            switch (resume.metadata?.layout) {
-                                case 'modern':
-                                    return <ModernTemplate resume={resume} />;
-                                case 'minimalist':
-                                    return <MinimalistTemplate resume={resume} />;
-                                case 'creative':
-                                    return <CreativeTemplate resume={resume} />;
-                                case 'professional':
-                                    return <ProfessionalTemplate resume={resume} />;
-                                case 'technical':
-                                    return <TechnicalTemplate resume={resume} />;
-                                case 'compact':
-                                    return <CompactTemplate resume={resume} />;
-                                case 'elegant':
-                                    return <ElegantTemplate resume={resume} />;
-                                case 'bold':
-                                    return <BoldTemplate resume={resume} />;
-                                case 'timeline':
-                                    return <TimelineTemplate resume={resume} />;
-                                default:
-                                    return <StandardTemplate resume={resume} />;
-                            }
-                        })()}
-                    </div>
-                </div>
+                        <Sparkles className="w-5 h-5 group-hover:animate-pulse" />
+                        <div className="absolute top-0 right-0 w-3 h-3 bg-status-error border-2 border-white rounded-full" />
+                    </button>
+                )}
             </div>
-
-            {/* Version History Modal */}
-            {showVersionHistory && id && id !== 'new' && (
-                <VersionHistory
-                    resumeId={id}
-                    onClose={() => setShowVersionHistory(false)}
-                    onRestore={() => {
-                        loadResume();
-                        setShowVersionHistory(false);
-                    }}
-                />
-            )}
-
-            {/* Resume Analyzer Modal */}
-            {showAnalyzer && resume && (
-                <div className="fixed inset-0 bg-ink/20 backdrop-blur-md backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
-                    <div className="bg-surface-1 rounded-2xl border border-ink/10 max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">Resume Analysis</h2>
-                            <button
-                                onClick={() => setShowAnalyzer(false)}
-                                className="p-2 hover:bg-surface-3 rounded-lg transition-colors"
-                            >
-                                <X className="w-5 h-5 text-ink" />
-                            </button>
-                        </div>
-                        <ResumeAnalyzer
-                            resume={resume}
-                            onClose={() => setShowAnalyzer(false)}
-                        />
-                    </div>
-                </div>
-            )}
-
-            {/* AI Features Panel Modal */}
-            {showAIPanel && resume && id && id !== 'new' && (
-                <div className="fixed inset-0 bg-ink/20 backdrop-blur-md backdrop-blur-sm z-50 flex items-center justify-center p-8 overflow-y-auto">
-                    <div className="bg-surface-1 rounded-2xl border border-ink/10 max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-serif font-semibold tracking-tight text-ink">AI Assistant</h2>
-                            <button
-                                onClick={() => setShowAIPanel(false)}
-                                className="p-2 hover:bg-surface-3 rounded-lg transition-colors"
-                            >
-                                <X className="w-5 h-5 text-ink" />
-                            </button>
-                        </div>
-                        <AIFeaturesPanel
-                            resumeId={id}
-                            resumeData={resume}
-                            onUpdate={(field, value) => {
-                                // Handle AI-generated content updates
-                                if (field === 'summary') {
-                                    setResume({
-                                        ...resume,
-                                        personalInfo: {
-                                            ...resume.personalInfo,
-                                            summary: value
-                                        }
-                                    });
-                                }
-                            }}
-                        />
-                    </div>
-                </div>
-            )}
-
-            {/* Resume Statistics Modal */}
-            {showStats && resume && (
-                <ResumeStats
-                    resume={resume}
-                    onClose={() => setShowStats(false)}
-                />
-            )}
         </div>
     );
 };

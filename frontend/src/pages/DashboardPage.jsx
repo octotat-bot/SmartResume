@@ -1,263 +1,174 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { resumeService, jobService } from '../services/api';
-import { FileText, Briefcase, Plus, TrendingUp, ArrowRight, BarChart3, Target } from 'lucide-react';
+import { Plus, MoreVertical, Edit2, Copy, Download, Trash2 } from 'lucide-react';
+import api from '../utils/api';
 
 const DashboardPage = () => {
     const { user } = useAuth();
-    const [stats, setStats] = useState({ total: 0, active: 0, recent: [] });
-    const [jobStats, setJobStats] = useState({ total: 0, byStatus: {} });
+    const navigate = useNavigate();
+    const [resumes, setResumes] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadDashboardData();
+        const fetchResumes = async () => {
+            try {
+                const response = await api.get('/api/resumes');
+                setResumes(response.data.data.slice(0, 4));
+            } catch (error) {
+                console.error('Error fetching resumes:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchResumes();
     }, []);
 
-    const loadDashboardData = async () => {
-        try {
-            // Load resume stats
-            const resumeData = await resumeService.getResumeStats();
-            setStats(resumeData);
+    const getTimeBasedGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good morning';
+        if (hour < 17) return 'Good afternoon';
+        return 'Good evening';
+    };
 
-            // Try to load job stats, but don't fail if endpoint doesn't exist
-            try {
-                const jobData = await jobService.getJobStats();
-                setJobStats(jobData);
-            } catch {
-                // Set default empty job stats
-                setJobStats({ total: 0, byStatus: {} });
-            }
-        } catch (error) {
-            console.error('Failed to load dashboard:', error);
-            // Set default values on error
-            setStats({ total: 0, active: 0, recent: [] });
-            setJobStats({ total: 0, byStatus: {} });
-        } finally {
-            setLoading(false);
+    const getFormattedDate = () => {
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        return new Date().toLocaleDateString('en-US', options);
+    };
+
+    const stats = [
+        { label: 'Resumes created', value: resumes.length, trend: '+12%' },
+        { label: 'Average ATS score', value: '78', trend: '+5%' },
+        { label: 'Applications tracked', value: '14', trend: '+20%' },
+        { label: 'Interviews scheduled', value: '3', trend: '-1', negative: true },
+    ];
+
+    const mockApplications = [
+        { id: 1, company: 'Stripe', role: 'Frontend Engineer', status: 'Interview', date: '2 days ago' },
+        { id: 2, company: 'Vercel', role: 'Software Engineer', status: 'Applied', date: '4 days ago' },
+        { id: 3, company: 'Google', role: 'Senior UX Designer', status: 'Offer', date: '1 week ago' },
+    ];
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Offer': return 'bg-status-success';
+            case 'Interview': return 'bg-status-warning';
+            case 'Applied': return 'bg-status-info';
+            case 'Rejected': return 'bg-ink/40';
+            default: return 'bg-ink/20';
         }
     };
 
-    if (loading) {
-        return (
-            <div className="h-screen bg-surface-1 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-ink/60">Loading your workspace...</p>
-                </div>
-            </div>
-        );
-    }
-
-    const totalApplications = jobStats.total || 0;
-    const successRate = totalApplications > 0
-        ? Math.round(((jobStats.byStatus?.Offer || 0) / totalApplications) * 100)
-        : 0;
-
-    const firstName = user?.name?.split(' ')[0] || 'there';
-
     return (
-        <div className="h-screen bg-surface-1 p-6 overflow-hidden flex flex-col">
-            {/* Header */}
-            <div className="mb-6 flex-shrink-0">
-                <h1 className="text-4xl font-bold text-ink mb-2">
-                    Welcome back, {firstName}
+        <div className="max-w-6xl mx-auto animate-[fadeInScale_300ms_ease-out]">
+            {/* Greeting */}
+            <div className="mb-10">
+                <h1 className="font-serif text-[28px] text-ink mb-1">
+                    {getTimeBasedGreeting()}, {user?.name?.split(' ')[0] || 'there'}.
                 </h1>
-                <p className="text-base text-ink/60">
-                    Here's what's happening with your job search today
+                <p className="text-[13px] text-ink/60 font-sans tracking-wide">
+                    {getFormattedDate()}
                 </p>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-4 gap-4 mb-6 flex-shrink-0">
-                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <FileText className="w-5 h-5 text-ink" />
+            {/* Quick Stats Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                {stats.map((stat, i) => (
+                    <div key={i} className="bg-white border border-ink/5 rounded-xl p-6 shadow-sm">
+                        <div className="font-serif text-[32px] text-accent leading-none mb-2">{stat.value}</div>
+                        <div className="text-[12px] text-ink/60 font-sans font-medium uppercase tracking-wider mb-1">{stat.label}</div>
+                        <div className={`text-[11px] font-sans font-medium ${stat.negative ? 'text-status-error' : 'text-status-success'}`}>
+                            {stat.trend}
                         </div>
                     </div>
-                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{stats.total}</div>
-                    <div className="text-sm text-ink/60">Resumes</div>
-                </div>
+                ))}
+            </div>
 
-                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <Briefcase className="w-5 h-5 text-ink" />
-                        </div>
-                    </div>
-                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{totalApplications}</div>
-                    <div className="text-sm text-ink/60">Applications</div>
+            {/* Recent Resumes */}
+            <div className="mb-12">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-[16px] font-sans font-semibold text-ink">Recent resumes</h2>
+                    <Link to="/workspace" className="text-[14px] text-ink/60 hover:text-ink font-medium transition-colors">
+                        View all →
+                    </Link>
                 </div>
+                
+                <div className="flex gap-6 overflow-x-auto pb-4 snap-x hide-scrollbar">
+                    {/* New Resume Card */}
+                    <button 
+                        onClick={() => navigate('/resumes/new')}
+                        className="snap-start shrink-0 w-[200px] h-[280px] bg-white border border-dashed border-accent/30 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-solid hover:bg-accent/5 hover:border-accent transition-all group"
+                    >
+                        <Plus className="w-7 h-7 text-accent" />
+                        <span className="text-[14px] text-ink/60 font-sans group-hover:text-ink transition-colors">New resume</span>
+                    </button>
 
-                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-ink" />
-                        </div>
-                    </div>
-                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{successRate}%</div>
-                    <div className="text-sm text-ink/60">Success Rate</div>
-                </div>
-
-                <div className="bg-surface-2 border border-ink/5 rounded-xl p-4 hover:border-white/20 transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                            <Target className="w-5 h-5 text-ink" />
-                        </div>
-                    </div>
-                    <div className="text-3xl font-serif font-semibold text-ink mb-1">{jobStats.byStatus?.Interview || 0}</div>
-                    <div className="text-sm text-ink/60">Interviews</div>
+                    {/* Existing Resumes */}
+                    {loading ? (
+                        [1, 2, 3].map(i => (
+                            <div key={i} className="shrink-0 w-[200px] h-[280px] skeleton rounded-xl" />
+                        ))
+                    ) : (
+                        resumes.map(resume => (
+                            <div key={resume._id} className="snap-start shrink-0 w-[200px] bg-white border border-ink/5 rounded-xl flex flex-col overflow-hidden hover:-translate-y-[3px] hover:shadow-card transition-all group relative">
+                                {/* Thumbnail Placeholder */}
+                                <div className="h-[180px] bg-surface-2 p-4 flex flex-col gap-2 relative">
+                                    <div className="w-1/2 h-3 bg-ink/10 rounded-sm mb-2" />
+                                    <div className="w-full h-1 bg-ink/5 rounded-sm" />
+                                    <div className="w-5/6 h-1 bg-ink/5 rounded-sm" />
+                                    <div className="w-full h-1 bg-ink/5 rounded-sm" />
+                                    
+                                    <div className="w-1/3 h-2 bg-ink/10 rounded-sm mt-4 mb-1" />
+                                    <div className="w-full h-1 bg-ink/5 rounded-sm" />
+                                    <div className="w-4/5 h-1 bg-ink/5 rounded-sm" />
+                                    
+                                    {/* Hover Menu */}
+                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg text-ink/60 hover:text-ink shadow-sm">
+                                            <MoreVertical className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                {/* Footer Info */}
+                                <div className="p-4 bg-white border-t border-ink/5 flex-1 flex flex-col justify-end">
+                                    <h3 className="text-[14px] font-medium text-ink font-sans truncate mb-1">{resume.title || 'Untitled Resume'}</h3>
+                                    <div className="flex items-center justify-between text-[12px] text-ink/40 font-sans">
+                                        <span>Just now</span>
+                                        <span>{resume.template || 'Modern'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
 
-            {/* Main Content - Flex 1 to fill remaining space */}
-            <div className="grid grid-cols-3 gap-4 flex-1 min-h-0">
-                {/* Recent Resumes */}
-                <div className="col-span-2 bg-surface-2 border border-ink/5 rounded-xl p-6 flex flex-col overflow-hidden">
-                    <div className="flex justify-between items-center mb-4 flex-shrink-0">
-                        <div>
-                            <h2 className="text-xl font-bold text-ink">Recent Resumes</h2>
-                            <p className="text-sm text-ink/60">Your latest versions</p>
-                        </div>
-                        <Link
-                            to="/workspace"
-                            className="px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
-                        >
-                            <Plus className="w-4 h-4" />
-                            New
-                        </Link>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto min-h-0">
-                        {stats.recent && stats.recent.length > 0 ? (
-                            <div className="space-y-2">
-                                {stats.recent.slice(0, 4).map((resume) => (
-                                    <Link
-                                        key={resume._id}
-                                        to={`/workspace/${resume._id}`}
-                                        className="group block p-4 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <FileText className="w-4 h-4 text-ink" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <h3 className="text-base font-semibold text-ink truncate">
-                                                        {resume.title || 'Untitled Resume'}
-                                                    </h3>
-                                                    <p className="text-sm text-ink/40">
-                                                        {new Date(resume.updatedAt).toLocaleDateString()}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-ink transition-colors flex-shrink-0" />
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full">
-                                <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-3">
-                                    <FileText className="w-6 h-6 text-gray-600" />
-                                </div>
-                                <h3 className="text-base font-semibold text-ink mb-1">No resumes yet</h3>
-                                <p className="text-sm text-ink/60 mb-4">Create your first resume</p>
-                                <Link
-                                    to="/workspace"
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                    Create Resume
-                                </Link>
-                            </div>
-                        )}
-                    </div>
+            {/* Application Tracker Preview */}
+            <div>
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-[16px] font-sans font-semibold text-ink">Applications</h2>
+                    <Link to="/applications" className="text-[14px] text-ink/60 hover:text-ink font-medium transition-colors">
+                        View all →
+                    </Link>
                 </div>
-
-                {/* Sidebar */}
-                <div className="space-y-4 flex flex-col overflow-hidden">
-                    {/* Quick Actions */}
-                    <div className="bg-surface-2 border border-ink/5 rounded-xl p-5 flex-shrink-0">
-                        <h3 className="text-base font-bold text-ink mb-4">Quick Actions</h3>
-                        <div className="space-y-2">
-                            <Link
-                                to="/resumes/new"
-                                className="flex items-center gap-3 p-3 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all group"
-                            >
-                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <FileText className="w-4 h-4 text-ink" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-semibold text-ink">New Resume</div>
-                                </div>
-                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-ink transition-colors" />
-                            </Link>
-
-                            <Link
-                                to="/applications"
-                                className="flex items-center gap-3 p-3 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all group"
-                            >
-                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <Briefcase className="w-4 h-4 text-ink" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-semibold text-ink">Track Job</div>
-                                </div>
-                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-ink transition-colors" />
-                            </Link>
-
-                            <Link
-                                to="/analytics"
-                                className="flex items-center gap-3 p-3 bg-surface-1 border border-ink/5 rounded-lg hover:border-white/20 transition-all group"
-                            >
-                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <BarChart3 className="w-4 h-4 text-ink" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-semibold text-ink">Analytics</div>
-                                </div>
-                                <ArrowRight className="w-3 h-3 text-gray-600 group-hover:text-ink transition-colors" />
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Application Pipeline */}
-                    <div className="bg-surface-2 border border-ink/5 rounded-xl p-5 flex-1 min-h-0 overflow-hidden">
-                        <h3 className="text-base font-bold text-ink mb-4">Pipeline</h3>
-                        <div className="space-y-3">
-                            <div>
-                                <div className="flex justify-between text-xs mb-1.5">
-                                    <span className="text-ink/60">Applied</span>
-                                    <span className="text-ink font-medium">{jobStats.byStatus?.Applied || 0}</span>
-                                </div>
-                                <div className="h-1.5 bg-surface-1 rounded-full overflow-hidden">
-                                    <div className="h-full bg-white/20 rounded-full" style={{ width: `${(jobStats.byStatus?.Applied || 0) / Math.max(totalApplications, 1) * 100}%` }}></div>
-                                </div>
+                
+                <div className="bg-white border border-ink/5 rounded-xl overflow-hidden shadow-sm">
+                    {mockApplications.map((app, i) => (
+                        <div key={app.id} className={`flex items-center p-4 hover:bg-surface-2 transition-colors ${i !== mockApplications.length - 1 ? 'border-b border-ink/5' : ''}`}>
+                            <div className="flex-1">
+                                <div className="text-[14px] font-medium text-ink font-sans">{app.company}</div>
+                                <div className="text-[13px] text-ink/60 font-sans mt-0.5">{app.role}</div>
                             </div>
-
-                            <div>
-                                <div className="flex justify-between text-xs mb-1.5">
-                                    <span className="text-ink/60">Interview</span>
-                                    <span className="text-ink font-medium">{jobStats.byStatus?.Interview || 0}</span>
-                                </div>
-                                <div className="h-1.5 bg-surface-1 rounded-full overflow-hidden">
-                                    <div className="h-full bg-white/40 rounded-full" style={{ width: `${(jobStats.byStatus?.Interview || 0) / Math.max(totalApplications, 1) * 100}%` }}></div>
-                                </div>
+                            <div className="w-32 flex items-center gap-2">
+                                <div className={`w-2 h-2 rounded-full ${getStatusColor(app.status)}`} />
+                                <span className="text-[12px] text-ink/80 font-sans">{app.status}</span>
                             </div>
-
-                            <div>
-                                <div className="flex justify-between text-xs mb-1.5">
-                                    <span className="text-ink/60">Offer</span>
-                                    <span className="text-ink font-medium">{jobStats.byStatus?.Offer || 0}</span>
-                                </div>
-                                <div className="h-1.5 bg-surface-1 rounded-full overflow-hidden">
-                                    <div className="h-full bg-white rounded-full" style={{ width: `${(jobStats.byStatus?.Offer || 0) / Math.max(totalApplications, 1) * 100}%` }}></div>
-                                </div>
+                            <div className="w-24 text-right text-[12px] text-ink/40 font-sans">
+                                {app.date}
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

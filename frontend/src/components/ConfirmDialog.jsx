@@ -1,65 +1,70 @@
-import { X, AlertTriangle } from 'lucide-react';
+import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, confirmText = 'Delete', cancelText = 'Cancel', type = 'danger' }) => {
-    if (!isOpen) return null;
+    const [isRendered, setIsRendered] = useState(false);
+    const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
-    const typeStyles = {
-        danger: {
-            icon: 'bg-red-500/10 text-red-400 border-red-500/20',
-            button: 'bg-red-500 hover:bg-red-600 text-ink'
-        },
-        warning: {
-            icon: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-            button: 'bg-yellow-500 hover:bg-yellow-600 text-ink'
-        },
-        info: {
-            icon: 'bg-blue-500/10 text-accent border-blue-500/20',
-            button: 'bg-blue-500 hover:btn-primary text-ink'
+    useEffect(() => {
+        if (isOpen) {
+            setIsRendered(true);
+            setIsAnimatingOut(false);
+        } else if (isRendered) {
+            setIsAnimatingOut(true);
+            const timer = setTimeout(() => {
+                setIsRendered(false);
+                setIsAnimatingOut(false);
+            }, 140);
+            return () => clearTimeout(timer);
         }
-    };
+    }, [isOpen]);
 
-    const styles = typeStyles[type] || typeStyles.danger;
+    if (!isRendered) return null;
+
+    const primaryButtonClass = type === 'danger'
+        ? 'bg-status-error text-white hover:brightness-95'
+        : 'btn-primary';
 
     return (
-        <div className="fixed inset-0 bg-canvas/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-            <div className="bg-surface-1 border border-ink/5 rounded-xl w-full max-w-md shadow-2xl animate-slideUp">
+        <div 
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-180 ease-out bg-ink/40 ${isAnimatingOut ? 'opacity-0' : 'opacity-100'}`}
+        >
+            <div 
+                className={`bg-surface-1 border border-ink/5 rounded-2xl w-full max-w-[480px] transition-transform duration-180 ease-out p-6 ${isAnimatingOut ? 'scale-95' : 'scale-100'}`}
+            >
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-ink/5">
-                    <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${styles.icon}`}>
-                            <AlertTriangle className="w-5 h-5" />
-                        </div>
-                        <h2 className="text-xl font-bold text-ink">{title}</h2>
-                    </div>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-[17px] font-semibold text-ink font-sans tracking-tight">{title}</h2>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-surface-2 rounded-lg transition-colors"
+                        className="text-ink/40 hover:text-ink/60 transition-colors"
+                        aria-label="Close"
                     >
-                        <X className="w-5 h-5 text-ink/60" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
-                    <p className="text-ink/80 leading-relaxed">{message}</p>
+                <div className="mb-8">
+                    <p className="text-ink/80 text-[15px] leading-relaxed font-sans">{message}</p>
                 </div>
 
-                {/* Footer */}
-                <div className="flex items-center justify-end gap-3 p-6 border-t border-ink/5 bg-surface-1">
-                    <button
-                        onClick={onClose}
-                        className="px-6 py-2.5 bg-surface-2 text-ink rounded-lg hover:bg-[#161616] transition-colors border border-ink/5 font-medium"
-                    >
-                        {cancelText}
-                    </button>
+                {/* Footer - Primary action left of cancel */}
+                <div className="flex items-center justify-end gap-4">
                     <button
                         onClick={() => {
                             onConfirm();
                             onClose();
                         }}
-                        className={`px-6 py-2.5 rounded-lg transition-colors font-semibold ${styles.button}`}
+                        className={`h-[40px] px-6 rounded-lg font-medium text-[14px] font-sans transition-colors ${primaryButtonClass}`}
                     >
                         {confirmText}
+                    </button>
+                    <button
+                        onClick={onClose}
+                        className="text-[14px] font-medium text-ink/60 hover:text-ink transition-colors font-sans"
+                    >
+                        {cancelText}
                     </button>
                 </div>
             </div>

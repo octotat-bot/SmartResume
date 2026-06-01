@@ -1,103 +1,145 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     LayoutDashboard,
     FileText,
-    Briefcase,
+    LayoutGrid,
     BarChart3,
-    User,
-    LogOut,
-    ChevronRight,
-    Target
+    Briefcase,
+    Sparkles,
+    Settings
 } from 'lucide-react';
 
 const Sidebar = () => {
+    const [isHovered, setIsHovered] = useState(false);
     const location = useLocation();
-    const navigate = useNavigate();
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
 
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
-
-    const navigation = [
+    const topNav = [
         { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-        { name: 'Resumes', href: '/workspace', icon: FileText },
-        { name: 'Job Tracker', href: '/applications', icon: Target },
-        { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-        { name: 'Profile', href: '/profile', icon: User },
+        { name: 'My Resumes', href: '/workspace', icon: FileText },
+        { name: 'Templates', href: '/templates', icon: LayoutGrid },
+        { name: 'ATS Checker', href: '/analyzer', icon: BarChart3 },
+        { name: 'Applications', href: '/applications', icon: Briefcase },
+        { name: 'AI Assistant', href: '/ai-assistant', icon: Sparkles },
     ];
 
-    const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
+    const bottomNav = [
+        { name: 'Settings', href: '/profile', icon: Settings }
+    ];
+
+    const mobileNav = [
+        { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+        { name: 'Resumes', href: '/workspace', icon: FileText },
+        { name: 'Applications', href: '/applications', icon: Briefcase },
+        { name: 'AI', href: '/ai-assistant', icon: Sparkles },
+        { name: 'Settings', href: '/profile', icon: Settings },
+    ];
+
+    const isActive = (path) => location.pathname.startsWith(path);
+
+    const getInitials = (name) => {
+        if (!name) return 'U';
+        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    };
 
     return (
-        <div className="w-64 h-screen bg-surface-1 border-r border-ink/5 flex flex-col fixed left-0 top-0">
-            {/* Logo */}
-            <div className="p-6 border-b border-ink/5 flex-shrink-0">
-                <Link to="/dashboard" className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                        <FileText className="w-6 h-6 text-black" />
+        <>
+            {/* Desktop Sidebar */}
+            <div
+                className={`hidden md:flex flex-col fixed left-0 top-0 h-screen bg-surface-2 transition-all duration-200 z-50 ${isHovered ? 'w-[220px] shadow-paper' : 'w-[56px]'}`}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                {/* Logo */}
+                <div className="h-[60px] flex items-center px-4 overflow-hidden shrink-0 mt-4">
+                    <div className="w-6 h-6 shrink-0 bg-ink rounded flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-canvas" />
                     </div>
-                    <span className="text-xl font-bold text-ink">SmartResume</span>
-                </Link>
-            </div>
+                    {isHovered && (
+                        <span className="ml-3 text-ink font-serif font-bold text-lg whitespace-nowrap">SmartResume</span>
+                    )}
+                </div>
 
-            {/* Navigation */}
-            <nav className="flex-1 p-4 overflow-hidden">
-                <div className="space-y-1">
-                    {navigation.map((item) => {
+                {/* Main Navigation */}
+                <nav className="flex-1 py-4 flex flex-col gap-1 overflow-y-auto overflow-x-hidden">
+                    {topNav.map((item) => {
                         const active = isActive(item.href);
                         return (
                             <Link
                                 key={item.name}
                                 to={item.href}
-                                className={`
-                                    group flex items-center gap-3 px-4 py-3 rounded-lg transition-all
+                                className={`flex items-center h-10 px-4 transition-colors whitespace-nowrap
                                     ${active
-                                        ? 'bg-white/10 text-ink border border-ink/10'
-                                        : 'text-ink/60 hover:text-ink hover:bg-surface-2 border border-transparent'
-                                    }
-                                `}
+                                        ? 'bg-accent/5 border-l-2 border-accent text-accent'
+                                        : 'text-ink/60 hover:bg-ink/5 hover:text-ink border-l-2 border-transparent'
+                                    }`}
+                                title={!isHovered ? item.name : undefined}
                             >
-                                <item.icon className={`w-5 h-5 ${active ? 'text-ink' : 'text-ink/40 group-hover:text-ink'} transition-colors`} />
-                                <span className="font-medium text-sm flex-1">{item.name}</span>
-                                {active && <ChevronRight className="w-4 h-4" />}
+                                <item.icon className="w-5 h-5 shrink-0" />
+                                {isHovered && (
+                                    <span className="ml-3 text-[14px] font-medium">{item.name}</span>
+                                )}
                             </Link>
                         );
                     })}
-                </div>
-            </nav>
 
-            {/* User Section */}
-            <div className="p-4 border-t border-ink/5 flex-shrink-0">
-                {/* User Info */}
-                <div className="mb-3 p-3 bg-surface-2 border border-ink/5 rounded-lg">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                            <User className="w-5 h-5 text-ink" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="text-sm font-semibold text-ink truncate">
-                                {user?.name || 'User'}
-                            </div>
-                            <div className="text-xs text-ink/40 truncate">
-                                {user?.email || ''}
-                            </div>
-                        </div>
+                    <div className="my-2 border-t border-ink/5 mx-4" />
+
+                    {bottomNav.map((item) => {
+                        const active = isActive(item.href);
+                        return (
+                            <Link
+                                key={item.name}
+                                to={item.href}
+                                className={`flex items-center h-10 px-4 transition-colors whitespace-nowrap
+                                    ${active
+                                        ? 'bg-accent/5 border-l-2 border-accent text-accent'
+                                        : 'text-ink/60 hover:bg-ink/5 hover:text-ink border-l-2 border-transparent'
+                                    }`}
+                                title={!isHovered ? item.name : undefined}
+                            >
+                                <item.icon className="w-5 h-5 shrink-0" />
+                                {isHovered && (
+                                    <span className="ml-3 text-[14px] font-medium">{item.name}</span>
+                                )}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                {/* User Section */}
+                <div className="h-[64px] shrink-0 border-t border-ink/5 flex items-center px-3 overflow-hidden">
+                    <div className="w-8 h-8 shrink-0 bg-ink text-surface-2 rounded-full flex items-center justify-center text-[12px] font-medium">
+                        {getInitials(user?.name)}
                     </div>
+                    {isHovered && (
+                        <div className="ml-3 flex-1 min-w-0">
+                            <div className="text-[13px] font-semibold text-ink truncate">{user?.name || 'User'}</div>
+                            <div className="text-[11px] text-ink/60 uppercase tracking-wide">Free Plan</div>
+                        </div>
+                    )}
                 </div>
-
-                {/* Logout Button */}
-                <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-ink/60 hover:text-ink hover:bg-surface-2 rounded-lg transition-all border border-transparent hover:border-ink/5"
-                >
-                    <LogOut className="w-5 h-5" />
-                    <span className="font-medium text-sm">Logout</span>
-                </button>
             </div>
-        </div>
+
+            {/* Mobile Bottom Navigation */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 h-[56px] bg-surface-1 border-t border-ink/5 flex items-center justify-around px-2 z-50">
+                {mobileNav.map((item) => {
+                    const active = isActive(item.href);
+                    return (
+                        <Link
+                            key={item.name}
+                            to={item.href}
+                            className={`flex flex-col items-center justify-center w-full h-full transition-colors ${active ? 'text-accent' : 'text-ink/40'}`}
+                        >
+                            <item.icon className="w-[20px] h-[20px] mb-1" />
+                            <span className="text-[10px] font-medium">{item.name}</span>
+                        </Link>
+                    );
+                })}
+            </div>
+        </>
     );
 };
 

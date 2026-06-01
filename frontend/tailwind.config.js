@@ -20,6 +20,13 @@ export default {
           warning: '#92622A',
           error: '#8B3030',
           info: '#2B5BA8'
+        },
+        badge: {
+          green: { bg: '#EAF3DE', text: '#27500A' },
+          amber: { bg: '#FAEEDA', text: '#633806' },
+          red: { bg: '#FCEBEB', text: '#791F1F' },
+          blue: { bg: '#E6F1FB', text: '#0C447C' },
+          gray: { bg: '#F1EFE8', text: '#444441' }
         }
       },
       fontFamily: {
