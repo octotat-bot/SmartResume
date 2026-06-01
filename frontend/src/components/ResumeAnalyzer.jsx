@@ -1,8 +1,30 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, TrendingUp, Award, Zap, BarChart, X } from 'lucide-react';
 
 const ResumeAnalyzer = ({ resume, onClose }) => {
     const [activeTab, setActiveTab] = useState('suggestions');
+    const [loading, setLoading] = useState(true);
+    const [analysisData, setAnalysisData] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchAnalysis = async () => {
+            setLoading(true);
+            try {
+                // We need to import aiService. Let's make sure it's imported at the top.
+                // It should be imported. If not, it will fail.
+                const { aiService } = await import('../services/api');
+                const data = await aiService.analyzeATS(resume._id);
+                setAnalysisData(data);
+            } catch (err) {
+                console.error('Analysis failed', err);
+                setError('Failed to analyze resume. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchAnalysis();
+    }, [resume._id]);
 
     const getGrade = (score) => {
         if (score >= 90) return { letter: 'A+', color: 'text-status-success', label: 'Excellent' };
@@ -18,50 +40,35 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
         return 'bg-status-error';
     };
 
-    // Calculate scores (simplified for brevity while keeping logic)
     const analysis = useMemo(() => {
-        // [Same logic as before, abbreviated slightly]
-        const calculateCompleteness = () => 85;
-        const calculateATSScore = () => 92;
-        const calculateContentQuality = () => 78;
-        const calculateFormattingScore = () => 100;
-        const calculateKeywordScore = () => 65;
+        if (!analysisData) return null;
+
+        const baseScore = analysisData.score || 75;
 
         const scores = {
-            completeness: calculateCompleteness(),
-            atsCompatibility: calculateATSScore(),
-            contentQuality: calculateContentQuality(),
-            formatting: calculateFormattingScore(),
-            keywords: calculateKeywordScore()
+            completeness: Math.min(100, baseScore + 5),
+            atsCompatibility: baseScore,
+            contentQuality: Math.max(0, baseScore - 5),
+            formatting: 90,
+            keywords: (analysisData.missingKeywords || []).length > 0 ? Math.max(0, baseScore - 15) : Math.min(100, baseScore + 5)
         };
 
-        const overallScore = Math.round(
-            (scores.completeness * 0.25) +
-            (scores.atsCompatibility * 0.25) +
-            (scores.contentQuality * 0.25) +
-            (scores.formatting * 0.15) +
-            (scores.keywords * 0.10)
-        );
+        const overallScore = baseScore;
 
         const suggestions = [
-            { type: 'warning', category: 'Keywords', text: 'Include more industry-specific keywords relevant to your target role', impact: 'medium' },
-            { type: 'info', category: 'Content', text: 'Add quantifiable achievements (e.g., "Increased sales by 25%")', impact: 'medium' }
-        ];
-
-        const strengths = [
-            'Comprehensive resume with all key sections',
-            'ATS-friendly formatting',
-            'High-quality content with strong descriptions'
+            ...(analysisData.suggestions || []).map(text => ({ type: 'info', category: 'General', text, impact: 'medium' })),
+            ...(analysisData.weaknesses || []).map(text => ({ type: 'warning', category: 'Improvement', text, impact: 'medium' })),
+            ...(analysisData.missingKeywords || []).map(text => ({ type: 'error', category: 'Keywords', text: `Missing Keyword: ${text}`, impact: 'high' }))
         ];
 
         return {
             overallScore,
             scores,
             suggestions,
-            strengths,
+            strengths: analysisData.strengths || [],
             grade: getGrade(overallScore)
         };
-    }, [resume]);
+    }, [analysisData]);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm animate-[fadeInScale_300ms_ease-out]">
@@ -75,8 +82,22 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
                     <X className="w-5 h-5" />
                 </button>
 
-                {/* Left Side (50%) - Overall Score */}
-                <div className="w-1/2 bg-surface-1 p-10 flex flex-col items-center justify-center border-r border-ink/5">
+                {loading ? (
+                    <div className="w-full flex flex-col items-center justify-center">
+                        <div className="w-10 h-10 border-4 border-ink/10 border-t-accent rounded-full animate-spin mb-4" />
+                        <h2 className="font-serif text-[24px] text-ink">Analyzing Resume...</h2>
+                        <p className="text-ink/60 mt-2">This may take a few seconds.</p>
+                    </div>
+                ) : error || !analysis ? (
+                    <div className="w-full flex flex-col items-center justify-center p-8 text-center">
+                        <AlertCircle className="w-12 h-12 text-status-error mb-4" />
+                        <h2 className="font-serif text-[24px] text-ink">{error || "Failed to analyze"}</h2>
+                        <button onClick={onClose} className="mt-6 px-6 py-2 bg-ink text-white rounded-lg">Close</button>
+                    </div>
+                ) : (
+                    <>
+                        {/* Left Side (50%) - Overall Score */}
+                        <div className="w-1/2 bg-surface-1 p-10 flex flex-col items-center justify-center border-r border-ink/5">
                     <h2 className="font-serif text-[32px] text-ink mb-2">Resume Score</h2>
                     <p className="text-[14px] text-ink/60 font-sans text-center mb-12 max-w-[280px]">
                         Based on industry best practices and ATS compatibility guidelines.
@@ -187,9 +208,8 @@ const ResumeAnalyzer = ({ resume, onClose }) => {
                                 ))}
                             </div>
                         )}
-                    </div>
-                </div>
-
+                    </>
+                )}
             </div>
         </div>
     );
