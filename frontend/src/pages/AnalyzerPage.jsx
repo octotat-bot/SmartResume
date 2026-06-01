@@ -14,10 +14,11 @@ const AnalyzerPage = () => {
 
     const loadResumes = async () => {
         try {
-            const { data } = await resumeService.getResumes();
-            setResumes(data);
+            const data = await resumeService.getResumes();
+            setResumes(data.resumes || []);
         } catch (error) {
             console.error('Failed to load resumes', error);
+            setResumes([]);
         } finally {
             setLoading(false);
         }

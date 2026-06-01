@@ -11,6 +11,9 @@ API_URL = API_URL.replace(/\/health\/*$/, '');
 // 3. Remove all trailing slashes to ensure base path is clean
 API_URL = API_URL.replace(/\/+$/, '');
 
+// 4. Deduplicate /api/api if it accidentally got added
+API_URL = API_URL.replace(/\/api\/api$/, '/api');
+
 console.log('Sanitized API URL:', API_URL);
 
 const api = axios.create({
