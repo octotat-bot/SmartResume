@@ -63,7 +63,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/octotat-bot/SmartResume.git
 cd SmartResume
 ```
 
@@ -98,7 +98,7 @@ NODE_ENV=development
 
 ```bash
 # Seed the database with templates (optional)
-npm run seed
+npm run seed:templates
 
 # Start the backend server
 npm start
@@ -130,13 +130,6 @@ Open your browser and navigate to:
 ```
 http://localhost:5173
 ```
-
-## 👤 Demo Account
-
-You can create a new account or use the following demo credentials:
-
-**Email:** demo@smartresume.com  
-**Password:** demo123
 
 ## 📁 Project Structure
 
@@ -179,7 +172,7 @@ SmartResume/
 ```bash
 npm start          # Start production server
 npm run dev        # Start development server with nodemon
-npm run seed       # Seed database with templates
+npm run seed:templates  # Seed database with templates
 ```
 
 ### Frontend
